@@ -1,0 +1,127 @@
+/**
+ * Program Name:	Connect to database
+ * Author:			Michael Burwell & Angela Venable
+ * Data Last Upd:	11/05/2021
+ * Description:	
+ *		This program will connect to a facts database and query it
+ *		to show the connection has been made.  
+ * */
+#include <iostream>
+#include <string>
+#include "sqlite3.h"
+
+using namespace std;
+
+int bookCallback(void*, int, char**, char**);
+/**
+ * This function will take a list of arguments used to query a
+ * database and print the information to a screen.  Will print
+ *	-> Book Number:
+ *	-> Book Title:
+ *	-> Book Year:
+ *  -> Book Subject:
+ *	-> authorCallback(): this will print all authors for the specific book
+ * */
+int authorCallback(void*, int, char**, char**);
+/**
+ * This function will be the second callback function made in the
+ * book callback function.  It will show all of the authors with 
+ * a credit to writing the book.
+ *  -> Author:
+ * */
+
+
+
+int main()
+{
+	int rc;
+	sqlite3* db;
+	rc = sqlite3_open_v2("factdb.db",&db,SQLITE_OPEN_READWRITE, NULL);
+	
+	// if connection is not ok then show error message
+	if(rc != SQLITE_OK)
+	{
+		std::cout << "Error in connection: " << sqlite3_errmsg(db);
+		sqlite3_close(db);
+		return -1;
+	}
+	else
+	{
+		std::cout << "Database opened successfully" << std::endl;
+	}
+	
+	// build query for selecting information for the callback function
+	std::string query = "SELECT DISTINCT b.book_num AS \'Book Num\', ";
+	query += "b.book_title AS \'Title\', ";
+	query += "b.book_year AS \'Published Year\', ";
+	query += "b.book_subject AS \'Subject\' "; 
+	query += "FROM Book AS b ";
+	query += "JOIN Writes AS w ON b.book_num = w.book_num ";
+	query += "JOIN Author AS a ON w.au_id = a.au_id";
+
+	char * err;
+	
+	// use the callback function to query the database
+	rc = sqlite3_exec(db, query.c_str(), bookCallback, db, &err);
+	
+	if(rc != SQLITE_OK)
+	{
+		std::cout << "ERROR - select statement for book and authors: " << err << std::endl;
+		sqlite3_free(err);
+	}
+	
+	sqlite3_close(db);
+	return 0;
+}
+
+int bookCallback(void *db, int numCol, char **value, char **colName)
+{
+	/**
+	 * Print the infromation for the currently selected book
+	 * */
+	for(int i = 0; i < numCol; i++)
+	{
+		std::cout << colName[i] << ": ";
+		if(value[i] != NULL)
+			std::cout << value[i];
+		std::cout << std::endl;
+	}
+
+	// create the SELECT string for selecting all of the authors
+	// credited with writing the book
+	std::string query = "SELECT author.au_fname || \' \' || author.au_lname AS \'Author\' ";
+	query += "FROM writes ";
+	query += "JOIN author ";
+	query += "ON writes.au_id = author.au_id ";
+	query += "WHERE writes.book_num = ";
+	query += value[0];
+
+	// convert the void database into a sqlite3 database
+	sqlite3 *newdb = (sqlite3*)db;
+
+	char * err;
+	int rc = sqlite3_exec(newdb, query.c_str(), authorCallback, NULL, &err);
+	
+	// if an error is returned to the return code print the
+	// errors information and free the error.
+	if(rc != SQLITE_OK)
+	{
+		std::cout << "There was an error in the author table: " << err<<  std::endl;
+		sqlite3_free(err);
+	}
+
+	std::cout << std::endl;
+	
+	return SQLITE_OK;
+}
+
+int authorCallback(void *data, int numCol, char **value, char **colName)
+{
+	if(value[0] != NULL)
+		std:: cout << colName[0] << ": " << value[0] << std::endl;
+
+	return SQLITE_OK;	
+}
+
+
+
