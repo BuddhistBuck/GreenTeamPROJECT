@@ -1,0 +1,56 @@
+.practice-container {
+    padding: 10px 40px 10px;
+}
+
+.practice-block {
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 10px 20px 10px;
+}
+
+.practice-block a {
+    color: rgb(111, 155, 155);
+    /* border: 2px solid rgb(111, 155, 155); */
+    /* padding: 2px; */
+}
+
+.practice-block a:hover {
+    color: grey;
+}
+
+.practice-item-queue {
+    text-align: center;
+}
+
+.practice-top-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.practice-interface {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.practice-interface input {
+    width: 800px;
+    min-height: 30px;   
+}
+
+
+.word-correct {
+    font-weight: bold;
+    color: green;
+}
+
+.word-incorrect {
+    font-weight: bold;
+    color: red;
+}
+
+.word-active {
+    font-weight: bold;
+}
