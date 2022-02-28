@@ -28,6 +28,16 @@
     justify-content: space-between;
 }
 
+.practice-top-buttons button {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	/* cursor: pointer; */
+	outline: inherit;
+}
+
 .practice-interface {
     display: flex;
     flex-direction: column;
@@ -54,3 +64,37 @@
 .word-active {
     font-weight: bold;
 }
+
+/* ---- PRACTICE DROPDOWN ---- */
+
+.select-list-dropdown {
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    visibility: hidden;
+    color: black;
+    margin-top: 2%;
+    transform: translateX(1150%);
+
+}
+
+.select-list-dropdown.active {
+    display: flex;
+    flex-direction: column;
+    visibility: visible;
+}
+
+
+.select-list-dropdown a {
+    color: black;
+    padding: 10px;
+}
+
+.select-list-dropdown div {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+
+}
+
+.select-list-dropdown a:hover {background-color: #f1f1f1; color: black;}

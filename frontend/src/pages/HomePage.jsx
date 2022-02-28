@@ -1,72 +1,65 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-func-assign */
 import React, { useState, useEffect, useRef } from "react";
 import Layout from "../components/Layout";
-import Axios from "axios";
+import Word from "../components/Word";
+import Timer from "../components/Timer";
+import { useDetectOutsideClick } from "../util/detectOutsideClick";
+// import Axios from "axios";
 import "../css/practice.css";
-
-const getCloud = () =>
-  `test because court defendant jury trial charge three men lawyers earth fire paraphernalia unfortunately solemn`
-    .split(" ")
-    .sort(() => (Math.random() > 0.5 ? 1 : -1));
-
-function Word(props) {
-  const { text, active, correct } = props;
-
-  if (correct === true) {
-    return <span className="word-correct">{text} </span>;
-  }
-
-  if (correct === false) {
-    return <span className="word-incorrect">{text} </span>;
-  }
-
-  if (active) {
-    return <span className="word-active">{text} </span>;
-  }
-
-  return <span>{text} </span>;
-}
-
-Word = React.memo(Word);
-
-function Timer(props) {
-  const { correctWords, startCounting } = props;
-  const [timeElapsed, setTimeElapsed] = useState(0);
-
-  useEffect(() => {
-    let id;
-    if (startCounting) {
-      id = setInterval(() => {
-        setTimeElapsed((oldTime) => oldTime + 1);
-      }, 1000);
-    }
-
-    return () => {
-      clearInterval(id);
-    };
-  }, [startCounting]);
-
-  const minutes = timeElapsed / 60;
-
-  return (
-    <div>
-      <p>Time: {timeElapsed}</p>
-      <p>Speed: {(correctWords / minutes || 0).toFixed(0)} WPM</p>
-    </div>
-  );
-}
 
 /**
  * @author Chris P
  * @component Home Page and Practice Session
  **/
 export default function HomePage() {
+  // Practice interface utilities
   const [userInput, setUserInput] = useState("");
   // const [itemQueue, setItemQueue] = useState([]);
-  const cloud = useRef(getCloud());
   const [activeWordIndex, setActiveWordIndex] = useState(0);
   const [correctWordArray, setCorrectWordArray] = useState([]);
   const [startCounting, setStartCounting] = useState(false);
+  const [selectedList, setSelectedList] = useState("");
+
+  const getCloud = (list) =>
+    `test because court defendant jury trial charge three men lawyers earth fire paraphernalia unfortunately solemn`
+      .split(" ")
+      .sort(() => (Math.random() > 0.5 ? 1 : -1));
+
+  const cloud = useRef(getCloud());
+
+  // 'Select List' dropdown utilities
+  const dropdownRef = useRef(null);
+  const [isDropdownActive, setIsDropdownActive] = useDetectOutsideClick(
+    dropdownRef,
+    false
+  );
+  const onClick = () => setIsDropdownActive(!isDropdownActive);
+  
+  const loadTerms = (category) => {
+    switch (category) {
+      case "medical":
+        console.log("medical");
+        setSelectedList(
+          "test because court defendant jury trial charge three men lawyers earth fire paraphernalia unfortunately solemn"
+        );
+        return;
+      case "court":
+        console.log("court");
+        setSelectedList(
+          "syringe doctor injury concern trouble trauma victim suffocation workplace attack medicine nurse hospital legal"
+        );
+        return;
+      default:
+        setSelectedList("none");
+        return;
+    }
+  };
+
+  // 'Restart' button utilities
+  function restartSession() {
+    window.location.reload();
+  }
 
   // useEffect(() => {
   //   async function fetchData() {
@@ -78,8 +71,8 @@ export default function HomePage() {
   // }, []);
 
   function processInput(value) {
-    if(activeWordIndex === cloud.current.length) {
-      return
+    if (activeWordIndex === cloud.current.length) {
+      return;
     }
 
     if (!startCounting) {
@@ -117,9 +110,25 @@ export default function HomePage() {
         <div className="practice-container">
           <h2>Practice Session</h2>
           <div className="practice-block">
-            <div className="practice-top-buttons">
-              <a href="/#">Restart Session</a>
-              <a href="/#">Select List</a>
+            <div className="practice-top-buttons" ref={dropdownRef}>
+              <a href="/#" onClick={restartSession}>
+                Restart Session
+              </a>
+              <a href="#" onClick={onClick}>
+                Select List
+              </a>
+              <div
+                className={`select-list-dropdown ${
+                  isDropdownActive ? "active" : "inactive"
+                }`}
+              >
+                <a href="#" onClick={() => loadTerms("court")}>
+                  Court Terms
+                </a>
+                <a href="#" onClick={() => loadTerms("medical")}>
+                  Medical Terms
+                </a>
+              </div>
             </div>
             <Timer
               startCounting={startCounting}
