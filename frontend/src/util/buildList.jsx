@@ -12,7 +12,7 @@ function buildList(text, wordsPerLine) {
 
     let j = i;
     while (j < i + wordsPerLine) {
-      substrings.push(items[j]);
+      substrings.push(items[j] + " ");
       j++;
     }
 
@@ -25,5 +25,5 @@ function buildList(text, wordsPerLine) {
 
 // Process text utilities
 let testRenderText = `Since they are still preserved in the rocks for us to see, they must have been formed quite recently, `;
-export const s = buildList(testRenderText, 6);
+export const s = buildList(testRenderText, 4);
 // console.log(s);

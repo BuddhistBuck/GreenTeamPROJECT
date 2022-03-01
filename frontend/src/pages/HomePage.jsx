@@ -3,9 +3,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-func-assign */
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Layout from "../components/Layout";
-import Word from "../components/Word";
 import Timer from "../components/Timer";
 import { useDetectOutsideClick } from "../util/detectOutsideClick";
 import loadTerms from "../util/loadTerms";
@@ -18,15 +17,16 @@ import "../css/practice.css";
  **/
 export default function HomePage() {
   // Practice interface utilities
-  const [userInput, setUserInput] = useState("");
   const [activeWordIndex, setActiveWordIndex] = useState(0);
   const [correctWordArray, setCorrectWordArray] = useState([]);
   const [startCounting, setStartCounting] = useState(false);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [currentLine, setCurrentLine] = useState(0);
 
-  // Detects state of letters
-  const [correctLetterIndex, setCorrectLetterIndex] = useState(0);
-  const [correctLetterArray, setCorrectLetterArray] = useState([]);
+  // Detect current line utitlities
+  let cloud = s[currentLineIndex];
+  const [correctMatch, setCorrectMatch] = useState("");
+  const [remaining, setRemaining] = useState(cloud);
 
   // 'Select List' dropdown utilities
   const dropdownRef = useRef(null);
@@ -36,45 +36,38 @@ export default function HomePage() {
   );
   const onClick = () => setIsDropdownActive(!isDropdownActive);
 
-  // 'Restart' button utilities
-  function restartSession() {
-    window.location.reload();
-  }
+  function processInput(e) {
+    console.log(`currentLineIndex: ${currentLineIndex} || s.length: ${s.length}`)
+    // Check if list is finished
+    // if (currentLineIndex + 1 === s.length) {
+    //   document.getElementById("clearInput").value = "List completed.";
+    //   setRemaining("Done");
+    // }
 
-  let cloud = s[currentLineIndex];
-
-  function processInput(value) {
     // Starts timer
     if (!startCounting) {
       setStartCounting(true);
     }
 
-    if (cloud && value) {
-      console.log(value);
+    // Highlight text
+    let value = e.target.value;
+    let txt = cloud.join("");
+    let regex = new RegExp("^" + value, "g");
+    let idx = txt.match(regex);
+
+    if (value === txt) {
+      setCurrentLineIndex(currentLineIndex + 1);
+      setRemaining(s[currentLineIndex]);
+      document.getElementById("clearInput").value = "";
     }
 
-    // Activates next word
-    if (cloud && value.endsWith(" ")) {
-      // Move currentLine to next line
-      if (activeWordIndex === cloud.length - 1) {
-        setCurrentLineIndex(currentLineIndex + 1);
-        setCorrectWordArray([]);
-        setActiveWordIndex(0);
-        setUserInput("");
-        return;
-      }
-
-      // Processes correct and incorrect words by indices
-      setUserInput("");
-      setActiveWordIndex(activeWordIndex + 1);
-      setCorrectWordArray((data) => {
-        const word = value.trim();
-        const newResult = [...data];
-        newResult[activeWordIndex] = word === cloud[activeWordIndex];
-        return newResult;
-      });
-    } else {
-      setUserInput(value);
+    if (idx) {
+      let newText = [
+        <strong key={idx.length}>{idx[0]}</strong>,
+        txt.substring(idx.length - 1 + value.length),
+      ];
+      setCorrectMatch(newText[0].props.children);
+      setRemaining(newText[1]);
     }
   }
 
@@ -85,7 +78,7 @@ export default function HomePage() {
           <h2>Practice Session</h2>
           <div className="practice-block">
             <div className="practice-top-buttons" ref={dropdownRef}>
-              <a href="/#" onClick={restartSession}>
+              <a href="/#" onClick={() => window.location.reload()}>
                 Restart Session
               </a>
               <a href="#" onClick={onClick}>
@@ -110,31 +103,28 @@ export default function HomePage() {
             />
 
             <div className="practice-item-queue">
-              {cloud ? (
-                s.map(function (word, index) {
-                  return (
-                    <div key={index}>
-                      {word === cloud ? (
-                        <Word
-                          key={index}
-                          active={index === activeWordIndex}
-                          correct={correctWordArray[index]}
-                          currentLine={cloud}
-                          currentWord={cloud[activeWordIndex]}
-                        />
-                      ) : (
-                        <p key={index}>
-                          {word.map((item, index) => {
-                            return <span key={index}>{item}&nbsp;</span>;
-                          })}
-                        </p>
-                      )}
-                    </div>
-                  );
-                })
-              ) : (
-                <p>List completed</p>
-              )}
+              {s.map((line, index) => {
+                return (
+                  <div key={index}>
+                    {line === cloud ? (
+                      <div style={{ backgroundColor: "#eeeef0" }}>
+                        {remaining ? (
+                          <span>
+                            <strong style={{ textDecoration: "underline" }}>
+                              {correctMatch}
+                            </strong>
+                            <span>{remaining}</span>
+                          </span>
+                        ) : (
+                          <span>{s[currentLineIndex]}</span>
+                        )}
+                      </div>
+                    ) : (
+                      <p>{line}</p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             <div className="practice-interface">
@@ -144,13 +134,12 @@ export default function HomePage() {
                 }}
               >
                 <br />
-
                 <input
                   size="30px"
                   height="20px"
                   placeholder="Start typing ... "
-                  value={userInput}
-                  onChange={(e) => processInput(e.target.value)}
+                  id="clearInput"
+                  onChange={(e) => processInput(e)}
                 />
               </form>
             </div>
