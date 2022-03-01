@@ -1,23 +1,33 @@
-import React from 'react';
+import React from "react";
 
-function Word(props) {
-    const { text, active, correct } = props;
-  
+export default function Word(props) {
+  const { active, correct, currentLine, currentWord } = props;
+
+  function processWord(word) {
     if (correct === true) {
-      return <span className="word-correct">{text} </span>;
+      return <span className="word-correct">{word} </span>;
     }
-  
-    if (correct === false) {
-      return <span className="word-incorrect">{text} </span>;
-    }
-  
-    if (active) {
-      return <span className="word-active">{text} </span>;
-    }
-  
-    return <span>{text} </span>;
-}
-  
-Word = React.memo(Word);
 
-export default Word;
+    if (correct === false) {
+      return <span className="word-incorrect">{word} </span>;
+    }
+
+    if (active) {
+      return <span className="word-active">{word} </span>;
+    }
+  }
+
+  return (
+    <div style={{ backgroundColor: "#eeeef0" }}>
+      {currentLine.map(function (word, index) {
+        // TODO: fix problem where first word is skipped on new line
+        // console.log(processWord(currentWord).props.children[0]);
+        return currentWord === word ? (
+          <span key={index}>{processWord(currentWord)}</span>
+        ) : (
+          <span key={index}>{word}&nbsp;</span>
+        );
+      })}
+    </div>
+  );
+}

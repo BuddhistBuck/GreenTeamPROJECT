@@ -1,11 +1,15 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-func-assign */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Layout from "../components/Layout";
 import Word from "../components/Word";
 import Timer from "../components/Timer";
 import { useDetectOutsideClick } from "../util/detectOutsideClick";
-// import Axios from "axios";
+import loadTerms from "../util/loadTerms";
+import { s } from "../util/buildList";
 import "../css/practice.css";
 
 /**
@@ -15,18 +19,14 @@ import "../css/practice.css";
 export default function HomePage() {
   // Practice interface utilities
   const [userInput, setUserInput] = useState("");
-  // const [itemQueue, setItemQueue] = useState([]);
   const [activeWordIndex, setActiveWordIndex] = useState(0);
   const [correctWordArray, setCorrectWordArray] = useState([]);
   const [startCounting, setStartCounting] = useState(false);
-  const [selectedList, setSelectedList] = useState("");
+  const [currentLineIndex, setCurrentLineIndex] = useState(0);
 
-  const getCloud = (list) =>
-    `test because court defendant jury trial charge three men lawyers earth fire paraphernalia unfortunately solemn`
-      .split(" ")
-      .sort(() => (Math.random() > 0.5 ? 1 : -1));
-
-  const cloud = useRef(getCloud());
+  // Detects state of letters
+  const [correctLetterIndex, setCorrectLetterIndex] = useState(0);
+  const [correctLetterArray, setCorrectLetterArray] = useState([]);
 
   // 'Select List' dropdown utilities
   const dropdownRef = useRef(null);
@@ -35,68 +35,42 @@ export default function HomePage() {
     false
   );
   const onClick = () => setIsDropdownActive(!isDropdownActive);
-  
-  const loadTerms = (category) => {
-    switch (category) {
-      case "medical":
-        console.log("medical");
-        setSelectedList(
-          "test because court defendant jury trial charge three men lawyers earth fire paraphernalia unfortunately solemn"
-        );
-        return;
-      case "court":
-        console.log("court");
-        setSelectedList(
-          "syringe doctor injury concern trouble trauma victim suffocation workplace attack medicine nurse hospital legal"
-        );
-        return;
-      default:
-        setSelectedList("none");
-        return;
-    }
-  };
 
   // 'Restart' button utilities
   function restartSession() {
     window.location.reload();
   }
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     await Axios.get("http://localhost:4000/listItems").then((res) => {
-  //       setItemQueue(res.data.listItems);
-  //     });
-  //   }
-  //   fetchData();
-  // }, []);
+  let cloud = s[currentLineIndex];
 
   function processInput(value) {
-    if (activeWordIndex === cloud.current.length) {
-      return;
-    }
-
+    // Starts timer
     if (!startCounting) {
       setStartCounting(true);
     }
 
-    if (value.endsWith(" ")) {
-      // the user has finished the word
+    if (cloud && value) {
+      console.log(value);
+    }
 
-      if (activeWordIndex === cloud.current.length) {
-        // overflow
-        setStartCounting(false);
-        setUserInput("List completed");
+    // Activates next word
+    if (cloud && value.endsWith(" ")) {
+      // Move currentLine to next line
+      if (activeWordIndex === cloud.length - 1) {
+        setCurrentLineIndex(currentLineIndex + 1);
+        setCorrectWordArray([]);
+        setActiveWordIndex(0);
+        setUserInput("");
         return;
       }
 
-      setActiveWordIndex((index) => index + 1);
+      // Processes correct and incorrect words by indices
       setUserInput("");
-
-      // corrected word
+      setActiveWordIndex(activeWordIndex + 1);
       setCorrectWordArray((data) => {
         const word = value.trim();
         const newResult = [...data];
-        newResult[activeWordIndex] = word === cloud.current[activeWordIndex];
+        newResult[activeWordIndex] = word === cloud[activeWordIndex];
         return newResult;
       });
     } else {
@@ -134,22 +108,33 @@ export default function HomePage() {
               startCounting={startCounting}
               correctWords={correctWordArray.filter(Boolean).length}
             />
+
             <div className="practice-item-queue">
-              <p>
-                {cloud.current.map((word, index) => {
+              {cloud ? (
+                s.map(function (word, index) {
                   return (
-                    <Word
-                      key={index}
-                      text={word}
-                      active={index === activeWordIndex}
-                      correct={correctWordArray[index]}
-                    />
+                    <div key={index}>
+                      {word === cloud ? (
+                        <Word
+                          key={index}
+                          active={index === activeWordIndex}
+                          correct={correctWordArray[index]}
+                          currentLine={cloud}
+                          currentWord={cloud[activeWordIndex]}
+                        />
+                      ) : (
+                        <p key={index}>
+                          {word.map((item, index) => {
+                            return <span key={index}>{item}&nbsp;</span>;
+                          })}
+                        </p>
+                      )}
+                    </div>
                   );
-                })}
-              </p>
-              {/* {itemQueue.map((data, index) => {
-                return <p key={index}>{data.text}</p>;
-              })} */}
+                })
+              ) : (
+                <p>List completed</p>
+              )}
             </div>
 
             <div className="practice-interface">
@@ -158,6 +143,8 @@ export default function HomePage() {
                   e.preventDefault();
                 }}
               >
+                <br />
+
                 <input
                   size="30px"
                   height="20px"
@@ -169,7 +156,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="practice-side"></div>
+        <div className="practice-side">{/* place WPM widget here */}</div>
       </div>
     </Layout>
   );

@@ -63,6 +63,7 @@
 
 .word-active {
     font-weight: bold;
+    background-color: #eeeef0;
 }
 
 /* ---- PRACTICE DROPDOWN ---- */
