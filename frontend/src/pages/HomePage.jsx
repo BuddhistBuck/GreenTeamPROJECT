@@ -5,29 +5,29 @@
 /* eslint-disable no-func-assign */
 import React, { useState, useRef, useEffect } from "react";
 import Layout from "../components/Layout";
-import Timer from "../components/Timer";
+import WpmSlider from "../components/WpmSlider";
+import PracticeInterface from "../components/PracticeInterface";
+import "../css/practice.css";
+
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
+import { MetronomeClearIcon, MetronomeSolidIcon } from "../util/metronomeIcons";
+
 import { useDetectOutsideClick } from "../util/detectOutsideClick";
 import loadTerms from "../util/loadTerms";
-import { s } from "../util/buildList";
-import "../css/practice.css";
+
+const theme = createTheme({
+  palette: {
+    primary: { main: "#419999" },
+  },
+});
 
 /**
  * @author Chris P
  * @component Home Page and Practice Session
  **/
 export default function HomePage() {
-  // Practice interface utilities
-  const [activeWordIndex, setActiveWordIndex] = useState(0);
-  const [correctWordArray, setCorrectWordArray] = useState([]);
-  const [startCounting, setStartCounting] = useState(false);
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [currentLine, setCurrentLine] = useState(0);
-
-  // Detect current line utitlities
-  let cloud = s[currentLineIndex];
-  const [correctMatch, setCorrectMatch] = useState("");
-  const [remaining, setRemaining] = useState(cloud);
-
   // 'Select List' dropdown utilities
   const dropdownRef = useRef(null);
   const [isDropdownActive, setIsDropdownActive] = useDetectOutsideClick(
@@ -36,48 +36,25 @@ export default function HomePage() {
   );
   const onClick = () => setIsDropdownActive(!isDropdownActive);
 
-  function processInput(e) {
-    console.log(`currentLineIndex: ${currentLineIndex} || s.length: ${s.length}`)
-    // Check if list is finished
-    // if (currentLineIndex + 1 === s.length) {
-    //   document.getElementById("clearInput").value = "List completed.";
-    //   setRemaining("Done");
-    // }
+  // Metronome icon utilities
+  const [metronomeIcon, setMetronomeIcon] = useState(true);
 
-    // Starts timer
-    if (!startCounting) {
-      setStartCounting(true);
-    }
-
-    // Highlight text
-    let value = e.target.value;
-    let txt = cloud.join("");
-    let regex = new RegExp("^" + value, "g");
-    let idx = txt.match(regex);
-
-    if (value === txt) {
-      setCurrentLineIndex(currentLineIndex + 1);
-      setRemaining(s[currentLineIndex]);
-      document.getElementById("clearInput").value = "";
-    }
-
-    if (idx) {
-      let newText = [
-        <strong key={idx.length}>{idx[0]}</strong>,
-        txt.substring(idx.length - 1 + value.length),
-      ];
-      setCorrectMatch(newText[0].props.children);
-      setRemaining(newText[1]);
-    }
-  }
+  const handleMetronomeClick = () => {
+    setMetronomeIcon(!metronomeIcon);
+  };
 
   return (
     <Layout>
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <div className="practice-container">
-          <h2>Practice Session</h2>
+        <div className="practice-root">
           <div className="practice-block">
+            <h2>Practice</h2>
+            <Divider />
+            <br />
             <div className="practice-top-buttons" ref={dropdownRef}>
+              <a href="#" onClick={() => {}}>
+                Back to Menu
+              </a>
               <a href="/#" onClick={() => window.location.reload()}>
                 Restart Session
               </a>
@@ -97,55 +74,33 @@ export default function HomePage() {
                 </a>
               </div>
             </div>
-            <Timer
-              startCounting={startCounting}
-              correctWords={correctWordArray.filter(Boolean).length}
-            />
+            <div style={{ height: "50px" }}></div>
 
-            <div className="practice-item-queue">
-              {s.map((line, index) => {
-                return (
-                  <div key={index}>
-                    {line === cloud ? (
-                      <div style={{ backgroundColor: "#eeeef0" }}>
-                        {remaining ? (
-                          <span>
-                            <strong style={{ textDecoration: "underline" }}>
-                              {correctMatch}
-                            </strong>
-                            <span>{remaining}</span>
-                          </span>
-                        ) : (
-                          <span>{s[currentLineIndex]}</span>
-                        )}
-                      </div>
-                    ) : (
-                      <p>{line}</p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <div className="practice-wpm">
+              <ThemeProvider theme={theme}>
+                <Button
+                  variant="outlined"
+                  onClick={() => handleMetronomeClick(false)}
+                  className="metronome-button"
+                >
+                  {metronomeIcon ? (
+                    <MetronomeClearIcon />
+                  ) : (
+                    <MetronomeSolidIcon />
+                  )}
+                </Button>
+              </ThemeProvider>
+              <div style={{ width: "50px" }} />
+              <WpmSlider />
+              <div style={{ width: "50px" }} />
+              <PracticeInterface />
+              <div style={{ width: "50px" }} />
 
-            <div className="practice-interface">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                }}
-              >
-                <br />
-                <input
-                  size="30px"
-                  height="20px"
-                  placeholder="Start typing ... "
-                  id="clearInput"
-                  onChange={(e) => processInput(e)}
-                />
-              </form>
             </div>
           </div>
         </div>
         <div className="practice-side">{/* place WPM widget here */}</div>
+        <div style={{ height: "200px" }} />
       </div>
     </Layout>
   );

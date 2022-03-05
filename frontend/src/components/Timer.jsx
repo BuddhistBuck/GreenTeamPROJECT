@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 
 export default function Timer(props) {
@@ -20,9 +21,9 @@ export default function Timer(props) {
   const minutes = timeElapsed / 60;
 
   return (
-    <div>
+    <div style={{position: 'absolute', marginTop: '-16px'}}>
       <p>Time: {timeElapsed}</p>
-      <p>Speed: {(correctWords / minutes || 0).toFixed(0)} WPM</p>
+      {/* <p>Speed: {(correctWords / minutes || 0).toFixed(0)} WPM</p> */}
     </div>
   );
 }

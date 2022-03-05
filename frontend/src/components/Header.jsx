@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { BsGlobe } from "react-icons/bs";
 import { AiFillCaretDown } from "react-icons/ai";
 import en from "../util/images/gb.svg";

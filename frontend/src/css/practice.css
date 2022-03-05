@@ -1,9 +1,10 @@
-.practice-container {
-    padding: 10px 40px 10px;
+.practice-root {
+    flex: 1;
+    padding: 10px 60px 10px;
 }
 
 .practice-block {
-    border: 1px solid grey;
+    /* border: 1px solid grey; */
     border-radius: 5px;
     padding: 10px 20px 10px;
 }
@@ -16,10 +17,6 @@
 
 .practice-block a:hover {
     color: grey;
-}
-
-.practice-item-queue {
-    text-align: center;
 }
 
 .practice-top-buttons {
@@ -38,18 +35,47 @@
 	outline: inherit;
 }
 
-.practice-interface {
+
+/* ---- WPM INTERFACE ---- */
+
+.practice-wpm {
     display: flex;
+    flex-direction: row;
+    max-height: 100px;
+    max-height: 300px;
+}
+
+.metronome-button {
+    position: absolute;
+    -ms-transform: translateY(135%);
+    transform: translateY(135%);
+    height: 80px;
+}
+
+/* ---- PRACTICE INTERFACE ---- */
+
+.practice-container {
+    flex: 1;
+    padding-left: 40px;
+    padding-right: 40px;
+    border-right: 6px solid rgb(49, 170, 170);
+    box-shadow: 10px 0px 0px 0px rgb(131, 224, 224);
+    height: auto;
+}
+
+.practice-container:focus {
+    background-color: Aqua;
+}
+
+.practice-input {
+    position: absolute;
+    /* display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
+    opacity:0.01; 
+    margin-top: -20px;
 }
-
-.practice-interface input {
-    width: 800px;
-    min-height: 30px;   
-}
-
 
 .word-correct {
     font-weight: bold;
