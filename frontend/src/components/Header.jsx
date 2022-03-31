@@ -10,8 +10,7 @@ function Header() {
   // State variables for language dropdown menu
   const dropdownRef = useRef(null);
   const [isActive, setIsActive] = useDetectOutsideClick(dropdownRef, false);
-    const onClick = () => setIsActive(!isActive);
-
+  const onClick = () => setIsActive(!isActive);
 
   return (
     <div className="header-top">

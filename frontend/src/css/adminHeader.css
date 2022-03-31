@@ -1,0 +1,25 @@
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    background-color: #24292F;
+    letter-spacing: 1px;
+    padding: 10px;
+    color: white;
+}
+
+.admin-header a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.admin-header h2 {
+    font-weight: 400;
+    padding-left: 20px;
+    padding-right: 20px;
+
+}
+
+.admin-header span {
+    font-weight: 300;
+    font-size: 18px;
+}

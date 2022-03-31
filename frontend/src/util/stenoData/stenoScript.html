@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, intital-scale=1.0">
+  <link rel="stylesheet" href="stenoPro.css">
+  <title>Demo</title>
+</head>
+<body>
+<div id="wrapper">
+  <header>
+    <h1>Demo</h1>
+  </header>
+  <main>
+    <br>
+    Set Speed: Min = 60 | Max = 300 <input type="text" min="60" max = 300 id="speedNumber" value="60">
+    <br>
+    <p id="error"></p>
+    <button onclick="WPMchanged()">Set Speed</button>
+    <br>
+    <p>Please Select a list:</p>
+    <input type="radio" id="stenoWords" name="fav_language" value="Words">
+    <label for="stenoWords">Words</label><br>
+    <input type="radio" id="stenoNumbers" name="fav_language" value="Numbers">
+    <label for="stenoNumbers">Numbers</label><br>
+    <input type="radio" id="stenoPhrases" name="fav_language" value="Phrases">
+    <label for="stenoPhrases">Phrases</label><br>
+    <input type="radio" id="stenoStates" name="fav_language" value="States">
+    <label for="stenoStates">States</label><br>
+    <input type="radio" id="stenoYears" name="fav_language" value="Years">
+    <label for="stenoYears">Years</label><br>
+    <br>
+    <button onclick="loadSelection()">Clear Selection</button>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div>
+      <p id="words"></p>
+      <p id="inlinePhrases"></p>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+  </main>
+
+  <footer>
+
+  </footer>
+  <script src="speedPro.js"></script>
+  <script src="stenoData.js"></script>
+  <script src="numbers.js"></script>
+  <script src="phrases.js"></script>
+  <script src="states.js"></script>
+  <script src="years.js"></script>
+
+  <script>
+
+    function stenoWordsSelected() {
+      convertToArray(stenoData);
+      testDisplaySpeed(finalArray, WPM);
+    }
+
+    function stenoPhraseSelected() {
+      convertToArray(phrases);
+      testDisplaySpeed(finalArray, WPM);
+    }
+
+    function stenoNumbersSelected() {
+      convertToArray(numbers);
+      testDisplaySpeed(finalArray, WPM);
+    }
+
+    function stenoStatesSelected() {
+      convertToArray(states);
+      testDisplaySpeed(finalArray, WPM);
+    }
+
+    function stenoYearsSelected() {
+      convertToArray(years);
+      testDisplaySpeed(finalArray, WPM);
+    }
+
+    function WPMchanged() {
+      WPM = document.getElementById("speedNumber").value;
+      if (WPM < 60) {
+        WPM = 60;
+      } else if (WPM > 300) {
+        WPM = 300;
+      } else if (WPM % 1 !== 0) {
+        WPM = Math.floor(WPM);
+      }
+      document.getElementById("speedNumber").value = WPM;
+    }
+
+    function loadSelection() {
+      location.reload();
+      document.getElementById("speedNumber").value = WPM;
+    }
+
+    function createEventListeners() {
+      let wordSelect = document.getElementById("stenoWords");
+      if (wordSelect.addEventListener) {
+        wordSelect.addEventListener("change", stenoWordsSelected, false);
+      }
+
+      let phraseSelect = document.getElementById("stenoPhrases");
+      if (phraseSelect.addEventListener) {
+        phraseSelect.addEventListener("change", stenoPhraseSelected, false);
+      }
+
+      let numbersSelected = document.getElementById("stenoNumbers");
+      if (numbersSelected.addEventListener) {
+        numbersSelected.addEventListener("change", stenoNumbersSelected, false);
+      }
+
+      let statesSelected = document.getElementById("stenoStates");
+      if (statesSelected.addEventListener) {
+        statesSelected.addEventListener("change", stenoStatesSelected, false);
+      }
+
+      let yearsSelected = document.getElementById("stenoYears");
+      if (yearsSelected.addEventListener) {
+        yearsSelected.addEventListener("change", stenoYearsSelected, false);
+      }
+    }
+    window.addEventListener("load", createEventListeners, false);
+    window.onload = function() {
+      WPM = 60;
+      document.getElementById("speedNumber").innerHTML = WPM.toString();
+    };
+  </script>
+</div>
+</body>
+</html>

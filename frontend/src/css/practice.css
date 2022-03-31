@@ -1,6 +1,6 @@
 .practice-root {
     flex: 1;
-    padding: 10px 60px 10px;
+    padding: 0px 60px 0px;
 }
 
 .practice-block {
@@ -47,8 +47,8 @@
 
 .metronome-button {
     position: absolute;
-    -ms-transform: translateY(135%);
-    transform: translateY(135%);
+    -ms-transform: translateY(65%);
+    transform: translateY(65%);
     height: 80px;
 }
 
