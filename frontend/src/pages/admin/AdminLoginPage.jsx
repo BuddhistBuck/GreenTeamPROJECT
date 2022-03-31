@@ -1,40 +1,32 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 import AdminHeader from "../../components/AdminHeader";
-import "../../css/login.css";
-import { loginUser, useAuthState, useAuthDispatch } from "../../context";
-import { useHistory } from "react-router-dom";
+import "../../css/adminLogin.css";
+import { loginAdmin, useAuthDispatch } from "../../context";
 
-export default function AdminLogin(props) {
+export default function AdminLoginPage(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  let history = useHistory();
-
+  const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useAuthDispatch();
-  const { loading, errorMessage } = useAuthState();
 
-  const HandleFormSubmit = (e) => {
+  const HandleFormSubmit = async (e) => {
     e.preventDefault();
     let payload = { username, password };
+    e.target.reset();
 
     try {
-      let response = loginUser(dispatch, payload);
-      if (!response) {
-        return;
-      } else {
-        history.push("/admin/home");
-      }
+      loginAdmin(dispatch, payload);
     } catch (error) {
-      console.log(error);
+      setErrorMessage("Unable to sign in");
     }
   };
 
   return (
     <>
-      <AdminHeader sidebar/>
-
-      <div className="login">
+      <AdminHeader sidebar />
+      
+      <div className="admin-login">
+        <div style={{ height: "40px" }} />
         <form onSubmit={HandleFormSubmit}>
           <label htmlFor="username">
             <p>Username</p>
@@ -55,11 +47,16 @@ export default function AdminLogin(props) {
           </label>
           <div style={{ height: "15px" }}></div>
 
-          {/* {errorMessage && <span className="form-error">{errorMessage}</span>} */}
-          <br />
-          <button disabled={isSubmitting}>
-            {isSubmitting ? "Loading..." : "Login"}
-          </button>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+            }}
+          >
+            {errorMessage && <span className="form-error">{errorMessage}</span>}
+            <button>Login</button>
+          </div>
         </form>
       </div>
     </>

@@ -1,0 +1,13 @@
+.account-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0px 140px 60px;
+}
+
+.account-block {
+}
+
+.account-option {
+  display: flex;
+  flex-direction: row;
+}

@@ -1,8 +1,7 @@
 import React from "react";
-import Layout from "../components/Layout";
 import errorImg from "../util/images/404.png";
 
-function NotFound(props) {
+export default function NotFoundPage(props) {
   return (
       <div
         style={{
@@ -30,5 +29,3 @@ function NotFound(props) {
       </div>
   );
 }
-
-export default NotFound;

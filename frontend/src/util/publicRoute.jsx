@@ -1,8 +1,6 @@
 import { Route, Redirect } from "react-router-dom";
 
-function PublicRoute({ children, isAuthenticated, ...rest }) {
-  console.log(isAuthenticated);
-
+function PublicRoute({ children, isAuthenticated, isAdmin, ...rest }) {
   return (
     <Route
       {...rest}

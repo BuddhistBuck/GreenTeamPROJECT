@@ -8,9 +8,9 @@ function HomePage(props) {
       <h1>Welcome to Court Reporter Pro</h1>
       <img src={logo} alt="" width="200px" />
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <a href="/sign-up">Sign Up</a>
+        <a href="/signup">Sign Up</a>
         <br />
-        <a href="/log-in">Log In</a>
+        <a href="/login">Log In</a>
         <br />
         <a href="/admin">Admin</a>
       </div>

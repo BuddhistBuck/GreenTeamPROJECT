@@ -34,3 +34,9 @@ a:active {
   text-decoration: none;
   color: inherit;
 }
+
+
+a,
+a label {
+    cursor: pointer;
+}

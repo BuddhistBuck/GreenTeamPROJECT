@@ -22,13 +22,13 @@ import { marks } from "../util/sliderValues";
 
 const theme = createTheme({
   palette: {
-    primary: { main: "#419999" },
+    primary: { main: "#007ea7" },
   },
 });
 
 const muiTheme = createTheme({
   palette: {
-    primary: { main: "#419999" },
+    primary: { main: "#007ea7" },
   },
 });
 

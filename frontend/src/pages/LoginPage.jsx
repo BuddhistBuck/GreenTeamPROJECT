@@ -1,51 +1,47 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
-import AdminHeader from "../components/AdminHeader";
-import "../css/login.css";
-import { loginUser, useAuthState, useAuthDispatch } from "../context";
-import { useHistory } from "react-router-dom";
+import "../css/userLogin.css";
+import { loginUser, useAuthDispatch } from "../context";
 import logo from "../util/images/logo.gif";
 
 export default function LoginPage(props) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  let history = useHistory();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const dispatch = useAuthDispatch();
-  const { loading, errorMessage } = useAuthState();
 
-  const HandleFormSubmit = (e) => {
+  const HandleFormSubmit = async (e) => {
     e.preventDefault();
-    let payload = { username, password };
+    let payload = { email, password };
+    e.target.reset();
 
     try {
-      let response = loginUser(dispatch, payload);
-      if (!response) {
-        return;
-      } else {
-        history.push("/");
-      }
+      loginUser(dispatch, payload);
     } catch (error) {
-      console.log(error);
+      setErrorMessage("Invalid username or password. Please try again.");
     }
   };
 
   return (
-    <>
-      <div className="login">
+    <div>
+      <div className="user-background-image" />
+      <div style={{ height: "40px" }} />
+      <div className="user-login">
+        <div style={{ height: "40px" }} />
+
         {/* img from https://www.flaticon.com/free-icon/typewriter_387124?related_id=387124&origin=tag# */}
-        <img src={logo} alt="" width="200px" />
+        <img src={logo} alt="" width="150em" />
 
         <h3>Court Reporter Pro</h3>
 
         <form onSubmit={HandleFormSubmit}>
           <label htmlFor="username">
-            <p>Username</p>
+            <p>Email</p>
             <input
               type="text"
-              placeholder="Enter username ..."
-              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter email ..."
+              onChange={(e) => setEmail(e.target.value)}
             />
           </label>
           <div style={{ height: "15px" }}></div>
@@ -67,16 +63,26 @@ export default function LoginPage(props) {
               Forgot Password
             </a>
           </div>
-          {/* {errorMessage && <span className="form-error">{errorMessage}</span>} */}
           <br />
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <button disabled={isSubmitting}>
-              {isSubmitting ? "Loading..." : "Login"}
-            </button>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+            }}
+          >
+            {errorMessage && <span className="form-error">{errorMessage}</span>}
+            <button>Login</button>
           </div>
-          <br />
         </form>
+        <div style={{ height: "60px" }} />
       </div>
-    </>
+      <div style={{ height: "40px" }} />
+
+      <footer className="user-login-footer">
+        <p style={{ paddingLeft: "20px" }}>Court Reporter Pro</p>
+        <p style={{ paddingRight: "20px" }}>All Rights Reserved</p>
+      </footer>
+    </div>
   );
 }

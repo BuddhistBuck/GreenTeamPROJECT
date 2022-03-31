@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { BrowserRouter, Switch } from "react-router-dom";
 import { AuthProvider } from "./context/context";
 import PrivateRoute from "./util/privateRoute";
@@ -10,17 +10,25 @@ import HomePage from "./pages/HomePage";
 import PracticePage from "./pages/PracticePage";
 import LoginPage from "./pages/LoginPage";
 import AccountSettingsPage from "./pages/AccountSettingsPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 // Admin Pages
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminHome from "./pages/admin/AdminHome";
-import ManageLists from "./pages/admin/ManageLists";
-import ManageUsers from "./pages/admin/ManageUsers";
-import NotFound from "./pages/NotFound";
+import AdminLoginPage from "./pages/admin/AdminLoginPage";
+import AdminHomePage from "./pages/admin/AdminHomePage";
+import ManageListsPage from "./pages/admin/ManageListsPage";
+import ManageUsersPage from "./pages/admin/ManageUsersPage";
 
-function App() {
-  const isAuthenticated = () => {
+export default function App() {
+  const isUser = () => {
     if (localStorage.getItem("currentUser")) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const isAdmin = () => {
+    if (localStorage.getItem("currentAdmin")) {
       return true;
     } else {
       return false;
@@ -31,53 +39,51 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Switch>
-          <PrivateRoute exact path="/" isAuthenticated={!isAuthenticated()}>
+          <PublicRoute exact path="/" isAuthenticated={!isUser}>
             <HomePage />
-          </PrivateRoute>
-          <PublicRoute exact path="/practice" isAuthenticated={isAuthenticated()}>
-            <PracticePage />
           </PublicRoute>
-          <PublicRoute exact path="/login">
+          <PublicRoute exact path="/login" isAuthenticated={!isUser}>
             <LoginPage />
           </PublicRoute>
-          <PublicRoute exact path="/admin">
-            <AdminLogin />
+          <PrivateRoute exact path="/practice" isAuthenticated={isUser}>
+            <PracticePage />
+          </PrivateRoute>
+          <PrivateRoute exact path="/account" isAuthenticated={isUser}>
+            <AccountSettingsPage />
+          </PrivateRoute>
+
+          {/* Admin Routes */}
+          <PublicRoute exact path="/admin" isAuthenticated={!isAdmin}>
+            <AdminLoginPage />
           </PublicRoute>
           <PrivateRoute
             exact
-            path="/account"
-            isAuthenticated={isAuthenticated()}
+            path="/admin/documentation"
+            isAuthenticated={isAdmin}
           >
-            <AccountSettingsPage />
+            <AdminHomePage />
           </PrivateRoute>
           <PrivateRoute
             exact
-            path="/admin/home"
-            isAuthenticated={isAuthenticated()}
+            path="/admin/lists"
+            isAuthenticated={isAdmin}
           >
-            <AdminHome />
+            <ManageListsPage />
           </PrivateRoute>
           <PrivateRoute
             exact
-            path="/admin/manage-lists"
-            isAuthenticated={isAuthenticated()}
+            path="/admin/users"
+            isAuthenticated={isAdmin}
           >
-            <ManageLists />
+            <ManageUsersPage />
           </PrivateRoute>
-          <PrivateRoute
-            exact
-            path="/admin/manage-users"
-            isAuthenticated={isAuthenticated()}
-          >
-            <ManageUsers />
-          </PrivateRoute>
+
+          {/* Page Not Found Route */}
           <PublicRoute exact path="/*">
-            <NotFound />
+            <NotFoundPage />
           </PublicRoute>
         </Switch>
       </BrowserRouter>
     </AuthProvider>
   );
 }
-
-export default App;

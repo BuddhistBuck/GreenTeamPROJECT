@@ -10,7 +10,6 @@ const dbConfig = require("./db/knex");
 
 // Import route runctions
 const dbList = require("./db/listItems");
-const dbUser = require("./db/users");
 
 // Initialize app tools
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -54,18 +53,6 @@ app.patch("/listItems/:id", async (req, res) => {
   res.status(200).json({ id });
 });
 
-// Create user
-// TODO: implement delete users operation
-// TODO: implement update users operation (change password, change email, change payment)
-app.post("/user", async (req, res, err) => {
-  const user = await dbUser.createUser(req.body);
-  if (user) {
-    return res.status(200).json({ success: "true" });
-  } else if (err) {
-    return res.status(400).json({ success: "false", error: err });
-  }
-});
-
 // Create admin
 app.post("/admin", (request, response, next) => {
   bcrypt.hash(request.body.password, 10).then((hashedPassword) => {
@@ -75,14 +62,14 @@ app.post("/admin", (request, response, next) => {
         password_digest: hashedPassword,
       })
       .returning(["id", "username"])
-      .then((users) => {
-        response.json(users[0]);
+      .then((admins) => {
+        response.json(admins[0]);
       })
       .catch((error) => response.json({ error }));
   });
 });
 
-// Admin signin
+// Admin login
 app.post("/admin-login", (request, response, next) => {
   db("admins")
     .where({ username: request.body.username })
@@ -114,8 +101,50 @@ app.post("/admin-login", (request, response, next) => {
     });
 });
 
-// User signin
-app.post("/user-login", async (req, res) => {});
-
 // User signup
-app.post("/user-signup", async (req, res) => {});
+app.post("/user", (request, response, next) => {
+  bcrypt.hash(request.body.password, 10).then((hashedPassword) => {
+    return db("users")
+      .insert({
+        email: request.body.email,
+        password_digest: hashedPassword,
+      })
+      .returning(["id", "email"])
+      .then((users) => {
+        response.json(users[0]);
+      })
+      .catch((error) => response.json({ error }));
+  });
+});
+
+// User login
+app.post("/user-login", (request, response, next) => {
+  db("users")
+    .where({ email: request.body.email })
+    .first()
+    .then((user) => {
+      if (!user) {
+        response.status(401).json({
+          error: "No user by that name",
+        });
+      } else {
+        return bcrypt
+          .compare(request.body.password, user.password_digest)
+          .then((isAuthenticated) => {
+            if (!isAuthenticated) {
+              response.status(401).json({
+                error: "Unauthorized Access!",
+              });
+            } else {
+              return jwt.sign(
+                user,
+                process.env.TOKEN_SECRET,
+                (error, token) => {
+                  response.status(200).json({ token });
+                }
+              );
+            }
+          });
+      }
+    });
+});
