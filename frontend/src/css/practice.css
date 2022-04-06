@@ -1,127 +1,139 @@
 .practice-root {
-    flex: 1;
-    padding: 0px 60px 0px;
+  flex: 1;
+  padding: 0px 60px 0px;
 }
 
 .practice-block {
-    /* border: 1px solid grey; */
-    border-radius: 5px;
-    padding: 10px 20px 10px;
+  border-radius: 5px;
+  padding: 10px 20px 10px;
 }
 
 .practice-block a {
-    color: #77939c
-    /* border: 2px solid rgb(111, 155, 155); */
-    /* padding: 2px; */
+  color: #77939c;
 }
 
 .practice-block a:hover {
-    color: grey;
+  color: grey;
 }
 
 .practice-top-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .practice-top-buttons button {
-	background: none;
-	color: inherit;
-	border: none;
-	padding: 0;
-	font: inherit;
-	/* cursor: pointer; */
-	outline: inherit;
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  /* cursor: pointer; */
+  outline: inherit;
 }
 
+/* ---- PRACTICE MENU ---- */
+.practice-menu-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 40px 0px 40px;
+  height: auto;
+}
+
+.practice-menu-select-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 40px 10px;
+}
 
 /* ---- WPM INTERFACE ---- */
 
 .practice-wpm {
-    display: flex;
-    flex-direction: row;
-    max-height: 100px;
-    max-height: 300px;
+  display: flex;
+  flex-direction: row;
+  max-height: 100px;
+  max-height: 300px;
 }
 
 .metronome-button {
-    position: absolute;
-    -ms-transform: translateY(65%);
-    transform: translateY(65%);
-    height: 80px;
+  position: absolute;
+  -ms-transform: translateY(65%);
+  transform: translateY(65%);
+  height: 80px;
 }
 
 /* ---- PRACTICE INTERFACE ---- */
 
 .practice-container {
-    flex: 1;
-    padding-left: 40px;
-    padding-right: 40px;
-    border-right: 6px solid rgb(49, 170, 170);
-    box-shadow: 10px 0px 0px 0px rgb(131, 224, 224);
-    height: auto;
+  flex: 1;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-right: 6px solid rgb(49, 170, 170);
+  box-shadow: 10px 0px 0px 0px rgb(131, 224, 224);
+  height: auto;
 }
 
 .practice-container:focus {
-    background-color: Aqua;
+  background-color: Aqua;
 }
 
 .practice-input {
-    position: absolute;
-    /* display: flex;
+  position: absolute;
+  /* display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center; */
-    opacity:0.01; 
-    margin-top: -20px;
+  opacity: 0.01;
+  margin-top: -20px;
 }
 
 .word-correct {
-    font-weight: bold;
-    color: green;
+  font-weight: bold;
+  color: green;
 }
 
 .word-incorrect {
-    font-weight: bold;
-    color: red;
+  font-weight: bold;
+  color: red;
 }
 
 .word-active {
-    font-weight: bold;
-    background-color: #eeeef0;
+  font-weight: bold;
+  background-color: #eeeef0;
 }
 
 /* ---- PRACTICE DROPDOWN ---- */
 
 .select-list-dropdown {
-    position: absolute;
-    background-color: #f9f9f9;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    visibility: hidden;
-    color: black;
-    margin-top: 2%;
-    transform: translateX(1150%);
-
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  visibility: hidden;
+  color: black;
+  margin-top: 2%;
+  transform: translateX(1150%);
 }
 
 .select-list-dropdown.active {
-    display: flex;
-    flex-direction: column;
-    visibility: visible;
+  display: flex;
+  flex-direction: column;
+  visibility: visible;
 }
 
-
 .select-list-dropdown a {
-    color: black;
-    padding: 10px;
+  color: black;
+  padding: 10px;
 }
 
 .select-list-dropdown div {
-    display: flex;
-    flex-direction: row;
-    padding: 10px;
-
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
 }
 
-.select-list-dropdown a:hover {background-color: #f1f1f1; color: black;}
+.select-list-dropdown a:hover {
+  background-color: #f1f1f1;
+  color: black;
+}

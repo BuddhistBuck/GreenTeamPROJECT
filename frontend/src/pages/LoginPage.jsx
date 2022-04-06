@@ -24,17 +24,16 @@ export default function LoginPage(props) {
   };
 
   return (
-    <div>
+    <>
       <div className="user-background-image" />
       <div style={{ height: "40px" }} />
       <div className="user-login">
         <div style={{ height: "40px" }} />
 
-        {/* img from https://www.flaticon.com/free-icon/typewriter_387124?related_id=387124&origin=tag# */}
+        {/* SOURCE: https://www.flaticon.com/free-icon/typewriter_387124?related_id=387124&origin=tag# */}
         <img src={logo} alt="" width="150em" />
 
         <h3>Court Reporter Pro</h3>
-
         <form onSubmit={HandleFormSubmit}>
           <label htmlFor="username">
             <p>Email</p>
@@ -48,14 +47,14 @@ export default function LoginPage(props) {
           <label htmlFor="email">
             <p>Password</p>
             <input
-              type="text"
+              type="password"
               placeholder="Enter password ..."
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
           <div style={{ height: "15px" }}></div>
           <div style={{ textAlign: "center" }}>
-            <a style={{ fontSize: "13px" }} href="/#">
+            <a style={{ fontSize: "13px" }} href="/signup">
               Create Account
             </a>
             &nbsp; • &nbsp;
@@ -83,6 +82,6 @@ export default function LoginPage(props) {
         <p style={{ paddingLeft: "20px" }}>Court Reporter Pro</p>
         <p style={{ paddingRight: "20px" }}>All Rights Reserved</p>
       </footer>
-    </div>
+    </>
   );
 }

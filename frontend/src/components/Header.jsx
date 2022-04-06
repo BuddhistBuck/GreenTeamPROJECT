@@ -8,7 +8,6 @@ import es from "../util/images/es.svg";
 import { useDetectOutsideClick } from "../util/detectOutsideClick";
 import { logoutUser, useAuthDispatch } from "../context";
 import typewriter from "../util/images/keyboard.png";
-
 import "../css/header.css";
 
 function Header() {
@@ -21,17 +20,15 @@ function Header() {
 
   function logout() {
     logoutUser(dispatch);
-    history.push("/login");
+    history.push("/practice");
   }
 
   return (
     <div className="header-top">
-      <a href="/practice">
-        <div className="header-logo">
-          <img src={typewriter} alt=""></img>&nbsp;&nbsp;&nbsp;&nbsp;
-          <h1>Court Reporter Pro</h1>
-        </div>
-      </a>
+      <div className="header-logo">
+        <img src={typewriter} alt=""></img>&nbsp;&nbsp;&nbsp;&nbsp;
+        <h1>Court Reporter Pro</h1>
+      </div>
 
       {/* BsGlobe */}
       {/* AiFillCaretDown */}

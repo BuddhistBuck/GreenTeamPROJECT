@@ -24,7 +24,6 @@ export default function AdminLoginPage(props) {
   return (
     <>
       <AdminHeader sidebar />
-      
       <div className="admin-login">
         <div style={{ height: "40px" }} />
         <form onSubmit={HandleFormSubmit}>
@@ -40,7 +39,7 @@ export default function AdminLoginPage(props) {
           <label htmlFor="email">
             <p>Password</p>
             <input
-              type="text"
+              type="password"
               placeholder="Enter password ..."
               onChange={(e) => setPassword(e.target.value)}
             />

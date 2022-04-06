@@ -91,6 +91,9 @@ app.post("/admin-login", (request, response, next) => {
               return jwt.sign(
                 admin,
                 process.env.TOKEN_SECRET,
+                {
+                  expiresIn: "12h", // expires in 12 hours
+                },
                 (error, token) => {
                   response.status(200).json({ token });
                 }
@@ -139,6 +142,9 @@ app.post("/user-login", (request, response, next) => {
               return jwt.sign(
                 user,
                 process.env.TOKEN_SECRET,
+                {
+                  expiresIn: "12h", // expires in 12 hours
+                },
                 (error, token) => {
                   response.status(200).json({ token });
                 }

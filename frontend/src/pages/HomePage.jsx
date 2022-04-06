@@ -1,4 +1,6 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
+
 import logo from "../util/images/logo.gif";
 import "../css/home.css";
 
@@ -8,11 +10,11 @@ function HomePage(props) {
       <h1>Welcome to Court Reporter Pro</h1>
       <img src={logo} alt="" width="200px" />
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <a href="/signup">Sign Up</a>
+        <NavLink exact to="/signup">Sign Up</NavLink>
         <br />
-        <a href="/login">Log In</a>
+        <NavLink exact to="/practice">Log In</NavLink>
         <br />
-        <a href="/admin">Admin</a>
+        <NavLink exact to="/admin">Admin</NavLink>
       </div>
     </div>
   );

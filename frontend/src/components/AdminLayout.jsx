@@ -58,19 +58,6 @@ const AdminLayout = ({ selectedLink, children }) => {
       default:
         return (
           <></>
-          // <ul>
-          //   <a href="/admin/documentation">
-          //     <li className="sidebar-inactive">Documentation </li>
-          //   </a>
-          //   <br />
-          //   <a href="/admin/users">
-          //     <li className="sidebar-inactive">Users </li>
-          //   </a>
-          //   <br />
-          //   <a href="/admin/lists">
-          //     <li className="sidebar-inactive">Lists </li>
-          //   </a>
-          // </ul>
         );
     }
   }

@@ -4,6 +4,7 @@ import { initialState, AuthReducer } from "./reducer";
 export const AuthStateContext = createContext();
 export const AuthDispatchContext = createContext();
 
+// AuthState utilized for Provider
 export function useAuthState() {
   const context = React.useContext(AuthStateContext);
   if (context === undefined) {
@@ -13,6 +14,7 @@ export function useAuthState() {
   return context;
 }
 
+// Login Dispatch
 export function useAuthDispatch() {
   const context = React.useContext(AuthDispatchContext);
   if (context === undefined) {
@@ -22,6 +24,7 @@ export function useAuthDispatch() {
   return context;
 }
 
+// Practice Page Dispatch
 export const AuthProvider = ({ children }) => {
   const [user, dispatch] = useReducer(AuthReducer, initialState);
 

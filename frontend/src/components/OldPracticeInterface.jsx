@@ -5,7 +5,7 @@ import Timer from "./Timer";
 import { s } from "../util/buildList";
 import "../css/practice.css";
 
-export default function TestPracticeInterface() {
+export default function OldPracticeInterface() {
   // Practice interface utilities
   const [startCounting, setStartCounting] = useState(false);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
