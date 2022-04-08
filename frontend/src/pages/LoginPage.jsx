@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
-import "../css/userLogin.css";
 import { loginUser, useAuthDispatch } from "../context";
 import logo from "../util/images/logo.gif";
+import "../css/userLogin.css";
 
 export default function LoginPage(props) {
   const [email, setEmail] = useState("");

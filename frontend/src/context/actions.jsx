@@ -15,6 +15,22 @@ export async function loginUser(dispatch, loginPayload) {
   }
 }
 
+
+export async function createAccountUser(dispatch, loginPayload) {
+  try {
+    dispatch({ type: "REQUEST_CREATE_ACCOUNT" });
+
+    Axios.post("http://localhost:4000/user", loginPayload).then((res) => {
+      dispatch({ type: "CREATE_ACCOUNT_SUCCESS", payload: res.data });
+      // localStorage.setItem("currentUser", JSON.stringify(res.data));
+      // window.location.href = "/login";
+      return res.data;
+    });
+  } catch (error) {
+    dispatch({ type: "CREATE_ACCOUNT_ERROR", error: error });
+  }
+}
+
 export async function loginAdmin(dispatch, loginPayload) {
   try {
     dispatch({ type: "REQUEST_LOGIN" });

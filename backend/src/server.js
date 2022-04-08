@@ -109,10 +109,14 @@ app.post("/user", (request, response, next) => {
   bcrypt.hash(request.body.password, 10).then((hashedPassword) => {
     return db("users")
       .insert({
+        firstName: request.body.firstName,
+        lastName: request.body.lastName,
         email: request.body.email,
+        occupation: request.body.occupation,
         password_digest: hashedPassword,
+        isSubscribed: request.body.isSubscribed,
       })
-      .returning(["id", "email"])
+      .returning(["id", "firstName", "lastName", "email", "occupation", "isSubscribed"])
       .then((users) => {
         response.json(users[0]);
       })
