@@ -27,28 +27,11 @@ app.set("view engine", "jade");
 
 // Initialize app tools
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({ origin: "*" }));
 dotenv.config();
 
-// Set CORS options
-var corsOptions = {
-  origin: `*`,
-  optionSuccessStatus: 200,
-};
-
 // Listen to port with CORS options
-app.listen(process.env.PORT, cors(corsOptions), () => {
-  console.log(`CORS-enabled web server listening on port ${process.env.PORT}!`);
-});
-
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+app.listen(process.env.PORT);
 
 // Set MongoDB database
 mongoose
