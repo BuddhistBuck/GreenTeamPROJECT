@@ -41,6 +41,12 @@ app.listen(process.env.PORT, cors(corsOptions), () => {
   console.log(`CORS-enabled web server listening on port ${process.env.PORT}!`);
 });
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // Set MongoDB database
 mongoose
   .connect(
