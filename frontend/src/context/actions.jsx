@@ -4,7 +4,10 @@ export async function loginUser(dispatch, loginPayload) {
   try {
     dispatch({ type: "REQUEST_LOGIN" });
 
-    Axios.post("http://localhost:4000/user-login", loginPayload).then((res) => {
+    Axios.post(
+      "https://court-reporter-pro.herokuapp.com/account/user-login",
+      loginPayload
+    ).then((res) => {
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
       localStorage.setItem("currentUser", JSON.stringify(res.data));
       window.location.href = "/practice";
@@ -15,12 +18,14 @@ export async function loginUser(dispatch, loginPayload) {
   }
 }
 
-
 export async function createAccountUser(dispatch, loginPayload) {
   try {
     dispatch({ type: "REQUEST_CREATE_ACCOUNT" });
 
-    Axios.post("http://localhost:4000/user", loginPayload).then((res) => {
+    Axios.post(
+      "https://court-reporter-pro.herokuapp.com/account/user",
+      loginPayload
+    ).then((res) => {
       dispatch({ type: "CREATE_ACCOUNT_SUCCESS", payload: res.data });
       // localStorage.setItem("currentUser", JSON.stringify(res.data));
       // window.location.href = "/login";
@@ -35,14 +40,15 @@ export async function loginAdmin(dispatch, loginPayload) {
   try {
     dispatch({ type: "REQUEST_LOGIN" });
 
-    Axios.post("http://localhost:4000/admin-login", loginPayload).then(
-      (res) => {
-        dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
-        localStorage.setItem("currentAdmin", JSON.stringify(res.data));
-        window.location.href = "/admin/documentation";
-        return res.data;
-      }
-    );
+    Axios.post(
+      "https://court-reporter-pro.herokuapp.com/account/admin-login",
+      loginPayload
+    ).then((res) => {
+      dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
+      localStorage.setItem("currentAdmin", JSON.stringify(res.data));
+      window.location.href = "/admin/documentation";
+      return res.data;
+    });
   } catch (error) {
     dispatch({ type: "LOGIN_ERROR", error: error });
   }
