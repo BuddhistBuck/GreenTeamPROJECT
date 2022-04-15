@@ -5,7 +5,7 @@ export async function loginUser(dispatch, loginPayload) {
     dispatch({ type: "REQUEST_LOGIN" });
 
     Axios.post(
-      "https://court-reporter-pro.herokuapp.com/account/user-login",
+      "https://court-reporter-pro.herokuapp.com/user-login",
       loginPayload
     ).then((res) => {
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
@@ -23,7 +23,7 @@ export async function createAccountUser(dispatch, loginPayload) {
     dispatch({ type: "REQUEST_CREATE_ACCOUNT" });
 
     Axios.post(
-      "https://court-reporter-pro.herokuapp.com/account/user",
+      "https://court-reporter-pro.herokuapp.com/user-create",
       loginPayload
     ).then((res) => {
       dispatch({ type: "CREATE_ACCOUNT_SUCCESS", payload: res.data });
