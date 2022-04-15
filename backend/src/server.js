@@ -27,7 +27,7 @@ app.set("view engine", "jade");
 
 // Initialize app tools
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "http://localhost:3000" }));
 dotenv.config();
 
 // Set CORS options
@@ -41,9 +41,12 @@ app.listen(process.env.PORT, cors(corsOptions), () => {
   console.log(`CORS-enabled web server listening on port ${process.env.PORT}!`);
 });
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
 
