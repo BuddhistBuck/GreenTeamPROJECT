@@ -56,3 +56,55 @@ exports.userListCreate = (req, res, next) => {
     }
   );
 };
+
+
+exports.userUpdateList = (req, res, next) => {
+  const { listTitle, newListTerms } = req.body;
+
+  UserList.findOneAndUpdate(
+    {
+      listTitle: listTitle,
+    },
+    {
+      $push: { listTerms: newListTerms },
+    },
+    { returnOriginal: false },
+    (res, err) => {
+      if (res) {
+        res.status(200).json({ res });
+      } else {
+        return console.log(err);
+      }
+    }
+  );
+};
+
+exports.userGetListByTitle = (req, res, next) => {
+  const { listTitle } = req.body;
+
+  UserList.find(
+    {
+      listTitle: listTitle,
+    },
+    (err, docs) => {
+      if (docs) {
+        res.status(200).send({ docs });
+      } else {
+        res.json({ err });
+      }
+    }
+  );
+};
+
+exports.userDeleteList = async (req, res) => {
+  const { name } = req.body;
+  const deleteList = await UserList.findOneAndDelete({
+    name: name,
+  });
+
+  if (deleteList) {
+    res.status(201).json({ message: "List removed" });
+  } else {
+    res.status(400).json({ message: "Something went wrong" });
+  }
+};

@@ -82,13 +82,30 @@ exports.adminGetListByTitle = (req, res, next) => {
 };
 
 exports.adminDeleteList = async (req, res) => {
-  const { name } = req.body;
-  const deleteList = await AdminList.findOneAndDelete({
-    name: name,
+  const { listTitle } = req.body;
+  const deleteListObj = await AdminList.findOneAndDelete({
+    listTitle: listTitle,
   });
 
-  if (deleteList) {
+  if (deleteListObj) {
     res.status(201).json({ message: "List removed" });
+  } else {
+    res.status(400).json({ message: "Something went wrong" });
+  }
+};
+
+// Deletes a single list term from database
+exports.adminDeleteListTerms = async (req, res) => {
+  const { listTitle, listTerm } = req.body;
+  const deleteListTerm = await AdminList.updateOne(
+    {
+      listTitle: listTitle,
+    },
+    { $pull: { listTerms: listTerm } }
+  );
+
+  if (deleteListTerm) {
+    res.status(201).json({ message: "List term removed" });
   } else {
     res.status(400).json({ message: "Something went wrong" });
   }

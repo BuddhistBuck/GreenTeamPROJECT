@@ -30,7 +30,6 @@ export default function ManageListsPage(props) {
   const [list, setList] = useState([]);
   const [listObjects, setListObjects] = useState([]);
   const [newList, setNewList] = useState("");
-
   const [currentList, setCurrentList] = useState(rows(list));
   const [listAddModal, setListAddModal] = useState(list);
   const [inputFieldCounter, setInputFieldCounter] = useState(1);
@@ -40,6 +39,7 @@ export default function ManageListsPage(props) {
   const [newListSuccessMessage, setNewListSuccessMessage] = useState("");
   const [newListFailedMessage, setNewListFailedMessage] = useState("");
   const [listToAddNewTerms, setListToAddNewTerms] = useState("");
+  const [refreshCount, setRefreshCount] = useState();
 
   const selectListMain = (event) => {
     setListAddModal(event.target.value);
@@ -99,35 +99,33 @@ export default function ManageListsPage(props) {
   const [selectedListTermsForDelete, setSelectedListTermsForDelete] =
     useState(false);
 
-  const deleteListTerms = (title, terms) => {
-    Axios.post(`${baseUrl}/`, {}).then(() => {});
-    console.log("List terms deleted");
-  };
-
   const deleteLists = (obj) => {
     for (let i = 0; i < obj.length; i++) {
       const requestOne = Axios.post(`${baseUrl}/admin-delete-list-object`, {
         name: obj[i],
       }).then((res) => {
-        console.log(res);
+        // console.log(res);
       });
 
       const requestTwo = Axios.post(`${baseUrl}/admin-delete-list`, {
-        listTitle: obj[i],
+        listTitle: obj[i].toLowerCase(),
       }).then((res) => {
-        console.log(res);
+        // console.log(res);
       });
 
       Axios.all([requestOne, requestTwo])
         .then(
           Axios.spread((...res) => {
-            const responseOne = res[0];
-            const responseTwo = res[1];
+            // eslint-disable-next-line no-unused-vars
+            let responseOne = res[0];
+            // eslint-disable-next-line no-unused-vars
+            let responseTwo = res[1];
           })
         )
         .catch((err) => {
           console.log(err);
         });
+      setRefreshCount(refreshCount + 1);
     }
   };
 
@@ -252,6 +250,20 @@ export default function ManageListsPage(props) {
     handleCloseAddList();
   };
 
+  const deleteListTerms = (obj, title) => {
+    console.log(`title: ${title}, obj: ${obj}`);
+    for (let i = 0; i < obj.length; i++) {
+      Axios.post(`${baseUrl}/admin-delete-list-term`, {
+        listTitle: title,
+        listTerm: obj[i],
+      })
+        .then((res) => console.log(res))
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
   let inputFields = generateInputFields(inputFieldCounter);
 
   useEffect(() => {
@@ -273,14 +285,19 @@ export default function ManageListsPage(props) {
       }
       setListObjects(arr);
     });
-  }, [baseUrl]);
+    setRefreshCount(refreshCount + 1);
+  }, [baseUrl, refreshCount]);
 
   const [selectionModel, setSelectionModel] = useState([]);
 
   useEffect(() => {
     let selections = [];
     for (let i = 0; i < selectionModel.length; i++) {
-      selections.push(currentList[i].term);
+      for (let j = 0; j < currentList.length; j++) {
+        if (selectionModel[i] === currentList[j].id) {
+          selections.push(currentList[j].term);
+        }
+      }
     }
     setSelectedListTermsForDelete(selections);
   }, [selectionModel]);
@@ -612,14 +629,16 @@ export default function ManageListsPage(props) {
                   {selectedListTermsForDelete.length > 0 ? (
                     selectedListTermsForDelete.map((data, index) => {
                       return (
-                        <p key={index}>
+                        <span key={index}>
                           <strong>{data}</strong>
-                        </p>
+                          <br />
+                        </span>
                       );
                     })
                   ) : (
                     <p>No list items selected</p>
                   )}
+                  <br />
                 </Typography>
                 <Button
                   variant="contained"
@@ -652,7 +671,7 @@ export default function ManageListsPage(props) {
                 <Button
                   variant="contained"
                   onClick={() => {
-                    // deleteListTerms(selectedListTermsForDelete);
+                    deleteListTerms(selectedListTermsForDelete, list);
                     handleCloseConfirmDeleteListTerms();
                     handleCloseDeleteListTerms();
                   }}

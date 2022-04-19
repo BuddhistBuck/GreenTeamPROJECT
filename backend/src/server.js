@@ -39,6 +39,7 @@ const {
   adminUpdateList,
   adminGetListByTitle,
   adminDeleteList,
+  adminDeleteListTerms,
 } = require("./controllers/adminList");
 
 // Initialize server
@@ -70,11 +71,18 @@ app.get("/test", (req, res) => {
 });
 
 // User routes
+app.get("/users", getAllUsers);
 app.post("/user-create", userCreate);
 app.post("/user-login", userLogin);
 app.get("/user-verify", userVerify);
 app.get("/user-logout", userLogout);
-app.get("/users", getAllUsers);
+// app.post("/user-list-object-create", userListObjectCreate);
+// app.post("/user-list-create", userListCreate);
+// app.get("/user-get-lists", userGetLists);
+// app.post("/user-get-list-by-title", userGetListByTitle);
+// app.post("/user-update-list", userUpdateList);
+// app.post("/user-delete-list", userDeleteList);
+// app.post("/user-delete-list-object", userDeleteListObject);
 
 // Admin routes
 app.post("/admin-create", adminCreate);
@@ -88,3 +96,4 @@ app.post("/admin-get-list-by-title", adminGetListByTitle);
 app.post("/admin-update-list", adminUpdateList);
 app.post("/admin-delete-list", adminDeleteList);
 app.post("/admin-delete-list-object", adminDeleteListObject);
+app.post("/admin-delete-list-term", adminDeleteListTerms);

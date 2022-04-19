@@ -34,12 +34,12 @@ exports.adminListObjectCreate = (req, res) => {
         if (err) {
           return res.send({
             success: false,
-            message: "Error: category creation attempted, server error",
+            message: "Error: List object creation attempted, server error",
           });
         }
         return res.send({
           success: true,
-          message: "Category created",
+          message: "List object created created",
         });
       });
     }
