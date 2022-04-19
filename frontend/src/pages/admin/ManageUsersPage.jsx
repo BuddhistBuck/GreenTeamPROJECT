@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Axios from "axios";
 import AdminLayout from "../../components/AdminLayout";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -10,8 +11,25 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 
-
 export default function ManageUsersPage(props) {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    Axios.get("http://localhost:4000/users").then((res) => {
+      let users = formatUserData(res.data);
+      setUsers(users);
+    });
+  }, []);
+
+  function formatUserData(users) {
+    let res = [];
+    let obj = Object.entries(users);
+    for (let i = 0; i < Object.keys(users).length; i++) {
+      res.push(obj[i][1]);
+    }
+    return res;
+  }
+
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.black,
@@ -32,33 +50,6 @@ export default function ManageUsersPage(props) {
     },
   }));
 
-  function createData(
-    firstName,
-    lastName,
-    subscriptionStatus,
-    email,
-    listCount,
-    lastLoggedIn
-  ) {
-    return {
-      firstName,
-      lastName,
-      subscriptionStatus,
-      email,
-      listCount,
-      lastLoggedIn,
-    };
-  }
-
-  const rows = [
-    createData("John", "Doe", "active", "johndoe@email.com", 3, "12:00 am EST"),
-    createData("John", "Doe", "active", "johndoe@email.com", 3, "12:00 am EST"),
-    createData("John", "Doe", "active", "johndoe@email.com", 3, "12:00 am EST"),
-    createData("John", "Doe", "active", "johndoe@email.com", 3, "12:00 am EST"),
-    createData("John", "Doe", "active", "johndoe@email.com", 3, "12:00 am EST"),
-    createData("John", "Doe", "active", "johndoe@email.com", 3, "12:00 am EST"),
-  ];
-
   return (
     <AdminLayout sidebar selectedLink="users">
       <h2>Manage Users</h2>
@@ -78,23 +69,33 @@ export default function ManageUsersPage(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <StyledTableRow key={row.firstName}>
-                <StyledTableCell align="right">{row.firstName}</StyledTableCell>
-                <StyledTableCell align="right">{row.lastName}</StyledTableCell>
-                <StyledTableCell align="right">{row.email}</StyledTableCell>
-                <StyledTableCell align="right">
-                  {row.subscriptionStatus}
-                </StyledTableCell>
-                <StyledTableCell align="right">{row.listCount}</StyledTableCell>
-                <StyledTableCell align="right">
-                  {row.lastLoggedIn}
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <Button>Send Email</Button>
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
+            {users ? (
+              users.map((row) => (
+                <StyledTableRow key={row.firstName}>
+                  <StyledTableCell align="right">
+                    {row.firstName}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.lastName}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">{row.email}</StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.subscriptionStatus ? "Subscribed" : "Not Subscribed"}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.listCount}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.lastLoggedIn}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    <Button>Send Email</Button>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))
+            ) : (
+              <></>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

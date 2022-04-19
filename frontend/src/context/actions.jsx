@@ -1,13 +1,12 @@
+/* eslint-disable no-unused-vars */
 import Axios from "axios";
+import { baseUrl } from "../util/baseUrl";
 
 export async function loginUser(dispatch, loginPayload) {
   try {
     dispatch({ type: "REQUEST_LOGIN" });
 
-    Axios.post(
-      "https://court-reporter-pro.herokuapp.com/user-login",
-      loginPayload
-    ).then((res) => {
+    Axios.post(`${baseUrl}/user-login`, loginPayload).then((res) => {
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
       localStorage.setItem("currentUser", JSON.stringify(res.data));
       window.location.href = "/practice";
@@ -22,10 +21,7 @@ export async function createAccountUser(dispatch, loginPayload) {
   try {
     dispatch({ type: "REQUEST_CREATE_ACCOUNT" });
 
-    Axios.post(
-      "https://court-reporter-pro.herokuapp.com/user-create",
-      loginPayload
-    ).then((res) => {
+    Axios.post(`${baseUrl}/user-create`, loginPayload).then((res) => {
       dispatch({ type: "CREATE_ACCOUNT_SUCCESS", payload: res.data });
       // localStorage.setItem("currentUser", JSON.stringify(res.data));
       // window.location.href = "/login";
@@ -40,10 +36,7 @@ export async function loginAdmin(dispatch, loginPayload) {
   try {
     dispatch({ type: "REQUEST_LOGIN" });
 
-    Axios.post(
-      "https://court-reporter-pro.herokuapp.com/account/admin-login",
-      loginPayload
-    ).then((res) => {
+    Axios.post(`${baseUrl}/admin-login`, loginPayload).then((res) => {
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
       localStorage.setItem("currentAdmin", JSON.stringify(res.data));
       window.location.href = "/admin/documentation";

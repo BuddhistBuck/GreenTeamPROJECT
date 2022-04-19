@@ -25,10 +25,10 @@ function Header() {
 
   return (
     <div className="header-top">
-      <div className="header-logo">
+      <a href="/practice" className="header-logo">
         <img src={typewriter} alt=""></img>&nbsp;&nbsp;&nbsp;&nbsp;
         <h1>Court Reporter Pro</h1>
-      </div>
+      </a>
 
       {/* BsGlobe */}
       {/* AiFillCaretDown */}

@@ -26,13 +26,6 @@ exports.userCreate = (req, res, next) => {
     });
   }
 
-  if (!occupation) {
-    return res.send({
-      success: false,
-      message: "error: Occupation cannot be blank",
-    });
-  }
-
   if (!password) {
     return res.send({
       success: false,
@@ -98,6 +91,17 @@ exports.userLogin = (req, res, next) => {
       message: "Error: password cannot be blank.",
     });
   }
+
+  User.findOneAndUpdate(
+    {
+      email: email,
+    },
+    {
+      $set: {
+        "lastLoggedIn.$": Date.now(),
+      },
+    }
+  );
 
   User.find(
     {
@@ -209,3 +213,36 @@ exports.userLogout = (req, res, next) => {
     }
   );
 };
+
+exports.getAllUsers = async (req, res) => {
+  User.find({}, function (err, users) {
+    var userMap = {};
+
+    users.forEach(function (user) {
+      userMap[(user.firstName, user.lastName, user.email, user.occupation)] =
+        user;
+    });
+
+    res.send(userMap);
+  });
+};
+
+// exports.userUpdateLastLoggedIn = (req, res, next) => {
+//   const { email } = req.body;
+
+//   User.findOneAndUpdate(
+//     {
+//       email: email,
+//     },
+//     {
+//       $set: {
+//         "lastLoggedIn.$": Date.now(),
+//       },
+//     }
+//   ).exec((error, user) => {
+//     if (error) return res.status(400).json({ error });
+//     if (user) {
+//       res.status(201).json({ user });
+//     }
+//   });
+// };

@@ -6,7 +6,6 @@ const adminSchema = new mongoose.Schema(
     username: {
       type: String,
       required: true,
-      // index: true,
       trim: true,
       unique: true,
       min: 3,
