@@ -8,8 +8,8 @@ import logo from "../util/images/logo.gif";
 export default function SignUpPage(props) {
   const [inputFirstName, setInputFirstName] = useState("");
   const [inputLastName, setInputLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [occupation, setOccupation] = useState("");
+  const [inputEmail, setInputEmail] = useState("");
+  const [inputOccupation, setInputOccupation] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [submitSuccess, setSubmitSucccess] = useState(false);
@@ -26,14 +26,19 @@ export default function SignUpPage(props) {
         inputFirstName.charAt(0).toUpperCase() + inputFirstName.slice(1);
       let lastName =
         inputLastName.charAt(0).toUpperCase() + inputLastName.slice(1);
-      let isSubscribed = false;
+      let occupation =
+        inputOccupation.charAt(0).toUpperCase() + inputOccupation.slice(1);
 
       try {
         let payload = {
-          email,
+          firstName: firstName,
+          lastName: lastName,
+          occupation: occupation,
+          email: inputEmail,
+          password: password,
         };
 
-        // createAccountUser(dispatch, payload);
+        createAccountUser(dispatch, payload);
         setSubmitSucccess(true);
       } catch (error) {
         setErrorMessage("ERROR: ", error);
@@ -102,7 +107,7 @@ export default function SignUpPage(props) {
                     <input
                       type="text"
                       placeholder="Enter email ..."
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => setInputEmail(e.target.value)}
                     />
                   </label>
                   <label htmlFor="occupation">
@@ -110,7 +115,7 @@ export default function SignUpPage(props) {
                     <input
                       type="text"
                       placeholder="Enter occupation ..."
-                      onChange={(e) => setOccupation(e.target.value)}
+                      onChange={(e) => setInputOccupation(e.target.value)}
                     />
                   </label>
                 </div>

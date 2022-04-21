@@ -47,7 +47,7 @@ exports.userCreate = (req, res, next) => {
       } else if (previousUsers.length > 0) {
         return res.send({
           success: false,
-          message: "Error: Account already exists.",
+          message: "Error: Email already exists.",
         });
       }
 
@@ -62,7 +62,7 @@ exports.userCreate = (req, res, next) => {
         if (err) {
           return res.send({
             success: false,
-            message: "Error: account creation attempted, server error",
+            message: err,
           });
         }
         return res.send({

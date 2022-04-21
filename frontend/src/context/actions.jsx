@@ -23,8 +23,7 @@ export async function createAccountUser(dispatch, loginPayload) {
 
     Axios.post(`${baseUrl}/user-create`, loginPayload).then((res) => {
       dispatch({ type: "CREATE_ACCOUNT_SUCCESS", payload: res.data });
-      // localStorage.setItem("currentUser", JSON.stringify(res.data));
-      // window.location.href = "/login";
+      console.log(res.data);
       return res.data;
     });
   } catch (error) {

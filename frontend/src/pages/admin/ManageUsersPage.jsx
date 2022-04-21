@@ -10,12 +10,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+import { baseUrl } from "../../util/baseUrl";
 
 export default function ManageUsersPage(props) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    Axios.get("http://localhost:4000/users").then((res) => {
+    Axios.get(`${baseUrl}/users`).then((res) => {
       let users = formatUserData(res.data);
       setUsers(users);
     });
