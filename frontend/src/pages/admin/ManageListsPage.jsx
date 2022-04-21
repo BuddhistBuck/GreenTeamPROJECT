@@ -6,7 +6,7 @@ import AdminLayout from "../../components/AdminLayout";
 import { DataGrid } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import { ThemeProvider } from "@mui/material/styles";
-import muiTheme from "../../util/muiTheme";
+import themeDefault from "../../util/themeDefault";
 import Modal from "@mui/material/Modal";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -348,7 +348,7 @@ export default function ManageListsPage(props) {
             </FormControl>
           </Box>
 
-          <ThemeProvider theme={muiTheme}>
+          <ThemeProvider theme={themeDefault}>
             &nbsp;
             <Button
               style={{ height: "55px" }}
@@ -500,10 +500,7 @@ export default function ManageListsPage(props) {
                   Confirm
                 </Button>
                 &nbsp;
-                <Button
-                  variant="contained"
-                  onClick={() => handleCloseDeleteList()}
-                >
+                <Button variant="contained" onClick={handleCloseDeleteList}>
                   Cancel
                 </Button>
               </Box>

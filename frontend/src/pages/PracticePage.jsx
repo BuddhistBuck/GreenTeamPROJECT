@@ -8,6 +8,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import Layout from "../components/Layout";
 import PracticeInterface from "../components/PracticeInterface";
+import { baseUrl } from "../util/baseUrl";
+import Axios from "axios";
 import "../css/practice.css";
 
 // Practice page style components and utilities
@@ -19,9 +21,21 @@ import { MetronomeClearIcon, MetronomeSolidIcon } from "../util/metronomeIcons";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import Button from "@mui/material/Button";
-import muiTheme from "../util/muiTheme";
-import { useDetectOutsideClick } from "../util/detectOutsideClick";
+import themeDefault from "../util/themeDefault";
+import themeUserList from "../util/themeUserList";
 import { marks } from "../util/sliderValues";
+import {
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 
 const lists = [
   { category: "Words", data: "stenoData" },
@@ -31,13 +45,6 @@ const lists = [
   { category: "Years", data: "years" },
 ];
 
-const userLists = [
-  { category: "Exam 1", data: ["Exam 1"] },
-  { category: "Exam 2", data: ["Exam 2"] },
-  { category: "Practice 1", data: ["Practice 1"] },
-  { category: "Practice 2", data: ["Practice 2"] },
-];
-
 /**
  * @component Home Page and Practice Session
  **/
@@ -45,13 +52,197 @@ export default function PraticePage() {
   // 'Select List' dropdown utilities
   const dropdownRef = useRef(null);
   const [selectedOption, setSelectedOption] = useState("");
-  const [listItems, setListItems] = useState("stenoData");
+  const [listItems, setListItems] = useState([]);
+  const [userLists, setUserLists] = useState([]);
   const [metronomeIcon, setMetronomeIcon] = useState(true);
   const [selectedButton, setSelectedButton] = useState(false);
   const [wpm, setWpm] = useState(200);
   const [begin, setBegin] = useState(false);
   const [view, setView] = useState("Words");
+  const [refreshCount, setRefreshCount] = useState();
 
+  // Get user lists
+  useEffect(() => {
+    Axios.post(`${baseUrl}/user-get-lists`, {
+      email: JSON.parse(localStorage.getItem("currentUser")).email,
+    }).then((res) => {
+      let arr = [];
+      for (let i = 0; i < res.data.lists.length; i++) {
+        arr.push(res.data.lists[i].name);
+      }
+      setUserLists(arr);
+    });
+  }, [baseUrl, refreshCount]);
+
+  // Create / Edit Lists Modals
+  const [openCreateList, setOpenCreateList] = useState(false);
+  const handleOpenCreateList = () => setOpenCreateList(true);
+  const handleCloseCreateList = () => setOpenCreateList(false);
+
+  const [openEditList, setOpenEditList] = useState(false);
+  const handleOpenEditList = () => setOpenEditList(true);
+  const handleCloseEditList = () => setOpenEditList(false);
+
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [inputFieldCounter, setInputFieldCounter] = useState(1);
+  const [inputFieldErrorMessage, setInputFieldErrorMessage] = useState("");
+  const [listToEdit, setListToEdit] = useState("");
+  const [newList, setNewList] = useState("");
+
+  const [openConfirmDeleteList, setOpenConfirmDeleteList] = useState(false);
+  const handleOpenConfirmDeleteList = () => {
+    setOpenConfirmDeleteList(true);
+    handleCloseEditList();
+  };
+  const handleCloseConfirmDeleteList = () => setOpenConfirmDeleteList(false);
+
+  const deleteLists = (obj) => {
+    for (let i = 0; i < obj.length; i++) {
+      const requestOne = Axios.post(`${baseUrl}/admin-delete-list-object`, {
+        name: obj[i],
+      }).then((res) => {
+        // console.log(res);
+      });
+
+      const requestTwo = Axios.post(`${baseUrl}/admin-delete-list`, {
+        listTitle: obj[i].toLowerCase(),
+      }).then((res) => {
+        // console.log(res);
+      });
+
+      Axios.all([requestOne, requestTwo])
+        .then(
+          Axios.spread((...res) => {
+            // eslint-disable-next-line no-unused-vars
+            let responseOne = res[0];
+            // eslint-disable-next-line no-unused-vars
+            let responseTwo = res[1];
+          })
+        )
+        .catch((err) => {
+          console.log(err);
+        });
+      setRefreshCount(refreshCount + 1);
+    }
+  };
+
+  function generateInputFields(count) {
+    let fields = [];
+    for (let i = 0; i < count; i++) {
+      let name = "box" + i;
+      fields.push(
+        <TextField
+          required
+          id={name}
+          label="Term"
+          variant="outlined"
+          size="small"
+        />
+      );
+    }
+    return fields;
+  }
+
+  let inputFields = generateInputFields(inputFieldCounter);
+
+  useEffect(() => {
+    if (inputFieldCounter > 8) {
+      setInputFieldCounter(8);
+      setInputFieldErrorMessage(
+        "Cannot have fields greater than 8. Please save and try again."
+      );
+    }
+    setTimeout(() => setInputFieldErrorMessage(""), 10000);
+  }, [inputFieldCounter]);
+
+  const saveNewList = () => {
+    const requestOne = Axios.post(`${baseUrl}/user-list-object-create`, {
+      email: JSON.parse(localStorage.getItem("currentUser")).email,
+      name: newList,
+    }).then((res) => {
+      if (res) {
+        setSuccessMessage("New list created");
+      } else {
+        setErrorMessage("Server error");
+      }
+    });
+
+    const requestTwo = Axios.post(`${baseUrl}/user-list-create`, {
+      email: JSON.parse(localStorage.getItem("currentUser")).email,
+      listTitle: newList,
+    }).then((res) => {
+      if (res) {
+        setSuccessMessage("New list successfully created");
+      } else {
+        setErrorMessage("Server error");
+      }
+    });
+
+    if (newList) {
+      Axios.all([requestOne, requestTwo])
+        .then(
+          Axios.spread((...res) => {
+            const responseOne = res[0];
+            const responseTwo = res[1];
+          })
+        )
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    setNewList("");
+    setTimeout(() => {
+      setSuccessMessage("");
+      setErrorMessage("");
+    }, 10000);
+    handleCloseCreateList();
+  };
+
+  const saveNewListTerms = () => {
+    let items = [];
+    for (let i = 0; i < inputFieldCounter; i++) {
+      items.push(document.getElementById("box" + i).value);
+    }
+    setInputFieldCounter(0);
+
+    Axios.post(`${baseUrl}/user-update-list`, {
+      email: JSON.parse(localStorage.getItem("currentUser")).email,
+      listTitle: listToEdit.toLowerCase(),
+      newListTerms: items,
+    })
+      .then((err) => {
+        setSuccessMessage("List updated");
+        if (err) {
+          setErrorMessage("Server error");
+        }
+      })
+      .catch((err) => console.log(err));
+
+    setSuccessMessage("List updated");
+
+    setTimeout(() => {
+      setSuccessMessage("");
+      setErrorMessage("");
+    }, 8000);
+    handleCloseEditList();
+  };
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
+
+  // Button group selection
   const handleChange = (event, nextView) => {
     setView(nextView);
   };
@@ -76,7 +267,7 @@ export default function PraticePage() {
         >
           <div className="practice-menu-select-list">
             <h3>Select List</h3>
-            <ThemeProvider theme={muiTheme}>
+            <ThemeProvider theme={themeDefault}>
               <ToggleButtonGroup
                 orientation="vertical"
                 value={view}
@@ -105,23 +296,33 @@ export default function PraticePage() {
                 <div
                   style={{ height: "20px", borderBottom: "1px solid #d9d9d9" }}
                 ></div>
-
-                {userLists.map((option, index) => {
-                  return (
-                    <ToggleButton
-                      size="large"
-                      variant="outlined"
-                      key={index}
-                      value={option.data}
-                      onClick={() => {
-                        setListItems(option.category);
-                      }}
-                      color={selectedButton ? "primary" : "secondary"}
-                    >
-                      {option.category}
-                    </ToggleButton>
-                  );
-                })}
+                {userLists.length > 0 ? (
+                  userLists.map((option, index) => {
+                    return (
+                      <ToggleButton
+                        size="large"
+                        variant="outlined"
+                        key={index + lists.length}
+                        value={option}
+                        onClick={() => {
+                          Axios.post(`${baseUrl}/user-get-list-by-title`, {
+                            email: JSON.parse(
+                              localStorage.getItem("currentUser")
+                            ).email,
+                            listTitle: option.toLowerCase(),
+                          }).then((res) => {
+                            setListItems(res.data.docs[0].listTerms);
+                          });
+                        }}
+                        color={selectedButton ? "primary" : "secondary"}
+                      >
+                        {option}
+                      </ToggleButton>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
               </ToggleButtonGroup>
             </ThemeProvider>
             <div style={{ height: "20px" }}></div>
@@ -144,7 +345,7 @@ export default function PraticePage() {
             }}
           >
             <br />
-            <ThemeProvider theme={muiTheme}>
+            <ThemeProvider theme={themeUserList}>
               <Slider
                 defaultValue={wpm}
                 orientation="vertical"
@@ -157,11 +358,38 @@ export default function PraticePage() {
               />
             </ThemeProvider>
           </Box>
-          <div style={{ height: "70px" }} />
+          <div style={{ height: "60px" }} />
 
-          <ThemeProvider theme={muiTheme}>
+          <p style={{ color: "red" }}> {errorMessage}</p>
+          <p style={{ color: "#007EA7" }}> {successMessage}</p>
+
+          <ThemeProvider theme={themeUserList}>
             <Button
-              style={{ height: "150px" }}
+              style={{ height: "60px", width: "150px", color: "white" }}
+              variant="contained"
+              value=""
+              onClick={handleOpenCreateList}
+            >
+              Create List
+            </Button>
+          </ThemeProvider>
+          <div style={{ height: "10px" }} />
+
+          <ThemeProvider theme={themeUserList}>
+            <Button
+              style={{ height: "60px", width: "150px", color: "white" }}
+              variant="contained"
+              value=""
+              onClick={handleOpenEditList}
+            >
+              Edit List
+            </Button>
+          </ThemeProvider>
+          <div style={{ height: "10px" }} />
+
+          <ThemeProvider theme={themeDefault}>
+            <Button
+              style={{ height: "60px", width: "150px" }}
               variant="contained"
               value=""
               onClick={() => {
@@ -206,7 +434,7 @@ export default function PraticePage() {
               <div className="practice-wpm">
                 <div style={{ width: "50px" }} />
                 <div style={{ display: "flex", flexDirection: "column" }}>
-                  <ThemeProvider theme={muiTheme}>
+                  <ThemeProvider theme={themeDefault}>
                     <ToggleButton
                       variant="outlined"
                       onClick={() => handleMetronomeClick(false)}
@@ -222,18 +450,6 @@ export default function PraticePage() {
                 </div>
                 <div style={{ width: "50px" }} />
 
-                {/* ---- DELETE THIS ---- */}
-
-                {/* <div>
-                  {listItems.map((data) => {
-                    return (
-                      <>
-                        <p>{data}</p>
-                      </>
-                    );
-                  })}
-                </div> */}
-
                 {/* ---- DISPLAY LIST DATA ---- */}
                 <PracticeInterface wpm={wpm} listItems={listItems} />
                 <div style={{ width: "100px" }} />
@@ -245,6 +461,171 @@ export default function PraticePage() {
       ) : (
         <PracticeMenu />
       )}
+
+      {/* ------ */}
+      {/* Create List Modal */}
+      {/* ------ */}
+      <Modal
+        open={openCreateList}
+        onClose={handleCloseCreateList}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Create List
+          </Typography>
+          <br />
+          <TextField
+            required
+            id="standard-basic"
+            label="List Name"
+            variant="outlined"
+            size="small"
+            onChange={(e) => setNewList(e.target.value)}
+          />
+          &nbsp;
+          <Button variant="contained" onClick={saveNewList}>
+            Save
+          </Button>
+        </Box>
+      </Modal>
+
+      {/* ------ */}
+      {/* Edit List Modal */}
+      {/* ------ */}
+      <Modal
+        open={openEditList}
+        onClose={handleCloseEditList}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Edit List
+          </Typography>
+          <br />
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Select List</InputLabel>
+              <Select
+                value={listToEdit}
+                label="Select List"
+                onChange={(e) => setListToEdit(e.target.value)}
+              >
+                {userLists.length > 0 ? (
+                  userLists.map((data, index) => {
+                    return (
+                      <MenuItem key={index} value={data}>
+                        {data}
+                      </MenuItem>
+                    );
+                  })
+                ) : (
+                  <MenuItem></MenuItem>
+                )}
+              </Select>
+            </FormControl>
+          </Box>
+          <br />
+          <div className={{ display: "flex", flexDirection: "row" }}>
+            {inputFields.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    padding: "5px 0px 5px",
+                  }}
+                >
+                  <>{item}</>
+                </div>
+              );
+            })}
+
+            <p style={{ color: "red" }}>{inputFieldErrorMessage}</p>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                Add
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => {
+                    setInputFieldCounter(inputFieldCounter + 1);
+                  }}
+                >
+                  <AddCircleIcon />
+                </IconButton>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                Remove
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => {
+                    setInputFieldCounter(inputFieldCounter - 1);
+                  }}
+                >
+                  <RemoveCircleIcon />
+                </IconButton>
+              </div>
+            </div>
+          </div>
+          <br />
+          <Button variant="contained" onClick={saveNewListTerms}>
+            Save
+          </Button>
+          &nbsp;
+          <Button
+            variant="contained"
+            style={{ backgroundColor: "#d62828" }}
+            onClick={handleOpenConfirmDeleteList}
+          >
+            Delete List
+          </Button>
+        </Box>
+      </Modal>
+
+      {/* ------ */}
+      {/* Delete List Confirm Modal */}
+      {/* ------ */}
+      <Modal
+        open={openConfirmDeleteList}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Confirm delete list(s) &nbsp;
+          </Typography>
+          <br />
+          <Button
+            variant="contained"
+            onClick={() => {
+              handleCloseConfirmDeleteList();
+              deleteLists(listToEdit);
+              setRefreshCount(refreshCount + 1);
+            }}
+          >
+            Confirm
+          </Button>
+          &nbsp;
+          <Button variant="contained" onClick={handleCloseConfirmDeleteList}>
+            Cancel
+          </Button>
+        </Box>
+      </Modal>
     </Layout>
   );
 }

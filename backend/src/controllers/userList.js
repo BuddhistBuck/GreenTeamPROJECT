@@ -7,7 +7,7 @@ exports.userListCreate = (req, res, next) => {
   if (!email) {
     return res.send({
       success: false,
-      message: "error: userId cannot be blank",
+      message: "error: Email cannot be blank",
     });
   }
 
@@ -28,14 +28,8 @@ exports.userListCreate = (req, res, next) => {
           success: false,
           message: "Error: server error",
         });
-      } else if (previousUsers.length > 0) {
-        return res.send({
-          success: false,
-          message: "Error: Cannot find user",
-        });
-      }
-
-      // save the new user
+      } 
+      // Save new user list
       const list = new UserList();
       list.email = email;
       list.listTitle = listTitle;
@@ -56,7 +50,6 @@ exports.userListCreate = (req, res, next) => {
     }
   );
 };
-
 
 exports.userUpdateList = (req, res, next) => {
   const { listTitle, newListTerms } = req.body;
@@ -80,10 +73,11 @@ exports.userUpdateList = (req, res, next) => {
 };
 
 exports.userGetListByTitle = (req, res, next) => {
-  const { listTitle } = req.body;
+  const { email, listTitle } = req.body;
 
   UserList.find(
     {
+      email: email,
       listTitle: listTitle,
     },
     (err, docs) => {
@@ -97,9 +91,10 @@ exports.userGetListByTitle = (req, res, next) => {
 };
 
 exports.userDeleteList = async (req, res) => {
-  const { name } = req.body;
+  const { email, listTitle } = req.body;
   const deleteList = await UserList.findOneAndDelete({
-    name: name,
+    email: email,
+    listTitle: listTitle,
   });
 
   if (deleteList) {

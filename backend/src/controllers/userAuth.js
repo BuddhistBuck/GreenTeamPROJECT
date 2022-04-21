@@ -147,6 +147,7 @@ exports.userLogin = (req, res, next) => {
           success: true,
           message: "Valid sign in",
           token: doc._id,
+          email: email,
         });
       });
     }

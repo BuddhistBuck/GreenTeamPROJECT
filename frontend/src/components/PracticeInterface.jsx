@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { stenoData } from "../util/stenoData/stenoData";
-import { numbers } from "../util/stenoData/numbers";
-import { phrases } from "../util/stenoData/phrases";
-import { states } from "../util/stenoData/states";
-import { years } from "../util/stenoData/years";
 
 /**
  * @author Andrew
@@ -11,45 +6,24 @@ import { years } from "../util/stenoData/years";
  **/
 export default function PracticeInterface(props) {
   const { wpm, listItems } = props;
-  const [listData, setListData] = useState([]);
+  const [sessionComplete, setSessionComplete] = useState(false);
 
   useEffect(() => {
-    switch (listItems) {
-      case "stenoData":
-        setListData(stenoData);
-        break;
-      case "numbers":
-        setListData(numbers);
-        break;
-      case "phrases":
-        setListData(phrases);
-        break;
-      case "states":
-        setListData(states);
-        break;
-      case "years":
-        setListData(years);
-        break;
-      default:
-        setListData([]);
-        break;
+    if (listItems.length > 0) {
+      testDisplaySpeed(listItems, wpm);
     }
-  }, [listItems]);
+  }, [listItems, wpm]);
 
   async function testDisplaySpeed(finalArray, WPM) {
     let WPS = (60 / WPM) * 1000;
     let sleep = (millisecond) =>
       new Promise((whatIsDelay) => setTimeout(whatIsDelay, millisecond));
-    for (let i = 0, len = finalArray.length; i < len; i++) {
-      let numberOfWords = finalArray[i].split(" ").length;
-      let combinedWPS = WPS * numberOfWords;
+    for (let i = 0; i < finalArray.length; i++) {
       document.getElementById("words").innerHTML = finalArray[i];
-      await sleep(combinedWPS);
+      await sleep(WPS * finalArray[i].length);
     }
-  }
 
-  function stenoWordsSelected(data, speed) {
-    testDisplaySpeed(data, speed);
+    setSessionComplete(true);
   }
 
   return (
@@ -71,7 +45,11 @@ export default function PracticeInterface(props) {
           backgroundColor: "#e6e6e6",
         }}
       >
-        <h1 id="words">{stenoWordsSelected(listData, wpm)}</h1>
+        {!sessionComplete ? (
+          <h1 id="words">No words in this list</h1>
+        ) : (
+          <h1 style={{ color: "green" }}>Session Complete</h1>
+        )}
       </div>
     </div>
   );

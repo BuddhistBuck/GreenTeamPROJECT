@@ -2,7 +2,6 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 const mongoose = require("mongoose");
 const app = express();
 
@@ -13,7 +12,6 @@ const {
   userVerify,
   userLogout,
   getAllUsers,
-  userUpdateLastLoggedIn,
 } = require("./controllers/userAuth");
 
 const {
@@ -25,7 +23,9 @@ const {
 
 const {
   userListCreate,
-  userIncreaseListCount,
+  userGetListByTitle,
+  userUpdateList,
+  userDeleteList,
 } = require("./controllers/userList");
 
 const {
@@ -41,6 +41,12 @@ const {
   adminDeleteList,
   adminDeleteListTerms,
 } = require("./controllers/adminList");
+
+const {
+  userListObjectCreate,
+  userGetLists,
+  userDeleteListObject,
+} = require("./controllers/userListObject");
 
 // Initialize server
 app.use(express.json());
@@ -76,13 +82,13 @@ app.post("/user-create", userCreate);
 app.post("/user-login", userLogin);
 app.get("/user-verify", userVerify);
 app.get("/user-logout", userLogout);
-// app.post("/user-list-object-create", userListObjectCreate);
-// app.post("/user-list-create", userListCreate);
-// app.get("/user-get-lists", userGetLists);
-// app.post("/user-get-list-by-title", userGetListByTitle);
-// app.post("/user-update-list", userUpdateList);
-// app.post("/user-delete-list", userDeleteList);
-// app.post("/user-delete-list-object", userDeleteListObject);
+app.post("/user-list-object-create", userListObjectCreate);
+app.post("/user-list-create", userListCreate);
+app.post("/user-get-lists", userGetLists);
+app.post("/user-get-list-by-title", userGetListByTitle);
+app.post("/user-update-list", userUpdateList);
+app.post("/user-delete-list", userDeleteList);
+app.post("/user-delete-list-object", userDeleteListObject);
 
 // Admin routes
 app.post("/admin-create", adminCreate);

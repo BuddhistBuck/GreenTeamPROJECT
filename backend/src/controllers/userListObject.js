@@ -1,7 +1,7 @@
-const AdminListObject = require("../models/AdminListObjectModel");
+const UserListObject = require("../models/UserListObjectModel");
 
-exports.adminListObjectCreate = (req, res) => {
-  const { name } = req.body;
+exports.userListObjectCreate = (req, res) => {
+  const { email, name } = req.body;
 
   if (!name) {
     return res.send({
@@ -10,8 +10,16 @@ exports.adminListObjectCreate = (req, res) => {
     });
   }
 
-  AdminListObject.find(
+  if (!email) {
+    return res.send({
+      success: false,
+      message: "error: Enauk parameter cannot be blank",
+    });
+  }
+
+  UserListObject.find(
     {
+      email: email,
       name: name,
     },
     (err, previousListObject) => {
@@ -23,13 +31,14 @@ exports.adminListObjectCreate = (req, res) => {
       } else if (previousListObject.length > 0) {
         return res.send({
           success: false,
-          message: "Error: Admin list already exists.",
+          message: "Error: User list already exists.",
         });
       }
 
-      // Save the new user
-      const newList = new AdminListObject();
+      // Save the new list object
+      const newList = new UserListObject();
       newList.name = name;
+      newList.email = email;
       newList.save((err, user) => {
         if (err) {
           return res.send({
@@ -46,8 +55,10 @@ exports.adminListObjectCreate = (req, res) => {
   );
 };
 
-exports.adminGetLists = (req, res) => {
-  AdminListObject.find({}).exec((error, lists) => {
+exports.userGetLists = (req, res) => {
+  const { email } = req.body;
+
+  UserListObject.find({ email: email }).exec((error, lists) => {
     if (error) return res.status(400).json({ error });
     if (lists) {
       res.status(200).json({ lists });
@@ -55,9 +66,10 @@ exports.adminGetLists = (req, res) => {
   });
 };
 
-exports.adminDeleteListObject = async (req, res) => {
-  const { name } = req.body;
-  const deleteListObj = await AdminListObject.findOneAndDelete({
+exports.userDeleteListObject = async (req, res) => {
+  const { email, name } = req.body;
+  const deleteListObj = await UserListObject.findOneAndDelete({
+    email: email,
     name: name,
   });
 
