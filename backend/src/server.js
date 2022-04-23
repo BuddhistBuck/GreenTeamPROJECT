@@ -5,6 +5,11 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const app = express();
 
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || "0.0.0.0";
+
+app.listen(PORT, HOST, console.log(`Server started on ${HOST}:${PORT}`));
+
 // Import controllers
 const {
   userCreate,
@@ -12,27 +17,27 @@ const {
   userVerify,
   userLogout,
   getAllUsers,
-} = require("./controllers/userAuth");
+} = require("./controllers/UserAuth");
 
 const {
   adminCreate,
   adminLogin,
   adminVerify,
   adminLogout,
-} = require("./controllers/adminAuth");
+} = require("./controllers/AdminAuth");
 
 const {
   userListCreate,
   userGetListByTitle,
   userUpdateList,
   userDeleteList,
-} = require("./controllers/userList");
+} = require("./controllers/UserList");
 
 const {
   adminListObjectCreate,
   adminGetLists,
   adminDeleteListObject,
-} = require("./controllers/adminListObject");
+} = require("./controllers/AdminListObject");
 
 const {
   adminListCreate,
@@ -40,19 +45,17 @@ const {
   adminGetListByTitle,
   adminDeleteList,
   adminDeleteListTerms,
-} = require("./controllers/adminList");
+} = require("./controllers/AdminList");
 
 const {
   userListObjectCreate,
   userGetLists,
   userDeleteListObject,
-} = require("./controllers/userListObject");
+} = require("./controllers/UserListObject");
 
 //
 // Initialize server
 app.use(express.json());
-app.use(cors({ origin: "*" }));
-app.listen(process.env.PORT);
 
 // Set MongoDB database
 mongoose
@@ -64,11 +67,27 @@ mongoose
     }
   )
   .then(() => {
-    console.log(`Server and database connected on port ${process.env.PORT}`);
+    console.log(`Database connected`);
   })
   .catch((err) => {
     console.log(err);
   });
+
+app.use(cors());
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "DELETE, PUT");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  if ("OPTIONS" == req.method) {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // Test route
 app.get("/test", (req, res) => {

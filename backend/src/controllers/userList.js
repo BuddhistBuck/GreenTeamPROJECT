@@ -1,5 +1,5 @@
-const User = require("../models/userModel");
-const UserList = require("../models/userListModel");
+const User = require("../models/UserModel");
+const UserList = require("../models/UserListModel");
 
 exports.userListCreate = (req, res, next) => {
   const { email, listTitle, listTerms } = req.body;

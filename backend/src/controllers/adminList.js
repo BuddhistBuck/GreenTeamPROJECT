@@ -1,4 +1,4 @@
-const AdminList = require("../models/adminListModel");
+const AdminList = require("../models/AdminListModel");
 
 exports.adminListCreate = (req, res, next) => {
   const { listTitle, listTerms } = req.body;

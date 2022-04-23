@@ -1,5 +1,5 @@
-const User = require("../models/userModel");
-const UserSession = require("../models/userSessionModel");
+const User = require("../models/UserModel");
+const UserSession = require("../models/UserSessionModel");
 
 exports.userCreate = (req, res, next) => {
   const { body } = req;

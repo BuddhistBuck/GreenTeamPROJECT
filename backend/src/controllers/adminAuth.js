@@ -1,5 +1,5 @@
-const Admin = require("../models/adminModel");
-const AdminSession = require("../models/adminSessionModel");
+const Admin = require("../models/AdminModel");
+const AdminSession = require("../models/AdminSessionModel");
 
 exports.adminCreate = (req, res, next) => {
   const { body } = req;

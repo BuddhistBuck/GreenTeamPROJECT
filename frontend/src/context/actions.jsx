@@ -2,12 +2,18 @@
 import Axios from "axios";
 import { baseUrl } from "../util/baseUrl";
 
+let axiosConfig = {
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+  },
+};
+
 export async function loginUser(dispatch, loginPayload) {
   try {
     dispatch({ type: "REQUEST_LOGIN" });
 
     Axios.post(`${baseUrl}/user-login`, loginPayload).then((res) => {
-      dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
+      dispatch({ type: "LOGIN_SUCCESS", payload: res.data }, axiosConfig);
       localStorage.setItem("currentUser", JSON.stringify(res.data));
       window.location.href = "/practice";
       return res.data;
