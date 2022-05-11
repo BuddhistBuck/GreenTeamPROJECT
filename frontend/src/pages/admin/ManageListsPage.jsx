@@ -36,19 +36,34 @@ export default function ManageListsPage(props) {
   const [inputFieldErrorMessage, setInputFieldErrorMessage] = useState("");
   const [inputFieldIndex, setInputFieldIndex] = useState(1);
   const [newListTerms, setNewListTerms] = useState([]);
-  const [newListSuccessMessage, setNewListSuccessMessage] = useState("");
-  const [newListFailedMessage, setNewListFailedMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [failedMessage, setFailedMessage] = useState("");
   const [listToAddNewTerms, setListToAddNewTerms] = useState("");
   const [refreshCount, setRefreshCount] = useState();
+
+  // Create event log
+  function createEventLog(eventType, eventDetails, admin) {
+    Axios.post(`${baseUrl}/admin-create-event-log`, {
+      eventType: eventType,
+      eventDetails: eventDetails,
+      admin: admin,
+    }).then((res) => {
+      console.log("Successfully created log");
+    });
+  }
 
   const selectListMain = (event) => {
     setListAddModal(event.target.value);
     setList(event.target.value);
 
     Axios.post(`${baseUrl}/admin-get-list-by-title`, {
-      listTitle: event.target.value.toLowerCase(),
+      listTitle: event.target.value,
     }).then((res) => {
-      setCurrentList(rows(Object.entries(res.data)[0][1][0].listTerms));
+      try {
+        setCurrentList(rows(Object.entries(res.data)[0][1][0].listTerms));
+      } catch (error) {
+        setCurrentList([]);
+      }
     });
   };
 
@@ -64,13 +79,14 @@ export default function ManageListsPage(props) {
   const handleOpenAddList = () => setOpenAddList(true);
   const handleCloseAddList = () => setOpenAddList(false);
 
-  const [openDeleteTerms, setOpenDeleteListTerms] = useState(false);
+  const [openDeleteListTerms, setOpenDeleteListTerms] = useState(false);
   const handleOpenDeleteListTerms = () => setOpenDeleteListTerms(true);
   const handleCloseDeleteListTerms = () => setOpenDeleteListTerms(false);
 
   const [openConfirmDeleteListTerms, setOpenConfirmDeleteListTerms] =
     useState(false);
   const handleOpenConfirmDeleteListTerms = () => {
+    handleCloseDeleteListTerms();
     if (selectedListTermsForDelete.length > 0) {
       setOpenConfirmDeleteListTerms(true);
     } else {
@@ -108,10 +124,16 @@ export default function ManageListsPage(props) {
       });
 
       const requestTwo = Axios.post(`${baseUrl}/admin-delete-list`, {
-        listTitle: obj[i].toLowerCase(),
+        listTitle: obj[i],
       }).then((res) => {
         // console.log(res);
       });
+
+      const requestThree = createEventLog(
+        "Deleted list",
+        `List Name: ${obj[i]}`,
+        JSON.parse(localStorage.getItem("currentAdmin")).admin
+      );
 
       Axios.all([requestOne, requestTwo])
         .then(
@@ -120,6 +142,8 @@ export default function ManageListsPage(props) {
             let responseOne = res[0];
             // eslint-disable-next-line no-unused-vars
             let responseTwo = res[1];
+            // eslint-disable-next-line no-unused-vars
+            let responseThree = res[3];
           })
         )
         .catch((err) => {
@@ -192,17 +216,19 @@ export default function ManageListsPage(props) {
       items.push(document.getElementById("box" + i).value);
     }
     setInputFieldCounter(0);
-
     Axios.post(`${baseUrl}/admin-update-list`, {
-      listTitle: listToAddNewTerms.toLowerCase(),
+      listTitle: listToAddNewTerms,
       newListTerms: items,
     })
-      .then((res, err) => {
-        if (res) {
-          // console.log(res);
-        }
-      })
+      .then((res, err) => {})
       .catch((err) => console.log(err));
+    createEventLog(
+      "Added terms to list",
+      `List Name: ${listToAddNewTerms}  ||  List Terms: ${items}`,
+      JSON.parse(localStorage.getItem("currentAdmin")).admin
+    );
+    setSuccessMessage("Terms added to list");
+    setRefreshCount(refreshCount + 1);
     handleCloseAddItems();
   };
 
@@ -211,9 +237,15 @@ export default function ManageListsPage(props) {
       name: newList,
     }).then((res) => {
       if (res) {
-        setNewListSuccessMessage("New list successfully created");
+        setSuccessMessage("New list successfully created, refresh to see changes");
+        createEventLog(
+          "Created list",
+          `List Name: ${newList}`,
+          JSON.parse(localStorage.getItem("currentAdmin")).admin
+        );
+        setRefreshCount(refreshCount + 1);
       } else {
-        setNewListFailedMessage("Failed to add new list");
+        setFailedMessage("Failed to add new list");
       }
     });
 
@@ -221,9 +253,9 @@ export default function ManageListsPage(props) {
       listTitle: newList,
     }).then((res) => {
       if (res) {
-        // setNewListSuccessMessage("New list successfully created");
+        // setSuccessMessage("New list successfully created");
       } else {
-        // setNewListFailedMessage("Failed to add new list");
+        // setFailedMessage("Failed to add new list");
       }
     });
 
@@ -244,8 +276,8 @@ export default function ManageListsPage(props) {
 
     setNewList("");
     setTimeout(() => {
-      setNewListSuccessMessage("");
-      setNewListFailedMessage("");
+      setSuccessMessage("");
+      setFailedMessage("");
     }, 8000);
     handleCloseAddList();
   };
@@ -262,6 +294,12 @@ export default function ManageListsPage(props) {
           console.log(err);
         });
     }
+
+    createEventLog(
+      "Deleted list terms",
+      `List Name: ${title}  ||  List Terms: ${obj}`,
+      JSON.parse(localStorage.getItem("currentAdmin")).admin
+    );
   };
 
   let inputFields = generateInputFields(inputFieldCounter);
@@ -279,16 +317,19 @@ export default function ManageListsPage(props) {
   useEffect(() => {
     Axios.get(`${baseUrl}/admin-get-lists`).then((res) => {
       let arr = [];
-      let obj = Object.entries(res.data)[0][1];
-      for (let i = 0; i < obj.length; i++) {
-        arr.push(obj[i].name);
+      for (let i = 0; i < Object.entries(res.data)[0][1].length; i++) {
+        arr.push(Object.entries(res.data)[0][1][i].name);
       }
       setListObjects(arr);
     });
-    setRefreshCount(refreshCount + 1);
   }, [baseUrl, refreshCount]);
 
   const [selectionModel, setSelectionModel] = useState([]);
+
+  useEffect(() => {
+    setInterval(() => setFailedMessage(""), 9000);
+    setInterval(() => setSuccessMessage(""), 9000);
+  }, [successMessage, failedMessage]);
 
   useEffect(() => {
     let selections = [];
@@ -312,8 +353,6 @@ export default function ManageListsPage(props) {
         }}
       >
         <h2>Manage Lists</h2>
-        <p style={{ color: "green" }}>{newListSuccessMessage}</p>
-        <p style={{ color: "red" }}>{newListFailedMessage}</p>
         <div
           style={{
             display: "flex",
@@ -470,10 +509,6 @@ export default function ManageListsPage(props) {
                 >
                   Delete
                 </Button>
-                &nbsp;
-                <Button variant="contained" onClick={handleCloseDeleteList}>
-                  Cancel
-                </Button>
               </Box>
             </Modal>
             {/* ------ */}
@@ -494,7 +529,8 @@ export default function ManageListsPage(props) {
                   onClick={() => {
                     handleCloseConfirmDeleteList();
                     deleteLists(selectedListsForDelete);
-                    // setRefreshCount(refreshCount + 1);
+                    setSuccessMessage("Successfully deleted list(s)");
+                    setRefreshCount(refreshCount + 1);
                   }}
                 >
                   Confirm
@@ -516,7 +552,7 @@ export default function ManageListsPage(props) {
             >
               <Box sx={style}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Add Items
+                  Add Term(s)
                 </Typography>
                 <br />
 
@@ -610,13 +646,14 @@ export default function ManageListsPage(props) {
             {/* Delete List Terms Modal */}
             {/* ------ */}
             <Modal
-              open={openDeleteTerms}
+              open={openDeleteListTerms}
+              onClose={handleCloseDeleteListTerms}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
               <Box sx={style}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Delete Terms
+                  Delete Term(s)
                 </Typography>
                 <Typography
                   id="modal-modal-description"
@@ -633,24 +670,21 @@ export default function ManageListsPage(props) {
                       );
                     })
                   ) : (
-                    <p>No list items selected</p>
+                    <p>No list terms selected</p>
                   )}
                   <br />
                 </Typography>
-                <Button
-                  variant="contained"
-                  onClick={handleOpenConfirmDeleteListTerms}
-                  style={{ backgroundColor: "#d62828" }}
-                >
-                  Delete
-                </Button>
-                &nbsp;
-                <Button
-                  variant="contained"
-                  onClick={handleCloseDeleteListTerms}
-                >
-                  Cancel
-                </Button>
+                {selectedListTermsForDelete.length > 0 ? (
+                  <Button
+                    variant="contained"
+                    onClick={handleOpenConfirmDeleteListTerms}
+                    style={{ backgroundColor: "#d62828" }}
+                  >
+                    Delete
+                  </Button>
+                ) : (
+                  <></>
+                )}
               </Box>
             </Modal>
             {/* ------ */}
@@ -663,14 +697,19 @@ export default function ManageListsPage(props) {
             >
               <Box sx={style}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Confirm delete list item(s)
+                  Confirm delete list terms(s)
                 </Typography>
+                <div style={{ height: "15px" }} />
                 <Button
                   variant="contained"
                   onClick={() => {
                     deleteListTerms(selectedListTermsForDelete, list);
                     handleCloseConfirmDeleteListTerms();
                     handleCloseDeleteListTerms();
+                    setSuccessMessage(
+                      "List term(s) deleted, please refresh to see changes"
+                    );
+                    setRefreshCount(refreshCount + 1);
                   }}
                 >
                   Confirm
@@ -698,6 +737,8 @@ export default function ManageListsPage(props) {
           selectionModel={selectionModel}
           checkboxSelection
         />
+        <h3 style={{ color: "#00a8e8" }}>{successMessage}</h3>
+        <h3 style={{ color: "red" }}>{failedMessage}</h3>
       </div>
     </AdminLayout>
   );

@@ -95,7 +95,7 @@ exports.adminDeleteList = async (req, res) => {
 };
 
 // Deletes a single list term from database
-exports.adminDeleteListTerms = async (req, res) => {
+exports.adminDeleteListTerm = async (req, res) => {
   const { listTitle, listTerm } = req.body;
   const deleteListTerm = await AdminList.updateOne(
     {

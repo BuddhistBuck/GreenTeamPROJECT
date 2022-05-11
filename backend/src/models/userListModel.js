@@ -7,7 +7,6 @@ const userListSchema = new mongoose.Schema({
   },
   listTitle: {
     type: String,
-    lowercase: true,
     required: true,
   },
   listTerms: {

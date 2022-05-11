@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
  **/
 export default function PracticeInterface(props) {
   const { wpm, listItems } = props;
+  console.log(listItems);
   const [sessionComplete, setSessionComplete] = useState(false);
 
   useEffect(() => {

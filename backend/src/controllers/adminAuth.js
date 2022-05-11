@@ -117,6 +117,7 @@ exports.adminLogin = (req, res, next) => {
         return res.send({
           success: true,
           message: "Valid sign in",
+          admin: username,
           token: doc._id,
         });
       });

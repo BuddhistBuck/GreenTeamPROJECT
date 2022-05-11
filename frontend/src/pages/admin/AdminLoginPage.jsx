@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AdminHeader from "../../components/AdminHeader";
 import "../../css/adminLogin.css";
 import { loginAdmin, useAuthDispatch } from "../../context";
@@ -6,19 +6,20 @@ import { loginAdmin, useAuthDispatch } from "../../context";
 export default function AdminLoginPage(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState();
   const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useAuthDispatch();
 
   const HandleFormSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage("");
     let payload = { username, password };
-    e.target.reset();
-
-    try {
-      loginAdmin(dispatch, payload);
-    } catch (error) {
-      setErrorMessage("Unable to sign in");
-    }
+    loginAdmin(dispatch, payload);
+    setLoading(true);
+    setInterval(() => {
+      setErrorMessage("Invalid username or password.");
+      setLoading(false);
+    }, 1000);
   };
 
   return (
@@ -53,8 +54,17 @@ export default function AdminLoginPage(props) {
               flexDirection: "column",
             }}
           >
-            {errorMessage && <span className="form-error">{errorMessage}</span>}
-            <button>Login</button>
+            {errorMessage && (
+              <span style={{ color: "red" }}>{errorMessage}</span>
+            )}
+            <div style={{ height: "15px" }}></div>
+            {loading ? (
+              <button style={{ backgroundColor: "#5AB4B4" }}>
+                Logging in ...
+              </button>
+            ) : (
+              <button>Login</button>
+            )}
           </div>
         </form>
       </div>

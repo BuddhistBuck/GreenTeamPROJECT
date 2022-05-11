@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { loginUser, useAuthDispatch } from "../context";
 import logo from "../util/images/logo.gif";
 import "../css/userLogin.css";
@@ -7,6 +7,7 @@ import "../css/userLogin.css";
 export default function LoginPage(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState();
   const [errorMessage, setErrorMessage] = useState("");
 
   const dispatch = useAuthDispatch();
@@ -14,14 +15,19 @@ export default function LoginPage(props) {
   const HandleFormSubmit = async (e) => {
     e.preventDefault();
     let payload = { email, password };
-    e.target.reset();
-
-    try {
-      loginUser(dispatch, payload);
-    } catch (error) {
-      setErrorMessage("Invalid username or password. Please try again.");
-    }
+    loginUser(dispatch, payload);
+    setLoading(true);
+    setInterval(() => {
+      setErrorMessage("Invalid username or password.");
+      setLoading(false);
+    }, 8000);
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 11000);
+  }, [errorMessage]);
 
   return (
     <>
@@ -58,8 +64,11 @@ export default function LoginPage(props) {
               Create Account
             </a>
             &nbsp; • &nbsp;
-            <a style={{ fontSize: "13px" }} href="/#">
+            {/* <a style={{ fontSize: "13px" }} href="/forgot-password">
               Forgot Password
+            </a> */}
+            <a style={{ fontSize: "13px" }} href="/">
+              Back to Home
             </a>
           </div>
           <br />
@@ -70,8 +79,17 @@ export default function LoginPage(props) {
               flexDirection: "column",
             }}
           >
-            {errorMessage && <span className="form-error">{errorMessage}</span>}
-            <button>Login</button>
+            {errorMessage && (
+              <span className="user-form-error">{errorMessage}</span>
+            )}
+            <div style={{ height: "20px" }} />
+            {loading ? (
+              <button style={{ backgroundColor: "#5AB4B4" }}>
+                Logging in ...
+              </button>
+            ) : (
+              <button>Login</button>
+            )}
           </div>
         </form>
         <div style={{ height: "60px" }} />

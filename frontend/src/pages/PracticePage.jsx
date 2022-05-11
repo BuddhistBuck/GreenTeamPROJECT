@@ -33,17 +33,23 @@ import {
   Select,
   TextField,
   Typography,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Checkbox,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 
-const lists = [
-  { category: "Words", data: "stenoData" },
-  { category: "Numbers", data: "numbers" },
-  { category: "Phrases", data: "phrases" },
-  { category: "States", data: "states" },
-  { category: "Years", data: "years" },
-];
+// const lists = [
+//   { category: "Words", data: "stenoData" },
+//   { category: "Numbers", data: "numbers" },
+//   { category: "Phrases", data: "phrases" },
+//   { category: "States", data: "states" },
+//   { category: "Years", data: "years" },
+// ];
 
 /**
  * @component Home Page and Practice Session
@@ -60,6 +66,35 @@ export default function PraticePage() {
   const [begin, setBegin] = useState(false);
   const [view, setView] = useState("Words");
   const [refreshCount, setRefreshCount] = useState();
+  const [counter, setCounter] = useState(0);
+
+  // Check subscription status
+  const [subscriptionStatus, setSubscriptionStatus] = useState();
+
+  useEffect(() => {
+    Axios.post(`${baseUrl}/get-user-by-email`, {
+      email: JSON.parse(localStorage.getItem("currentUser")).email,
+    }).then((res) => {
+      setSubscriptionStatus(res.data.docs[0].subscriptionStatus);
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Get default lists
+  const [lists, setLists] = useState([]);
+
+  useEffect(() => {
+    Axios.get(`${baseUrl}/admin-get-lists`).then((res) => {
+      let data = res.data.lists;
+      let arr = [];
+      for (let i = 0; i < data.length; i++) {
+        arr.push(data[i].name);
+      }
+      setLists(arr);
+    });
+    setRefreshCount(refreshCount + 1);
+  }, [baseUrl, refreshCount]);
 
   // Get user lists
   useEffect(() => {
@@ -72,16 +107,24 @@ export default function PraticePage() {
       }
       setUserLists(arr);
     });
-  }, [baseUrl, refreshCount]);
+  }, [counter]);
 
   // Create / Edit Lists Modals
   const [openCreateList, setOpenCreateList] = useState(false);
   const handleOpenCreateList = () => setOpenCreateList(true);
   const handleCloseCreateList = () => setOpenCreateList(false);
 
-  const [openEditList, setOpenEditList] = useState(false);
-  const handleOpenEditList = () => setOpenEditList(true);
-  const handleCloseEditList = () => setOpenEditList(false);
+  const [openAddTerms, setOpenAddTerms] = useState(false);
+  const handleOpenAddTerms = () => setOpenAddTerms(true);
+  const handleCloseAddTerms = () => setOpenAddTerms(false);
+
+  const [openDeleteTerms, setOpenDeleteTerms] = useState(false);
+  const handleOpenDeleteTerms = () => setOpenDeleteTerms(true);
+  const handleCloseDeleteTerms = () => {
+    setOpenDeleteTerms(false);
+    setListToDeleteTerms("");
+    setListToDeleteTermsArray([]);
+  };
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -89,45 +132,96 @@ export default function PraticePage() {
   const [inputFieldCounter, setInputFieldCounter] = useState(1);
   const [inputFieldErrorMessage, setInputFieldErrorMessage] = useState("");
   const [listToEdit, setListToEdit] = useState("");
+  const [listToDeleteTerms, setListToDeleteTerms] = useState([]);
+  const [listToDeleteTermsArray, setListToDeleteTermsArray] = useState([]);
+
   const [newList, setNewList] = useState("");
 
   const [openConfirmDeleteList, setOpenConfirmDeleteList] = useState(false);
   const handleOpenConfirmDeleteList = () => {
     setOpenConfirmDeleteList(true);
-    handleCloseEditList();
+    handleCloseAddTerms();
   };
   const handleCloseConfirmDeleteList = () => setOpenConfirmDeleteList(false);
 
   const deleteLists = (obj) => {
+    console.log(obj);
+
+    const requestOne = Axios.post(`${baseUrl}/user-delete-list-object`, {
+      email: JSON.parse(localStorage.getItem("currentUser")).email,
+      name: obj,
+    }).then((res) => {
+      // console.log(res);
+    });
+
+    const requestTwo = Axios.post(`${baseUrl}/user-delete-list`, {
+      email: JSON.parse(localStorage.getItem("currentUser")).email,
+      listTitle: obj,
+    }).then((res) => {
+      // console.log(res);
+    });
+
+    Axios.all([requestOne, requestTwo])
+      .then(
+        Axios.spread((...res) => {
+          // eslint-disable-next-line no-unused-vars
+          let responseOne = res[0];
+          // eslint-disable-next-line no-unused-vars
+          let responseTwo = res[1];
+        })
+      )
+      .catch((err) => {
+        console.log(err);
+      });
+    setRefreshCount(refreshCount + 1);
+  };
+
+  // DELETE LIST TERMS
+
+  const loadListToDeleteTerms = (list) => {
+    Axios.post(`${baseUrl}/user-get-list-by-title`, {
+      email: JSON.parse(localStorage.getItem("currentUser")).email,
+      listTitle: list,
+    }).then((res) => {
+      setListToDeleteTerms(res.data.docs[0].listTitle);
+      setListToDeleteTermsArray(res.data.docs[0].listTerms);
+    });
+  };
+
+  const deleteListTerms = (title, obj) => {
+    let terms = String(obj).split(",");
+    console.log(terms);
     for (let i = 0; i < obj.length; i++) {
-      const requestOne = Axios.post(`${baseUrl}/admin-delete-list-object`, {
-        name: obj[i],
-      }).then((res) => {
-        // console.log(res);
-      });
-
-      const requestTwo = Axios.post(`${baseUrl}/admin-delete-list`, {
-        listTitle: obj[i].toLowerCase(),
-      }).then((res) => {
-        // console.log(res);
-      });
-
-      Axios.all([requestOne, requestTwo])
-        .then(
-          Axios.spread((...res) => {
-            // eslint-disable-next-line no-unused-vars
-            let responseOne = res[0];
-            // eslint-disable-next-line no-unused-vars
-            let responseTwo = res[1];
-          })
-        )
+      Axios.post(`${baseUrl}/user-delete-list-term`, {
+        email: JSON.parse(localStorage.getItem("currentUser")).email,
+        listTitle: title,
+        listTerm: terms[0],
+      })
+        .then((res) => setSuccessMessage("List terms removed"))
         .catch((err) => {
-          console.log(err);
+          setErrorMessage(err);
         });
-      setRefreshCount(refreshCount + 1);
     }
   };
 
+  // Check list for Delete Term(s) Modal
+  const [checked, setChecked] = useState([]);
+  const handleToggle = (value) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
+  //////
+
+  // Input fields for Add Terms To List Modal
   function generateInputFields(count) {
     let fields = [];
     for (let i = 0; i < count; i++) {
@@ -157,6 +251,7 @@ export default function PraticePage() {
     setTimeout(() => setInputFieldErrorMessage(""), 10000);
   }, [inputFieldCounter]);
 
+  // Save List
   const saveNewList = () => {
     const requestOne = Axios.post(`${baseUrl}/user-list-object-create`, {
       email: JSON.parse(localStorage.getItem("currentUser")).email,
@@ -172,9 +267,9 @@ export default function PraticePage() {
     const requestTwo = Axios.post(`${baseUrl}/user-list-create`, {
       email: JSON.parse(localStorage.getItem("currentUser")).email,
       listTitle: newList,
+      listTerms: [],
     }).then((res) => {
       if (res) {
-        setSuccessMessage("New list successfully created");
       } else {
         setErrorMessage("Server error");
       }
@@ -186,6 +281,7 @@ export default function PraticePage() {
           Axios.spread((...res) => {
             const responseOne = res[0];
             const responseTwo = res[1];
+            setCounter(counter + 1);
           })
         )
         .catch((err) => {
@@ -201,6 +297,7 @@ export default function PraticePage() {
     handleCloseCreateList();
   };
 
+  // Save List Terms
   const saveNewListTerms = () => {
     let items = [];
     for (let i = 0; i < inputFieldCounter; i++) {
@@ -210,7 +307,7 @@ export default function PraticePage() {
 
     Axios.post(`${baseUrl}/user-update-list`, {
       email: JSON.parse(localStorage.getItem("currentUser")).email,
-      listTitle: listToEdit.toLowerCase(),
+      listTitle: listToEdit,
       newListTerms: items,
     })
       .then((err) => {
@@ -227,9 +324,10 @@ export default function PraticePage() {
       setSuccessMessage("");
       setErrorMessage("");
     }, 8000);
-    handleCloseEditList();
+    handleCloseAddTerms();
   };
 
+  // Default style for Modal
   const style = {
     position: "absolute",
     top: "50%",
@@ -274,29 +372,40 @@ export default function PraticePage() {
                 exclusive
                 onChange={handleChange}
               >
-                {lists.map((option, index) => {
-                  return (
-                    <ToggleButton
-                      size="large"
-                      variant="outlined"
-                      key={index}
-                      value={option.data}
-                      onClick={() => {
-                        setListItems(option.data);
-                      }}
-                      color={selectedButton ? "primary" : "secondary"}
-                    >
-                      {option.category}
-                    </ToggleButton>
-                  );
-                })}
+                {lists.length > 0 ? (
+                  lists.map((option, index) => {
+                    return (
+                      <ToggleButton
+                        size="large"
+                        variant="outlined"
+                        key={index}
+                        value={option}
+                        onClick={() => {
+                          console.log(option);
+                          Axios.post(`${baseUrl}/admin-get-list-by-title`, {
+                            listTitle: option,
+                          }).then((res) => {
+                              setListItems(res.data.docs[0].listTerms);
+                          });
+                        }}
+                        color={selectedButton ? "primary" : "secondary"}
+                      >
+                        {option}
+                      </ToggleButton>
+                    );
+                  })
+                ) : (
+                  <>Lists loading ... </>
+                )}
                 <div style={{ height: "20px" }}></div>
-
                 <Divider>Custom Lists</Divider>
-                <div
-                  style={{ height: "20px", borderBottom: "1px solid #d9d9d9" }}
-                ></div>
-                {userLists.length > 0 ? (
+                <div style={{ height: "20px" }} />
+                {subscriptionStatus ? (
+                  <div style={{ borderBottom: "1px solid silver" }} />
+                ) : (
+                  <></>
+                )}
+                {userLists.length > 0 && subscriptionStatus ? (
                   userLists.map((option, index) => {
                     return (
                       <ToggleButton
@@ -309,7 +418,7 @@ export default function PraticePage() {
                             email: JSON.parse(
                               localStorage.getItem("currentUser")
                             ).email,
-                            listTitle: option.toLowerCase(),
+                            listTitle: option,
                           }).then((res) => {
                             setListItems(res.data.docs[0].listTerms);
                           });
@@ -320,8 +429,35 @@ export default function PraticePage() {
                       </ToggleButton>
                     );
                   })
+                ) : subscriptionStatus ? (
+                  <div
+                    style={{
+                      width: "70%",
+                      margin: "0 auto",
+                      textAlign: "center",
+                    }}
+                  >
+                    <div style={{ height: "20px" }} />
+                    There are no lists created
+                  </div>
                 ) : (
-                  <></>
+                  <div
+                    style={{
+                      width: "70%",
+                      margin: "0 auto",
+                      textAlign: "center",
+                      // color: "grey",
+                    }}
+                  >
+                    <div style={{ height: "20px" }} />
+                    <p>
+                      Please{" "}
+                      <a style={{ color: "#00a8e8" }} href="/account">
+                        subscribe
+                      </a>{" "}
+                      to access the Custom Lists feature.
+                    </p>
+                  </div>
                 )}
               </ToggleButtonGroup>
             </ThemeProvider>
@@ -358,38 +494,67 @@ export default function PraticePage() {
               />
             </ThemeProvider>
           </Box>
-          <div style={{ height: "60px" }} />
-
           <p style={{ color: "red" }}> {errorMessage}</p>
           <p style={{ color: "#007EA7" }}> {successMessage}</p>
 
-          <ThemeProvider theme={themeUserList}>
-            <Button
-              style={{ height: "60px", width: "150px", color: "white" }}
-              variant="contained"
-              value=""
-              onClick={handleOpenCreateList}
-            >
-              Create List
-            </Button>
-          </ThemeProvider>
-          <div style={{ height: "10px" }} />
+          <div
+            style={
+              !subscriptionStatus
+                ? {
+                    border: "2px solid silver",
+                    backgroundColor: "#b0b0b0",
+                    padding: "5px",
+                    pointerEvents: "none",
+                    textAlign: "center",
+                  }
+                : {}
+            }
+          >
+            {!subscriptionStatus ? (
+              <p style={{ color: "#545353" }}>Premium Features</p>
+            ) : (
+              <></>
+            )}
+            <ThemeProvider theme={themeUserList}>
+              <Button
+                style={{ height: "70px", width: "150px", color: "white" }}
+                variant="contained"
+                value=""
+                onClick={handleOpenCreateList}
+              >
+                Create List
+              </Button>
+            </ThemeProvider>
+            <div style={{ height: "10px" }} />
 
-          <ThemeProvider theme={themeUserList}>
-            <Button
-              style={{ height: "60px", width: "150px", color: "white" }}
-              variant="contained"
-              value=""
-              onClick={handleOpenEditList}
-            >
-              Edit List
-            </Button>
-          </ThemeProvider>
+            <ThemeProvider theme={themeUserList}>
+              <Button
+                style={{ height: "70px", width: "150px", color: "white" }}
+                variant="contained"
+                value=""
+                onClick={handleOpenAddTerms}
+              >
+                Add Term(s) To List
+              </Button>
+            </ThemeProvider>
+            <div style={{ height: "10px" }} />
+
+            <ThemeProvider theme={themeUserList}>
+              <Button
+                style={{ height: "70px", width: "150px", color: "white" }}
+                variant="contained"
+                value=""
+                onClick={handleOpenDeleteTerms}
+              >
+                Delete Term(s) From List
+              </Button>
+            </ThemeProvider>
+          </div>
           <div style={{ height: "10px" }} />
 
           <ThemeProvider theme={themeDefault}>
             <Button
-              style={{ height: "60px", width: "150px" }}
+              style={{ height: "70px", width: "150px" }}
               variant="contained"
               value=""
               onClick={() => {
@@ -423,6 +588,13 @@ export default function PraticePage() {
                 </a>
                 <a
                   onClick={() => {
+                    // setSelectedOption(selectedOption);
+                  }}
+                >
+                  Randomize
+                </a>
+                <a
+                  onClick={() => {
                     setSelectedOption(selectedOption);
                   }}
                 >
@@ -433,7 +605,7 @@ export default function PraticePage() {
 
               <div className="practice-wpm">
                 <div style={{ width: "50px" }} />
-                <div style={{ display: "flex", flexDirection: "column" }}>
+                {/* <div style={{ display: "flex", flexDirection: "column" }}>
                   <ThemeProvider theme={themeDefault}>
                     <ToggleButton
                       variant="outlined"
@@ -447,7 +619,7 @@ export default function PraticePage() {
                       )}
                     </ToggleButton>
                   </ThemeProvider>
-                </div>
+                </div> */}
                 <div style={{ width: "50px" }} />
 
                 {/* ---- DISPLAY LIST DATA ---- */}
@@ -485,24 +657,28 @@ export default function PraticePage() {
             onChange={(e) => setNewList(e.target.value)}
           />
           &nbsp;
-          <Button variant="contained" onClick={saveNewList}>
+          <Button
+            variant="contained"
+            style={{ backgroundColor: "#008B9E" }}
+            onClick={saveNewList}
+          >
             Save
           </Button>
         </Box>
       </Modal>
 
       {/* ------ */}
-      {/* Edit List Modal */}
+      {/* Add Terms To List Modal */}
       {/* ------ */}
       <Modal
-        open={openEditList}
-        onClose={handleCloseEditList}
+        open={openAddTerms}
+        onClose={handleCloseAddTerms}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Edit List
+            Add Term(s) To List
           </Typography>
           <br />
           <Box sx={{ minWidth: 120 }}>
@@ -583,17 +759,23 @@ export default function PraticePage() {
             </div>
           </div>
           <br />
-          <Button variant="contained" onClick={saveNewListTerms}>
-            Save
-          </Button>
-          &nbsp;
-          <Button
-            variant="contained"
-            style={{ backgroundColor: "#d62828" }}
-            onClick={handleOpenConfirmDeleteList}
-          >
-            Delete List
-          </Button>
+          {listToEdit ? (
+            <>
+              <Button variant="contained" onClick={saveNewListTerms}>
+                Save
+              </Button>
+              &nbsp;
+              <Button
+                variant="contained"
+                style={{ backgroundColor: "#d62828" }}
+                onClick={handleOpenConfirmDeleteList}
+              >
+                Delete List
+              </Button>
+            </>
+          ) : (
+            <></>
+          )}
         </Box>
       </Modal>
 
@@ -612,10 +794,12 @@ export default function PraticePage() {
           <br />
           <Button
             variant="contained"
+            style={{ backgroundColor: "#d62828" }}
             onClick={() => {
               handleCloseConfirmDeleteList();
               deleteLists(listToEdit);
               setRefreshCount(refreshCount + 1);
+              setCounter(counter + 1);
             }}
           >
             Confirm
@@ -624,6 +808,100 @@ export default function PraticePage() {
           <Button variant="contained" onClick={handleCloseConfirmDeleteList}>
             Cancel
           </Button>
+        </Box>
+      </Modal>
+
+      {/* ------ */}
+      {/* Delete Terms From List Modal */}
+      {/* ------ */}
+      <Modal
+        open={openDeleteTerms}
+        onClose={handleCloseDeleteTerms}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Delete Term(s) From List &nbsp;
+          </Typography>
+
+          <Box sx={{ minWidth: 120 }}>
+            <br />
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Select List</InputLabel>
+              <Select
+                // value={listToEdit}
+                label="Select List"
+                onChange={(e) => loadListToDeleteTerms(e.target.value)}
+              >
+                {userLists.length > 0 ? (
+                  userLists.map((data, index) => {
+                    return (
+                      <MenuItem key={index} value={data}>
+                        {data}
+                      </MenuItem>
+                    );
+                  })
+                ) : (
+                  <MenuItem></MenuItem>
+                )}
+              </Select>
+              <List
+                sx={{
+                  width: "100%",
+                  maxWidth: 360,
+                  bgcolor: "background.paper",
+                }}
+              >
+                {listToDeleteTermsArray.length > 0 ? (
+                  listToDeleteTermsArray.map((value) => {
+                    const labelId = `checkbox-list-label-${value}`;
+
+                    return (
+                      <ListItem key={value} disablePadding>
+                        <ListItemButton
+                          role={undefined}
+                          onClick={handleToggle(value)}
+                          dense
+                        >
+                          <ListItemIcon>
+                            <Checkbox
+                              edge="start"
+                              checked={checked.indexOf(value) !== -1}
+                              tabIndex={-1}
+                              disableRipple
+                              inputProps={{ "aria-labelledby": labelId }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText id={labelId} primary={value} />
+                        </ListItemButton>
+                      </ListItem>
+                    );
+                  })
+                ) : listToDeleteTerms ? (
+                  <p>This list is empty</p>
+                ) : (
+                  <></>
+                )}
+              </List>
+            </FormControl>
+          </Box>
+          <br />
+          {listToDeleteTermsArray.length > 0 ? (
+            <Button
+              variant="contained"
+              style={{ backgroundColor: "#d62828" }}
+              onClick={() => {
+                handleCloseDeleteTerms();
+                deleteListTerms(listToDeleteTerms, checked);
+                setRefreshCount(refreshCount + 1);
+              }}
+            >
+              Delete
+            </Button>
+          ) : (
+            <></>
+          )}
         </Box>
       </Modal>
     </Layout>

@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema(
       max: 20,
       default: "Not listed",
     },
+    phoneNumber: {
+      type: String,
+      default: "Not listed",
+    },
     password: {
       type: String,
       required: true,

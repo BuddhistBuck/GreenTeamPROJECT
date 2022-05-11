@@ -34,7 +34,7 @@ function Header() {
       {/* AiFillCaretDown */}
 
       <div className="header-right">
-        <div className="language-controls" ref={dropdownRef}>
+        {/* <div className="language-controls" ref={dropdownRef}>
           <button className="language-icons" onClick={onClick}>
             <BsGlobe size="26px" /> &nbsp;
             <AiFillCaretDown size="26px" />
@@ -55,12 +55,12 @@ function Header() {
               </div>
             </a>
           </div>
-        </div>
-        <p style={{ width: "20px" }} />
+        </div> */}
+        <p style={{ width: "40px" }} />
         <a href="/account">
-          <p>Account</p>
+          <p>Account Settings</p>
         </a>
-        <p style={{ width: "20px" }} />
+        <p style={{ width: "40px" }} />
         <a onClick={logout}>
           <p>Sign Out</p>
         </a>

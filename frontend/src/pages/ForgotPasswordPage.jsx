@@ -1,91 +1,94 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { loginUser, useAuthDispatch } from "../context";
 import logo from "../util/images/logo.gif";
-import "../css/userLogin.css";
+import "../css/forgotPassword.css";
+import Axios from "axios";
+import { baseUrl } from "../util/baseUrl";
+import NewPasswordEmailSent from "../components/NewPasswordEmailSent";
 
 function SignUpSuccess(props) {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [emailFound, setEmailFound] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [userEmails, setUserEmails] = useState("");
 
-  const dispatch = useAuthDispatch();
+  useEffect(() => {
+    Axios.get(`${baseUrl}/users`).then((res) => {
+      let items = [];
+      for (let i = 0; i < Object.entries(res.data).length; i++) {
+        items.push(Object.entries(res.data)[i][1].email);
+      }
+      setUserEmails(items);
+    });
+
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 8000);
+  }, []);
+
+  function searchEmail(emails, email) {
+    for (let i = 0; i < emails.length; i++) {
+      if (email === emails[i]) {
+        console.log("Email found");
+        setEmailFound(true);
+      } else {
+        setErrorMessage("Email was not found. Please try again.");
+      }
+    }
+  }
 
   const HandleFormSubmit = async (e) => {
     e.preventDefault();
-    let payload = { email, password };
-    e.target.reset();
+    // e.target.reset();
 
-    try {
-    //   loginUser(dispatch, payload);
-    } catch (error) {
-      setErrorMessage("Invalid username or password. Please try again.");
-    }
+    searchEmail(userEmails, email);
   };
 
   return (
     <>
       <div className="user-background-image" />
-      <div
-        style={{
-          position: "absolute",
-          width: "100%",
-          margin: "0 auto",
-          left: "35%",
-          top: "40%",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            verticalAlign: "middle",
-            backgroundColor: "white",
-            padding: "20px",
-            borderRadius: "5px",
-            width: "400px",
-          }}
-        >
-          <h3>Forgot Password?</h3>
-
-          <form onSubmit={HandleFormSubmit}>
-            <label htmlFor="username">
-              <p>Email</p>
-              <input
-                type="text"
-                placeholder="Enter email ..."
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </label>
-            {/* <div style={{ height: "15px" }}></div>
-          <label htmlFor="email">
-            <p>Password</p>
-            <input
-              type="password"
-              placeholder="Enter password ..."
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label> */}
-            <div style={{ height: "15px" }}></div>
-            <br />
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "column",
-              }}
-            >
-              {errorMessage && (
-                <span className="form-error">{errorMessage}</span>
-              )}
-              <button>Login</button>
+      {emailFound ? (
+        <NewPasswordEmailSent />
+      ) : (
+        <div className="forgot-password-root">
+          <div className="forgot-password-container">
+            <h3>Forgot Password?</h3>
+            <div className="forgot-password-form">
+              <form onSubmit={HandleFormSubmit}>
+                <p>
+                  Enter your email address below and we'll send you a link to
+                  reset your password.
+                </p>
+                <label>
+                  <p>Email Address</p>
+                  <input
+                    type="email"
+                    placeholder="Enter email ..."
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </label>
+                <div style={{ height: "10px" }}></div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                  }}
+                >
+                  {errorMessage && (
+                    <span style={{ color: "red" }}>{errorMessage}</span>
+                  )}
+                  <div style={{ height: "10px" }}></div>
+                  <button>Reset Password</button>
+                </div>
+              </form>
             </div>
-          </form>
-
-          <a href="/practice">Back to Login</a>
+            <div style={{ height: "20px" }} />
+            <a href="/practice">Back to Login</a>
+            <div style={{ height: "10px" }}></div>
+          </div>
         </div>
-      </div>
-
+      )}
       <div style={{ height: "40px" }} />
       <footer className="user-login-footer">
         <p style={{ paddingLeft: "20px" }}>Court Reporter Pro</p>

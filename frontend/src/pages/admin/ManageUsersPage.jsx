@@ -31,6 +31,18 @@ export default function ManageUsersPage(props) {
     return res;
   }
 
+  function formatDate(date) {
+    var d = new Date(date),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [day, month, year].join("-");
+  }
+
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.black,
@@ -61,12 +73,11 @@ export default function ManageUsersPage(props) {
               <StyledTableCell align="right">First Name</StyledTableCell>
               <StyledTableCell align="right">Last Name</StyledTableCell>
               <StyledTableCell align="right">Email</StyledTableCell>
+              <StyledTableCell align="right">Phone Number</StyledTableCell>
               <StyledTableCell align="right">
                 Subscription Status
               </StyledTableCell>
-              <StyledTableCell align="right">List Count</StyledTableCell>
-              <StyledTableCell align="right">Last Logged In</StyledTableCell>
-              <StyledTableCell align="right">Options</StyledTableCell>
+              <StyledTableCell align="right">Date Created</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -81,16 +92,13 @@ export default function ManageUsersPage(props) {
                   </StyledTableCell>
                   <StyledTableCell align="right">{row.email}</StyledTableCell>
                   <StyledTableCell align="right">
+                    {row.phoneNumber}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
                     {row.subscriptionStatus ? "Subscribed" : "Not Subscribed"}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {row.listCount}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.lastLoggedIn}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    <Button>Send Email</Button>
+                    {formatDate(row.lastLoggedIn)}
                   </StyledTableCell>
                 </StyledTableRow>
               ))

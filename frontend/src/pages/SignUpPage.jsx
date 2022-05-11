@@ -4,16 +4,16 @@ import SignUpSuccess from "./SignUpSuccess";
 import "../css/userSignup.css";
 import { createAccountUser, useAuthDispatch } from "../context";
 import logo from "../util/images/logo.gif";
+import { formatPhoneNumber } from "../util/formatPhoneNumber";
 
 export default function SignUpPage(props) {
   const [inputFirstName, setInputFirstName] = useState("");
   const [inputLastName, setInputLastName] = useState("");
   const [inputEmail, setInputEmail] = useState("");
   const [inputOccupation, setInputOccupation] = useState("");
+  const [inputPhone, setInputPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [submitSuccess, setSubmitSucccess] = useState(false);
-  const [passwordMismatchMessage, setPasswordMismatchMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const dispatch = useAuthDispatch();
@@ -21,32 +21,27 @@ export default function SignUpPage(props) {
   const HandleFormSubmit = async (e) => {
     e.preventDefault();
 
-    if (password === confirmPassword) {
-      let firstName =
-        inputFirstName.charAt(0).toUpperCase() + inputFirstName.slice(1);
-      let lastName =
-        inputLastName.charAt(0).toUpperCase() + inputLastName.slice(1);
-      let occupation =
-        inputOccupation.charAt(0).toUpperCase() + inputOccupation.slice(1);
+    let firstName =
+      inputFirstName.charAt(0).toUpperCase() + inputFirstName.slice(1);
+    let lastName =
+      inputLastName.charAt(0).toUpperCase() + inputLastName.slice(1);
+    let occupation =
+      inputOccupation.charAt(0).toUpperCase() + inputOccupation.slice(1);
 
-      try {
-        let payload = {
-          firstName: firstName,
-          lastName: lastName,
-          occupation: occupation,
-          email: inputEmail,
-          password: password,
-        };
+    try {
+      let payload = {
+        firstName: firstName,
+        lastName: lastName,
+        occupation: occupation,
+        email: inputEmail,
+        phoneNumber: inputPhone,
+        password: password,
+      };
 
-        createAccountUser(dispatch, payload);
-        setSubmitSucccess(true);
-      } catch (error) {
-        setErrorMessage("ERROR: ", error);
-      }
-    } else {
-      setPasswordMismatchMessage(
-        "Password fields don't match, please try again."
-      );
+      createAccountUser(dispatch, payload);
+      setSubmitSucccess(true);
+    } catch (error) {
+      setErrorMessage("ERROR: ", error);
     }
   };
 
@@ -128,20 +123,29 @@ export default function SignUpPage(props) {
                     justifyContent: "space-between",
                   }}
                 >
+                  <label htmlFor="phone">
+                    <p>Phone Number</p>
+                    <input
+                      type="tel"
+                      placeholder="(123) 456-7890"
+                      value={inputPhone}
+                      onChange={(e) => {
+                        const formattedPhoneNumber = formatPhoneNumber(
+                          e.target.value
+                        );
+
+                        console.log(formattedPhoneNumber);
+
+                        setInputPhone(formattedPhoneNumber);
+                      }}
+                    />
+                  </label>
                   <label htmlFor="password">
                     <p>Password</p>
                     <input
                       type="password"
                       placeholder="Enter password ..."
                       onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </label>
-                  <label htmlFor="confirmPassword">
-                    <p>Confirm Password</p>
-                    <input
-                      type="password"
-                      placeholder="Enter password ..."
-                      onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                   </label>
                 </div>
@@ -158,9 +162,6 @@ export default function SignUpPage(props) {
                 }}
               >
                 {errorMessage && (
-                  <span className="form-error">{errorMessage}</span>
-                )}
-                {passwordMismatchMessage && (
                   <span className="form-error">{errorMessage}</span>
                 )}
                 <button>Sign Up</button>

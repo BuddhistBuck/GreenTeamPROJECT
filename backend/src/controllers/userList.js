@@ -28,7 +28,7 @@ exports.userListCreate = (req, res, next) => {
           success: false,
           message: "Error: server error",
         });
-      } 
+      }
       // Save new user list
       const list = new UserList();
       list.email = email;
@@ -41,11 +41,12 @@ exports.userListCreate = (req, res, next) => {
             success: false,
             message: "Error: account creation attempted, server error",
           });
+        } else {
+          return res.send({
+            success: true,
+            message: "User list created",
+          });
         }
-        return res.send({
-          success: true,
-          message: "User list created",
-        });
       });
     }
   );
@@ -99,6 +100,25 @@ exports.userDeleteList = async (req, res) => {
 
   if (deleteList) {
     res.status(201).json({ message: "List removed" });
+  } else {
+    res.status(400).json({ message: "Something went wrong" });
+  }
+};
+
+// Deletes a single list term from database
+exports.userDeleteListTerm = async (req, res) => {
+  const { email, listTitle, listTerm } = req.body;
+  const deleteListTerm = await UserList.updateOne(
+    {
+      email: email,
+      listTitle: listTitle,
+      listTerm: listTerm,
+    },
+    { $pull: { listTerms: listTerm } }
+  );
+
+  if (deleteListTerm) {
+    res.status(201).json({ message: "List term removed" });
   } else {
     res.status(400).json({ message: "Something went wrong" });
   }

@@ -1,10 +1,31 @@
 .account-container {
   display: flex;
   flex-direction: column;
-  padding: 20px 0px 140px 60px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0px 20px;
+  width: 100%;
 }
 
 .account-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid silver;
+  border-radius: 5px;
+  padding: 30px;
+}
+
+.account-block form {
+  width: 100%;
+
+}
+
+.account-block input {
+  width: 240px;
+  padding: 8px 10px;
+  box-sizing: border-box;
 }
 
 .account-option {

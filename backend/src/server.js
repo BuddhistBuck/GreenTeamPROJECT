@@ -17,6 +17,8 @@ const {
   userVerify,
   userLogout,
   getAllUsers,
+  userUpdate,
+  getUserByEmail,
 } = require("./controllers/UserAuth");
 
 const {
@@ -31,6 +33,7 @@ const {
   userGetListByTitle,
   userUpdateList,
   userDeleteList,
+  userDeleteListTerm,
 } = require("./controllers/UserList");
 
 const {
@@ -44,7 +47,7 @@ const {
   adminUpdateList,
   adminGetListByTitle,
   adminDeleteList,
-  adminDeleteListTerms,
+  adminDeleteListTerm,
 } = require("./controllers/AdminList");
 
 const {
@@ -52,6 +55,11 @@ const {
   userGetLists,
   userDeleteListObject,
 } = require("./controllers/UserListObject");
+
+const {
+  adminGetEvents,
+  adminCreateEvent,
+} = require("./controllers/AdminEvent");
 
 //
 // Initialize server
@@ -102,6 +110,8 @@ app.post("/user-create", userCreate);
 app.post("/user-login", userLogin);
 app.get("/user-verify", userVerify);
 app.get("/user-logout", userLogout);
+app.post("/user-update", userUpdate);
+app.post("/get-user-by-email", getUserByEmail);
 app.post("/user-list-object-create", userListObjectCreate);
 app.post("/user-list-create", userListCreate);
 app.post("/user-get-lists", userGetLists);
@@ -109,6 +119,7 @@ app.post("/user-get-list-by-title", userGetListByTitle);
 app.post("/user-update-list", userUpdateList);
 app.post("/user-delete-list", userDeleteList);
 app.post("/user-delete-list-object", userDeleteListObject);
+app.post("/user-delete-list-term", userDeleteListTerm);
 
 // Admin routes
 app.post("/admin-create", adminCreate);
@@ -122,4 +133,6 @@ app.post("/admin-get-list-by-title", adminGetListByTitle);
 app.post("/admin-update-list", adminUpdateList);
 app.post("/admin-delete-list", adminDeleteList);
 app.post("/admin-delete-list-object", adminDeleteListObject);
-app.post("/admin-delete-list-term", adminDeleteListTerms);
+app.post("/admin-delete-list-term", adminDeleteListTerm);
+app.get("/admin-get-event-logs", adminGetEvents);
+app.post("/admin-create-event-log", adminCreateEvent);

@@ -3,7 +3,8 @@ const UserSession = require("../models/UserSessionModel");
 
 exports.userCreate = (req, res, next) => {
   const { body } = req;
-  const { email, firstName, lastName, occupation, password } = body;
+  const { email, firstName, lastName, occupation, phoneNumber, password } =
+    body;
 
   if (!email) {
     return res.send({
@@ -57,6 +58,7 @@ exports.userCreate = (req, res, next) => {
       newUser.firstName = firstName;
       newUser.lastName = lastName;
       newUser.occupation = occupation;
+      newUser.phoneNumber = phoneNumber;
       newUser.password = newUser.generateHash(password);
       newUser.save((err, user) => {
         if (err) {
@@ -148,6 +150,8 @@ exports.userLogin = (req, res, next) => {
           message: "Valid sign in",
           token: doc._id,
           email: email,
+          firstName: user.firstName,
+          lastName: user.lastName,
         });
       });
     }
@@ -228,22 +232,67 @@ exports.getAllUsers = async (req, res) => {
   });
 };
 
-// exports.userUpdateLastLoggedIn = (req, res, next) => {
-//   const { email } = req.body;
+exports.getUserByEmail = async (req, res) => {
+  const { body } = req;
+  const { email } = body;
+  User.find(
+    {
+      email: email,
+    },
+    (err, docs) => {
+      if (docs) {
+        res.status(200).send({ docs });
+      } else {
+        res.json({ err });
+      }
+    }
+  );
+};
 
-//   User.findOneAndUpdate(
-//     {
-//       email: email,
-//     },
-//     {
-//       $set: {
-//         "lastLoggedIn.$": Date.now(),
-//       },
-//     }
-//   ).exec((error, user) => {
-//     if (error) return res.status(400).json({ error });
-//     if (user) {
-//       res.status(201).json({ user });
-//     }
-//   });
-// };
+exports.userUpdate = (req, res, next) => {
+  const { body } = req;
+  const {
+    firstName,
+    lastName,
+    email,
+    subscriptionStatus,
+    emailConfirmed,
+    occupation,
+    phoneNumber,
+    password,
+  } = body;
+
+  if (!email) {
+    return res.send({
+      success: false,
+      message: "Error: email cannot be blank.",
+    });
+  }
+
+  User.findOne(
+    {
+      email: email,
+    },
+    function (err, user) {
+      if (firstName) user.firstName = firstName;
+      if (lastName) user.lastName = lastName;
+      if (email) user.email = email;
+      if (subscriptionStatus) user.subscriptionStatus = subscriptionStatus;
+      if (emailConfirmed) user.emailConfirmed = emailConfirmed;
+      if (occupation) user.occupation = occupation;
+      if (phoneNumber) user.phoneNumber = phoneNumber;
+      if (password) user.password = password;
+
+      user.save(function (err) {
+        if (err) {
+          return res.send({
+            success: false,
+            message: err,
+          });
+        } else {
+          return res.send({ success: true, message: "User updated" });
+        }
+      });
+    }
+  );
+};
