@@ -11,10 +11,18 @@
   height: 100%;
   width: 100%;
   z-index: -1;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  /* background-position: center; */
+  background-repeat: repeat-y;
 }
+
+.user-login-top {
+  height: 40px;
+}
+
+.user-login-bottom {
+  height: 40px;
+}
+
 
 .user-login {
   display: flex;
@@ -79,4 +87,53 @@
 .user-form-error {
   color: #f42b4b;
   text-align: center;
+}
+
+@media only screen and (max-width: 1500px) {
+  .user-login {
+    transform: scale(0.9);
+    padding-top: 0px;
+  }
+  .user-login-top {
+    height: 20px;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .user-login {
+    transform: scale(0.8);
+    margin-top: -20px;
+  }
+  .user-login-top {
+    height: 0px;
+  }
+}
+
+@media only screen and (max-width: 1280px) {
+  .user-login {
+    transform: scale(0.7);
+    margin-top: -45px;
+    /* border: 2px solid red; */
+  }
+
+  .user-background-image {
+    transform: translateY(50px);
+  }
+
+  .user-login-top {
+    height: 0px;
+  }
+  .user-login-bottom {
+    height: 0px;
+  }
+
+}
+
+@media only screen and (max-width: 800px) {
+  .user-login {
+    width: 100%;
+    height: 100%;
+    /* border: 2px solid red; */
+
+  }
 }

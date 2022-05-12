@@ -94,17 +94,6 @@ exports.userLogin = (req, res, next) => {
     });
   }
 
-  User.findOneAndUpdate(
-    {
-      email: email,
-    },
-    {
-      $set: {
-        "lastLoggedIn.$": Date.now(),
-      },
-    }
-  );
-
   User.find(
     {
       email: email,
@@ -152,6 +141,7 @@ exports.userLogin = (req, res, next) => {
           email: email,
           firstName: user.firstName,
           lastName: user.lastName,
+          darkTheme: user.darkTheme,
         });
       });
     }
@@ -221,14 +211,14 @@ exports.userLogout = (req, res, next) => {
 
 exports.getAllUsers = async (req, res) => {
   User.find({}, function (err, users) {
-    var userMap = {};
+    // var userMap = {};
 
-    users.forEach(function (user) {
-      userMap[(user.firstName, user.lastName, user.email, user.occupation)] =
-        user;
-    });
+    // users.forEach(function (user) {
+    //   userMap[(user.firstName, user.lastName, user.email, user.occupation)] =
+    //     user;
+    // });
 
-    res.send(userMap);
+    res.send(users);
   });
 };
 
@@ -260,6 +250,7 @@ exports.userUpdate = (req, res, next) => {
     occupation,
     phoneNumber,
     password,
+    darkTheme,
   } = body;
 
   if (!email) {
@@ -282,6 +273,7 @@ exports.userUpdate = (req, res, next) => {
       if (occupation) user.occupation = occupation;
       if (phoneNumber) user.phoneNumber = phoneNumber;
       if (password) user.password = password;
+      if (darkTheme) user.darkTheme = darkTheme;
 
       user.save(function (err) {
         if (err) {

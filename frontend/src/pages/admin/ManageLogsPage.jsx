@@ -149,7 +149,7 @@ export default function ManageLogsPage(props) {
                   {row.eventType}
                 </TableCell>
                 <TableCell style={{ width: 600 }} align="right">
-                  <span style={{color: 'grey'}}>{row.eventDetails}</span>
+                  <span style={{ color: "grey" }}>{row.eventDetails}</span>
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="right">
                   {row.admin}
@@ -169,7 +169,8 @@ export default function ManageLogsPage(props) {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                // rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[5, 10]}
                 colSpan={3}
                 count={rows.length}
                 rowsPerPage={rowsPerPage}

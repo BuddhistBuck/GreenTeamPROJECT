@@ -5,9 +5,10 @@ import "../css/account.css";
 import stripeBadge from "../util/images/stripe-badge-grey.png";
 import Box from "@mui/material/Box";
 import Axios from "axios";
-import { Button } from "@mui/material";
+import { Button, FormControlLabel, FormGroup } from "@mui/material";
 import { Modal, Typography } from "@mui/material";
 import { baseUrl } from "../util/baseUrl";
+import { DarkThemeSwitch } from "../components/DarkThemeSwitch";
 
 /**
  * @author Chris P
@@ -59,21 +60,51 @@ export default function AccountSettingsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counter]);
 
-  // Style variable for Modal components
+  const [firstNameInputChanged, setFirstNameInputChanged] = useState(false);
+  const [lastNameInputChanged, setLastNameInputChanged] = useState(false);
+
+  const [darkTheme, setDarkTheme] = useState(
+    JSON.parse(localStorage.getItem("currentUser")).darkTheme
+  );
+  function handleChangedarkTheme(event) {
+    setDarkTheme(event.target.checked);
+    let param = {
+      email: JSON.parse(localStorage.getItem("currentUser")).email,
+      darkTheme: String(event.target.checked),
+    };
+    updateUserInfo(param, false);
+    let updatedToken = JSON.parse(localStorage.getItem("currentUser"));
+    updatedToken.darkTheme = event.target.checked;
+    localStorage.setItem("currentUser", JSON.stringify(updatedToken));
+  }
+
+  // Get token on update to load dark theme
+  useEffect(() => {
+    let darkThemeToken = JSON.parse(
+      localStorage.getItem("currentUser")
+    ).darkTheme;
+
+    if (darkThemeToken) {
+      document.body.style.backgroundColor = "#454545";
+    } else {
+      document.body.style.backgroundColor = "white";
+    }
+  }, [darkTheme]);
+
+  // Default style for Modal
   const style = {
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: 400,
-    bgcolor: "background.paper",
+    bgcolor: darkTheme ? "#454545" : "background.paper",
+    color: darkTheme ? "#ffffff" : "000000",
     border: "2px solid #000",
+    borderRadius: "5px",
     boxShadow: 24,
     p: 4,
   };
-
-  const [firstNameInputChanged, setFirstNameInputChanged] = useState(false);
-  const [lastNameInputChanged, setLastNameInputChanged] = useState(false);
 
   // Update visibility of button components based on inputs
   useEffect(() => {
@@ -94,160 +125,219 @@ export default function AccountSettingsPage() {
     Axios.post(`${baseUrl}/user-update`, param).then((res, err) => {
       if (redirectToStripe)
         window.location.href = "https://buy.stripe.com/fZe4gt1008aDciQcMN";
-      if (err) return;
+      if (err) {
+        console.log(err);
+        return;
+      }
     });
   }
 
   return (
     <Layout>
-      <div className="account-container">
-        <h2>Account Settings</h2>
-        <Divider />
-        <div className="account-content">
-          <div className="account-block">
-            <form>
-              <label htmlFor="firstName">
-                <strong style={{ color: "#303030" }}>First Name</strong>
-                <div style={{ height: "10px" }} />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: "350px",
+      <div
+        className={darkTheme ? "account-container-dark" : "account-container"}
+      >
+        <h2 style={darkTheme ? { color: "white" } : { color: "black" }}>
+          Account Settings
+        </h2>
+        <div className={darkTheme ? "account-block-dark" : "account-block"}>
+          <a
+            href="/"
+            style={
+              darkTheme
+                ? { color: "#00A8e8", marginTop: "-15px" }
+                : { color: "#003459", marginTop: "-15px" }
+            }
+          >
+            Back to Practice Page
+          </a>
+          <div style={{ height: "20px" }} />
+          <form>
+            <label htmlFor="firstName">
+              <strong
+                style={darkTheme ? { color: "white" } : { color: "black" }}
+              >
+                First Name
+              </strong>
+              <div style={{ height: "10px" }} />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "350px",
+                }}
+              >
+                <input
+                  type="text"
+                  defaultValue={firstName}
+                  onChange={(e) => {
+                    setInputFirstName(e.target.value);
+                    setFirstNameInputChanged(true);
                   }}
-                >
-                  <input
-                    type="text"
-                    defaultValue={firstName}
-                    onChange={(e) => {
-                      setInputFirstName(e.target.value);
-                      setFirstNameInputChanged(true);
-                    }}
-                  />
-                  {firstNameModified && firstNameInputChanged ? (
-                    <Button
-                      style={{ backgroundColor: "#003459" }}
-                      variant="contained"
-                      onClick={() => {
-                        let param = {
-                          email: JSON.parse(localStorage.getItem("currentUser"))
-                            .email,
-                          firstName: inputFirstName,
-                        };
-                        updateUserInfo(param, false);
-                        setUpdateMessage(
-                          "Must log out in order to see the reflected changes."
-                        );
-                        setCounter(counter + 1);
-                      }}
-                    >
-                      Update
-                    </Button>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </label>
-              <div style={{ height: "20px" }} />
-              <label htmlFor="lastName">
-                <strong style={{ color: "#303030" }}>Last Name</strong>
-                <div style={{ height: "10px" }} />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: "350px",
-                  }}
-                >
-                  <input
-                    type="text"
-                    defaultValue={lastName}
-                    onChange={(e) => {
-                      setInputLastName(e.target.value);
-                      setUpdateMessage(
-                        "Must log out in order to see the reflected changes."
-                      );
-                      setLastNameInputChanged(true);
-                    }}
-                  />
-                  {lastNameModified && lastNameInputChanged ? (
-                    <Button
-                      style={{ backgroundColor: "#003459" }}
-                      variant="contained"
-                      onClick={() => {
-                        let param = {
-                          email: JSON.parse(localStorage.getItem("currentUser"))
-                            .email,
-                          lastName: inputLastName,
-                        };
-                        updateUserInfo(param, false);
-                        setUpdateMessage(
-                          "Please log out in order to reflect the changes."
-                        );
-                        setCounter(counter + 1);
-                      }}
-                    >
-                      Update
-                    </Button>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </label>
-            </form>
-            {<p style={{ color: "#00A8E8" }}>{updateMessage}</p>}
-            <div className="account-option">
-              {userSubscriptionStatus ? (
-                <div>
-                  <p>
-                    Subscription Status:&nbsp;
-                    <span style={{ color: "#003459" }}>Active</span>
-                  </p>
+                />
+                {firstNameModified && firstNameInputChanged ? (
                   <Button
                     style={{ backgroundColor: "#003459" }}
-                    width="20%"
-                    variant="contained"
-                    onClick={handleOpenCancelSubscription}
-                  >
-                    Cancel Subscription
-                  </Button>
-                </div>
-              ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "60%",
-                  }}
-                >
-                  <p>
-                    Subscription Status:&nbsp;
-                    <span style={{ color: "#003459" }}>Inactive</span>
-                  </p>
-                  <Button
-                    style={{ backgroundColor: "#003459" }}
-                    width="20%"
                     variant="contained"
                     onClick={() => {
                       let param = {
                         email: JSON.parse(localStorage.getItem("currentUser"))
                           .email,
-                        subscriptionStatus: true,
+                        firstName: inputFirstName,
                       };
-                      updateUserInfo(param, true);
+                      updateUserInfo(param, false);
+                      setUpdateMessage(
+                        "Log in again in order to see the reflected changes."
+                      );
+                      setCounter(counter + 1);
                     }}
                   >
-                    Purchase Subscription
+                    Update
                   </Button>
-                  <br />
-                  <div style={{ height: "20px" }} />
-
-                  <img src={stripeBadge} alt="" width="400px" />
-                </div>
-              )}
+                ) : (
+                  <></>
+                )}
+              </div>
+            </label>
+            <div style={{ height: "20px" }} />
+            <label htmlFor="lastName">
+              <strong
+                style={darkTheme ? { color: "white" } : { color: "black" }}
+              >
+                Last Name
+              </strong>
+              <div style={{ height: "10px" }} />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "350px",
+                }}
+              >
+                <input
+                  type="text"
+                  defaultValue={lastName}
+                  onChange={(e) => {
+                    setInputLastName(e.target.value);
+                    setLastNameInputChanged(true);
+                  }}
+                />
+                {lastNameModified && lastNameInputChanged ? (
+                  <Button
+                    style={{ backgroundColor: "#003459" }}
+                    variant="contained"
+                    onClick={() => {
+                      let param = {
+                        email: JSON.parse(localStorage.getItem("currentUser"))
+                          .email,
+                        lastName: inputLastName,
+                      };
+                      updateUserInfo(param, false);
+                      setUpdateMessage(
+                        "Log in again in order to see the reflected changes."
+                      );
+                      setCounter(counter + 1);
+                    }}
+                  >
+                    Update
+                  </Button>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </label>
+            <br />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <strong
+                style={darkTheme ? { color: "white" } : { color: "black" }}
+              >
+                Dark Theme
+              </strong>
+              <DarkThemeSwitch
+                sx={{ m: 1 }}
+                checked={darkTheme}
+                onChange={handleChangedarkTheme}
+              />
             </div>
+            {<p style={{ color: "#00A8E8" }}>{updateMessage}</p>}
+          </form>
+          <div className="account-option">
+            {userSubscriptionStatus ? (
+              <div>
+                <p style={darkTheme ? { color: "white" } : { color: "black" }}>
+                  Subscription Status:&nbsp;
+                  <span
+                    style={
+                      darkTheme ? { color: "#00a8e8" } : { color: "#003459" }
+                    }
+                  >
+                    Active
+                  </span>
+                </p>
+                <Button
+                  style={
+                    darkTheme
+                      ? { backgroundColor: "#4f7fa1" }
+                      : { backgroundColor: "#008B9E" }
+                  }
+                  width="20%"
+                  variant="contained"
+                  onClick={handleOpenCancelSubscription}
+                >
+                  Cancel Subscription
+                </Button>
+              </div>
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "60%",
+                }}
+              >
+                <p style={darkTheme ? { color: "white" } : { color: "black" }}>
+                  Subscription Status:&nbsp;
+                  <span
+                    style={
+                      darkTheme ? { color: "#00a8e8" } : { color: "#003459" }
+                    }
+                  >
+                    Inactive
+                  </span>
+                </p>
+                <Button
+                  style={
+                    darkTheme
+                      ? { backgroundColor: "#4f7fa1" }
+                      : { backgroundColor: "#008B9E" }
+                  }
+                  width="20%"
+                  variant="contained"
+                  onClick={() => {
+                    let param = {
+                      email: JSON.parse(localStorage.getItem("currentUser"))
+                        .email,
+                      subscriptionStatus: true,
+                    };
+                    updateUserInfo(param, true);
+                  }}
+                >
+                  Purchase Subscription
+                </Button>
+                <br />
+                <div style={{ height: "20px" }} />
+
+                <img src={stripeBadge} alt="" width="400px" />
+              </div>
+            )}
           </div>
         </div>
         <div style={{ height: "50px" }} />
@@ -264,8 +354,11 @@ export default function AccountSettingsPage() {
           <br />
           <Button
             variant="contained"
-            style={{ backgroundColor: "#003459" }}
-            onClick={() => {
+            style={
+              darkTheme
+                ? { backgroundColor: "#4f7fa1" }
+                : { backgroundColor: "#008B9E" }
+            }            onClick={() => {
               let param = {
                 email: JSON.parse(localStorage.getItem("currentUser")).email,
                 subscriptionStatus: "false",
@@ -280,8 +373,11 @@ export default function AccountSettingsPage() {
           &nbsp;
           <Button
             variant="contained"
-            style={{ backgroundColor: "#003459" }}
-            onClick={handleCloseCancelSubscription}
+            style={
+              darkTheme
+                ? { backgroundColor: "#4f7fa1" }
+                : { backgroundColor: "#008B9E" }
+            }            onClick={handleCloseCancelSubscription}
           >
             No
           </Button>
@@ -303,7 +399,7 @@ export default function AccountSettingsPage() {
             onClick={() => {
               handleCloseCancelSubscriptionMessage();
               setCounter(counter + 1);
-              window.location.reload();
+              // window.location.reload();
             }}
           >
             Okay

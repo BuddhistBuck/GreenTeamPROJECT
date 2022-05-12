@@ -25,6 +25,7 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import { Paper } from "@mui/material";
 
 export default function ManageListsPage(props) {
   const [list, setList] = useState([]);
@@ -237,7 +238,9 @@ export default function ManageListsPage(props) {
       name: newList,
     }).then((res) => {
       if (res) {
-        setSuccessMessage("New list successfully created, refresh to see changes");
+        setSuccessMessage(
+          "New list successfully created, refresh to see changes"
+        );
         createEventLog(
           "Created list",
           `List Name: ${newList}`,
@@ -466,40 +469,42 @@ export default function ManageListsPage(props) {
                 {/* Delete List Check Box */}
                 {/* ------ */}
                 <Box sx={{ minWidth: 120 }}>
-                  <List
-                    sx={{
-                      width: "100%",
-                      maxWidth: 360,
-                      bgcolor: "background.paper",
-                    }}
-                  >
-                    {listObjects.map((value) => {
-                      const labelId = `checkbox-list-label-${value}`;
+                  <Paper style={{ maxHeight: 200, overflow: "auto" }}>
+                    <List
+                      sx={{
+                        width: "100%",
+                        maxWidth: 360,
+                        bgcolor: "background.paper",
+                      }}
+                    >
+                      {listObjects.map((value) => {
+                        const labelId = `checkbox-list-label-${value}`;
 
-                      return (
-                        <ListItem key={value} disablePadding>
-                          <ListItemButton
-                            role={undefined}
-                            onClick={handleToggle(value)}
-                            dense
-                          >
-                            <ListItemIcon>
-                              <Checkbox
-                                edge="start"
-                                checked={
-                                  selectedListsForDelete.indexOf(value) !== -1
-                                }
-                                tabIndex={-1}
-                                disableRipple
-                                inputProps={{ "aria-labelledby": labelId }}
-                              />
-                            </ListItemIcon>
-                            <ListItemText id={labelId} primary={value} />
-                          </ListItemButton>
-                        </ListItem>
-                      );
-                    })}
-                  </List>
+                        return (
+                          <ListItem key={value} disablePadding>
+                            <ListItemButton
+                              role={undefined}
+                              onClick={handleToggle(value)}
+                              dense
+                            >
+                              <ListItemIcon>
+                                <Checkbox
+                                  edge="start"
+                                  checked={
+                                    selectedListsForDelete.indexOf(value) !== -1
+                                  }
+                                  tabIndex={-1}
+                                  disableRipple
+                                  inputProps={{ "aria-labelledby": labelId }}
+                                />
+                              </ListItemIcon>
+                              <ListItemText id={labelId} primary={value} />
+                            </ListItemButton>
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  </Paper>
                 </Box>
                 <br />
                 <Button

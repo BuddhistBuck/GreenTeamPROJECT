@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 
 import logo from "../util/images/logo.gif";
 import "../css/home.css";
+import { runCommand } from "../util/extractFromExcel";
 
 function HomePage(props) {
   return (
@@ -15,6 +16,7 @@ function HomePage(props) {
         <NavLink exact to="/practice">Log In</NavLink>
         <br />
         <NavLink exact to="/admin">Admin</NavLink>
+        {/* <button onClick={runCommand}>Extract</button> */}
       </div>
     </div>
   );

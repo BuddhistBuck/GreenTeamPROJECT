@@ -32,7 +32,7 @@ export default function LoginPage(props) {
   return (
     <>
       <div className="user-background-image" />
-      <div style={{ height: "40px" }} />
+      <div className="user-login-top" />
       <div className="user-login">
         <div style={{ height: "40px" }} />
 
@@ -94,7 +94,7 @@ export default function LoginPage(props) {
         </form>
         <div style={{ height: "60px" }} />
       </div>
-      <div style={{ height: "40px" }} />
+      <div className="user-login-bottom" />
 
       <footer className="user-login-footer">
         <p style={{ paddingLeft: "20px" }}>Court Reporter Pro</p>

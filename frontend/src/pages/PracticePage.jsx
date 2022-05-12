@@ -39,17 +39,15 @@ import {
   ListItemIcon,
   ListItemText,
   Checkbox,
+  Paper,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-
-// const lists = [
-//   { category: "Words", data: "stenoData" },
-//   { category: "Numbers", data: "numbers" },
-//   { category: "Phrases", data: "phrases" },
-//   { category: "States", data: "states" },
-//   { category: "Years", data: "years" },
-// ];
+import themeListButtons from "../util/themeListButtons";
+import themeListButtonsDark from "../util/themeListButtonsDark";
+import themeSliderDark from "../util/themeSliderDark";
+import themeSlider from "../util/themeSlider";
+import themeUserButtons from "../util/themeUserButtons";
 
 /**
  * @component Home Page and Practice Session
@@ -145,8 +143,6 @@ export default function PraticePage() {
   const handleCloseConfirmDeleteList = () => setOpenConfirmDeleteList(false);
 
   const deleteLists = (obj) => {
-    console.log(obj);
-
     const requestOne = Axios.post(`${baseUrl}/user-delete-list-object`, {
       email: JSON.parse(localStorage.getItem("currentUser")).email,
       name: obj,
@@ -190,7 +186,6 @@ export default function PraticePage() {
 
   const deleteListTerms = (title, obj) => {
     let terms = String(obj).split(",");
-    console.log(terms);
     for (let i = 0; i < obj.length; i++) {
       Axios.post(`${baseUrl}/user-delete-list-term`, {
         email: JSON.parse(localStorage.getItem("currentUser")).email,
@@ -247,6 +242,8 @@ export default function PraticePage() {
       setInputFieldErrorMessage(
         "Cannot have fields greater than 8. Please save and try again."
       );
+    } else if (inputFieldCounter < 1) {
+      setInputFieldCounter(1);
     }
     setTimeout(() => setInputFieldErrorMessage(""), 10000);
   }, [inputFieldCounter]);
@@ -327,19 +324,6 @@ export default function PraticePage() {
     handleCloseAddTerms();
   };
 
-  // Default style for Modal
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
-
   // Button group selection
   const handleChange = (event, nextView) => {
     setView(nextView);
@@ -353,19 +337,56 @@ export default function PraticePage() {
     setSelectedButton(!selectedButton);
   };
 
+  let darkTheme = JSON.parse(localStorage.getItem("currentUser")).darkTheme;
+
+  // Default style for Modal
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: darkTheme ? "#454545" : "background.paper",
+    color: darkTheme ? "#ffffff" : "000000",
+    border: "2px solid #000",
+    borderRadius: "5px",
+    boxShadow: 24,
+    p: 4,
+  };
+
   function PracticeMenu() {
     return (
       <div className="practice-menu-container">
         <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            border: "2px solid silver",
-          }}
+          style={
+            darkTheme
+              ? {
+                  display: "flex",
+                  flexDirection: "row",
+                  border: "1px solid #393939",
+                  borderRadius: "5px",
+                }
+              : {
+                  display: "flex",
+                  flexDirection: "row",
+                  border: "1px solid silver",
+                  borderRadius: "5px",
+                }
+          }
         >
-          <div className="practice-menu-select-list">
-            <h3>Select List</h3>
-            <ThemeProvider theme={themeDefault}>
+          <div
+            className={
+              darkTheme
+                ? "practice-menu-select-list-dark"
+                : "practice-menu-select-list"
+            }
+          >
+            <h3 style={darkTheme ? { color: "white" } : { color: "black" }}>
+              Select List
+            </h3>
+            <ThemeProvider
+              theme={darkTheme ? themeListButtonsDark : themeListButtons}
+            >
               <ToggleButtonGroup
                 orientation="vertical"
                 value={view}
@@ -380,14 +401,14 @@ export default function PraticePage() {
                         variant="outlined"
                         key={index}
                         value={option}
-                        onClick={() => {
-                          console.log(option);
+                        onClick={(e) => {
                           Axios.post(`${baseUrl}/admin-get-list-by-title`, {
                             listTitle: option,
                           }).then((res) => {
-                              setListItems(res.data.docs[0].listTerms);
+                            setListItems(res.data.docs[0].listTerms);
                           });
                         }}
+                        style={darkTheme ? { backgroundColor: "#666666" } : {}}
                         color={selectedButton ? "primary" : "secondary"}
                       >
                         {option}
@@ -395,15 +416,31 @@ export default function PraticePage() {
                     );
                   })
                 ) : (
-                  <>Lists loading ... </>
+                  <p
+                    style={
+                      darkTheme
+                        ? { color: "white", margin: "0 auto" }
+                        : { color: "grey", margin: "0 auto" }
+                    }
+                  >
+                    Lists loading ...{" "}
+                  </p>
                 )}
-                <div style={{ height: "20px" }}></div>
-                <Divider>Custom Lists</Divider>
                 <div style={{ height: "20px" }} />
-                {subscriptionStatus ? (
+                <p
+                  style={
+                    darkTheme
+                      ? { color: "white", margin: "0 auto" }
+                      : { color: "black", margin: "0 auto" }
+                  }
+                >
+                  Custom Lists
+                </p>
+                <div style={{ height: "5px" }} />
+                {subscriptionStatus && userLists.length > 0 ? (
                   <div style={{ borderBottom: "1px solid silver" }} />
                 ) : (
-                  <></>
+                  <div></div>
                 )}
                 {userLists.length > 0 && subscriptionStatus ? (
                   userLists.map((option, index) => {
@@ -423,7 +460,8 @@ export default function PraticePage() {
                             setListItems(res.data.docs[0].listTerms);
                           });
                         }}
-                        color={selectedButton ? "primary" : "secondary"}
+                        style={darkTheme ? { backgroundColor: "#666666" } : {}}
+                        color={selectedButton ? "#ffffff" : "secondary"}
                       >
                         {option}
                       </ToggleButton>
@@ -437,8 +475,11 @@ export default function PraticePage() {
                       textAlign: "center",
                     }}
                   >
-                    <div style={{ height: "20px" }} />
-                    There are no lists created
+                    <p
+                      style={darkTheme ? { color: "white" } : { color: "grey" }}
+                    >
+                      There are no lists created
+                    </p>
                   </div>
                 ) : (
                   <div
@@ -450,7 +491,11 @@ export default function PraticePage() {
                     }}
                   >
                     <div style={{ height: "20px" }} />
-                    <p>
+                    <p
+                      style={
+                        darkTheme ? { color: "white" } : { color: "black" }
+                      }
+                    >
                       Please{" "}
                       <a style={{ color: "#00a8e8" }} href="/account">
                         subscribe
@@ -481,16 +526,15 @@ export default function PraticePage() {
             }}
           >
             <br />
-            <ThemeProvider theme={themeUserList}>
+            <ThemeProvider theme={darkTheme ? themeSliderDark : themeSlider}>
               <Slider
                 defaultValue={wpm}
                 orientation="vertical"
                 step={50}
                 marks={marks}
-                min={100}
+                min={150}
                 max={300}
                 onChange={(e, val) => setWpm(val)}
-                color="primary"
               />
             </ThemeProvider>
           </Box>
@@ -515,36 +559,39 @@ export default function PraticePage() {
             ) : (
               <></>
             )}
-            <ThemeProvider theme={themeUserList}>
+            <ThemeProvider theme={themeUserButtons}>
               <Button
                 style={{ height: "70px", width: "150px", color: "white" }}
                 variant="contained"
                 value=""
                 onClick={handleOpenCreateList}
+                color={darkTheme ? "primary" : "secondary"}
               >
                 Create List
               </Button>
             </ThemeProvider>
             <div style={{ height: "10px" }} />
 
-            <ThemeProvider theme={themeUserList}>
+            <ThemeProvider theme={themeUserButtons}>
               <Button
                 style={{ height: "70px", width: "150px", color: "white" }}
                 variant="contained"
                 value=""
                 onClick={handleOpenAddTerms}
+                color={darkTheme ? "primary" : "secondary"}
               >
                 Add Term(s) To List
               </Button>
             </ThemeProvider>
             <div style={{ height: "10px" }} />
 
-            <ThemeProvider theme={themeUserList}>
+            <ThemeProvider theme={themeUserButtons}>
               <Button
                 style={{ height: "70px", width: "150px", color: "white" }}
                 variant="contained"
                 value=""
                 onClick={handleOpenDeleteTerms}
+                color={darkTheme ? "primary" : "secondary"}
               >
                 Delete Term(s) From List
               </Button>
@@ -554,12 +601,25 @@ export default function PraticePage() {
 
           <ThemeProvider theme={themeDefault}>
             <Button
-              style={{ height: "70px", width: "150px" }}
+              style={
+                darkTheme
+                  ? {
+                      height: "70px",
+                      width: "150px",
+                      backgroundColor: "#003459",
+                    }
+                  : {
+                      height: "70px",
+                      width: "150px",
+                      backgroundColor: "#008B9E",
+                    }
+              }
               variant="contained"
               value=""
               onClick={() => {
                 setBegin(true);
               }}
+              disabled={!listItems.length > 0}
             >
               Begin
             </Button>
@@ -568,15 +628,16 @@ export default function PraticePage() {
       </div>
     );
   }
-
   return (
     <Layout>
       {begin && listItems ? (
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div className="practice-root">
             <div className="practice-block">
-              <h2>Practice</h2>
-              <Divider />
+              <h2 style={darkTheme ? { color: "white" } : { color: "black" }}>
+                Practice
+              </h2>
+              <div style={{ borderBottom: "1px solid silver" }} />
               <br />
               <div className="practice-top-buttons" ref={dropdownRef}>
                 <a
@@ -586,13 +647,13 @@ export default function PraticePage() {
                 >
                   Back to Menu
                 </a>
-                <a
+                {/* <a
                   onClick={() => {
                     // setSelectedOption(selectedOption);
                   }}
                 >
                   Randomize
-                </a>
+                </a> */}
                 <a
                   onClick={() => {
                     setSelectedOption(selectedOption);
@@ -659,7 +720,11 @@ export default function PraticePage() {
           &nbsp;
           <Button
             variant="contained"
-            style={{ backgroundColor: "#008B9E" }}
+            style={
+              darkTheme
+                ? { backgroundColor: "#4f7fa1" }
+                : { backgroundColor: "#008B9E" }
+            }
             onClick={saveNewList}
           >
             Save
@@ -683,11 +748,21 @@ export default function PraticePage() {
           <br />
           <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Select List</InputLabel>
+              <InputLabel
+                id="demo-simple-select-label"
+                style={darkTheme ? { color: "white" } : {}}
+              >
+                Select List
+              </InputLabel>
               <Select
                 value={listToEdit}
                 label="Select List"
                 onChange={(e) => setListToEdit(e.target.value)}
+                style={
+                  darkTheme
+                    ? { backgroundColor: "#666666", color: "white" }
+                    : { backgroundColor: "#white" }
+                }
               >
                 {userLists.length > 0 ? (
                   userLists.map((data, index) => {
@@ -698,7 +773,7 @@ export default function PraticePage() {
                     );
                   })
                 ) : (
-                  <MenuItem></MenuItem>
+                  <MenuItem>You have no lists</MenuItem>
                 )}
               </Select>
             </FormControl>
@@ -761,7 +836,15 @@ export default function PraticePage() {
           <br />
           {listToEdit ? (
             <>
-              <Button variant="contained" onClick={saveNewListTerms}>
+              <Button
+                variant="contained"
+                style={
+                  darkTheme
+                    ? { backgroundColor: "#4f7fa1" }
+                    : { backgroundColor: "#008B9E" }
+                }
+                onClick={saveNewListTerms}
+              >
                 Save
               </Button>
               &nbsp;
@@ -828,62 +911,111 @@ export default function PraticePage() {
           <Box sx={{ minWidth: 120 }}>
             <br />
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Select List</InputLabel>
+              <InputLabel
+                id="demo-simple-select-label"
+                style={darkTheme ? { color: "white" } : {}}
+              >
+                Select List
+              </InputLabel>
               <Select
                 // value={listToEdit}
                 label="Select List"
                 onChange={(e) => loadListToDeleteTerms(e.target.value)}
+                style={
+                  darkTheme
+                    ? { backgroundColor: "#666666", color: "white" }
+                    : { backgroundColor: "#white" }
+                }
               >
                 {userLists.length > 0 ? (
                   userLists.map((data, index) => {
                     return (
-                      <MenuItem key={index} value={data}>
+                      <MenuItem
+                        key={index}
+                        value={data}
+                        style={
+                          darkTheme
+                            ? { bgColor: "#666666" }
+                            : { backgroundColor: "#white" }
+                        }
+                      >
                         {data}
                       </MenuItem>
                     );
                   })
                 ) : (
-                  <MenuItem></MenuItem>
+                  <MenuItem>You have no lists</MenuItem>
                 )}
               </Select>
-              <List
-                sx={{
-                  width: "100%",
-                  maxWidth: 360,
-                  bgcolor: "background.paper",
-                }}
+              <div style={{ height: "20px" }} />
+              <Paper
+                style={
+                  darkTheme
+                    ? {
+                        maxHeight: 200,
+                        overflow: "auto",
+                        backgroundColor: "#666666",
+                        color: "black",
+                        padding: "10px",
+                      }
+                    : {
+                        maxHeight: 200,
+                        overflow: "auto",
+                        backgroundColor: "white",
+                        color: "white",
+                        padding: "10px",
+                      }
+                }
               >
-                {listToDeleteTermsArray.length > 0 ? (
-                  listToDeleteTermsArray.map((value) => {
-                    const labelId = `checkbox-list-label-${value}`;
+                <List
+                  sx={
+                    darkTheme
+                      ? {
+                          width: "100%",
+                          maxWidth: 360,
+                          bgcolor: "#666666",
+                          color: "white",
+                        }
+                      : {
+                          width: "100%",
+                          maxWidth: 360,
+                          bgcolor: "background.paper",
+                          color: "black",
+                        }
+                  }
+                >
+                  {listToDeleteTermsArray.length > 0 ? (
+                    listToDeleteTermsArray.map((value) => {
+                      const labelId = `checkbox-list-label-${value}`;
 
-                    return (
-                      <ListItem key={value} disablePadding>
-                        <ListItemButton
-                          role={undefined}
-                          onClick={handleToggle(value)}
-                          dense
-                        >
-                          <ListItemIcon>
-                            <Checkbox
-                              edge="start"
-                              checked={checked.indexOf(value) !== -1}
-                              tabIndex={-1}
-                              disableRipple
-                              inputProps={{ "aria-labelledby": labelId }}
-                            />
-                          </ListItemIcon>
-                          <ListItemText id={labelId} primary={value} />
-                        </ListItemButton>
-                      </ListItem>
-                    );
-                  })
-                ) : listToDeleteTerms ? (
-                  <p>This list is empty</p>
-                ) : (
-                  <></>
-                )}
-              </List>
+                      return (
+                        <ListItem key={value} disablePadding>
+                          <ListItemButton
+                            role={undefined}
+                            onClick={handleToggle(value)}
+                            dense
+                          >
+                            <ListItemIcon>
+                              <Checkbox
+                                edge="start"
+                                checked={checked.indexOf(value) !== -1}
+                                tabIndex={-1}
+                                disableRipple
+                                inputProps={{ "aria-labelledby": labelId }}
+                              />
+                            </ListItemIcon>
+                            <ListItemText id={labelId} primary={value} />
+                          </ListItemButton>
+                        </ListItem>
+                      );
+                    })
+                  ) : listToDeleteTerms ? (
+                    <p>This list is empty</p>
+                  ) : (
+                    <></>
+                  )}
+                </List>
+              </Paper>
             </FormControl>
           </Box>
           <br />

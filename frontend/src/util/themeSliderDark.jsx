@@ -1,9 +1,9 @@
 import { createTheme } from "@mui/material/styles";
 
-const themeUserList = createTheme({
+const themeSliderDark = createTheme({
   palette: {
-    primary: { main: "#a9cbd6" },
-    secondary: { main: "#a9cbd6" },
+    primary: { main: "#003459" },
+    secondary: { main: "#003459" },
   },
   components: {
     MuiSlider: {
@@ -16,4 +16,4 @@ const themeUserList = createTheme({
   },
 });
 
-export default themeUserList;
+export default themeSliderDark;

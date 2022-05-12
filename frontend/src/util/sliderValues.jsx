@@ -15,8 +15,4 @@ export const marks = [
     value: 150,
     label: "150 WPM",
   },
-  {
-    value: 100,
-    label: "50 WPM",
-  },
 ];

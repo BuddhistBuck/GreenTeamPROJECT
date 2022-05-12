@@ -40,3 +40,25 @@ a,
 a label {
     cursor: pointer;
 }
+
+
+/* Screen Size Compatibility */
+
+@media only screen and (max-width: 1280px) {
+  /* html {
+    transform : scale(0.7);
+    transform-origin: 0 0;
+    width: 143%;
+    height: 100%;
+  } */
+}
+
+
+@media only screen and (max-width: 800px) {
+  /* html {
+    transform : scale(0.6);
+    transform-origin: 0 0;
+    width: 168%;
+    height: 100%;
+  } */
+}

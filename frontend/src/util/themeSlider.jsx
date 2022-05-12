@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
-const themeUserList = createTheme({
+const themeSlider = createTheme({
   palette: {
     primary: { main: "#a9cbd6" },
     secondary: { main: "#a9cbd6" },
@@ -9,11 +9,11 @@ const themeUserList = createTheme({
     MuiSlider: {
       styleOverrides: {
         markLabel: {
-          color: "#ffffff",
+          color: "#000000",
         },
       },
     },
   },
 });
 
-export default themeUserList;
+export default themeSlider;

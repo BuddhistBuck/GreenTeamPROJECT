@@ -8,6 +8,7 @@ export default function PracticeInterface(props) {
   const { wpm, listItems } = props;
   console.log(listItems);
   const [sessionComplete, setSessionComplete] = useState(false);
+  let darkTheme = JSON.parse(localStorage.getItem("currentUser")).darkTheme;
 
   useEffect(() => {
     if (listItems.length > 0) {
@@ -29,27 +30,58 @@ export default function PracticeInterface(props) {
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        border: "2px solid #003459",
-        padding: "20px",
-        width: "100%",
-      }}
+      style={
+        darkTheme
+          ? {
+              display: "flex",
+              flexDirection: "column",
+              border: "2px solid #003459",
+              borderRadius: "5px",
+              padding: "20px",
+              width: "100%",
+              backgroundColor: "#333333",
+            }
+          : {
+              display: "flex",
+              flexDirection: "column",
+              border: "2px solid #008B9E",
+              borderRadius: "5px",
+              padding: "20px",
+              width: "100%",
+              backgroundColor: "#FFFFFF",
+            }
+      }
     >
-      <h3>WPM: {wpm}</h3>
+      <h3 style={darkTheme ? { color: "white" } : { color: "black" }}>
+        WPM: {wpm}
+      </h3>
 
       <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          backgroundColor: "#e6e6e6",
-        }}
+        style={
+          darkTheme
+            ? {
+                display: "flex",
+                justifyContent: "center",
+                backgroundColor: "#666666",
+              }
+            : {
+                display: "flex",
+                justifyContent: "center",
+                backgroundColor: "#efefef",
+              }
+        }
       >
         {!sessionComplete ? (
-          <h1 id="words">No words in this list</h1>
+          <h1
+            id="words"
+            style={darkTheme ? { color: "white" } : { color: "black" }}
+          >
+            No words in this list
+          </h1>
         ) : (
-          <h1 style={{ color: "green" }}>Session Complete</h1>
+          <h1 style={darkTheme ? { color: "#00a8e8" } : { color: "#008B9E" }}>
+            Session Complete
+          </h1>
         )}
       </div>
     </div>

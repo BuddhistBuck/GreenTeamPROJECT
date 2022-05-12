@@ -133,9 +133,6 @@ export default function SignUpPage(props) {
                         const formattedPhoneNumber = formatPhoneNumber(
                           e.target.value
                         );
-
-                        console.log(formattedPhoneNumber);
-
                         setInputPhone(formattedPhoneNumber);
                       }}
                     />
@@ -165,7 +162,7 @@ export default function SignUpPage(props) {
                   <span className="form-error">{errorMessage}</span>
                 )}
                 <button>Sign Up</button>
-                <br />
+                <div style={{height: '15px'}}/>
                 <a href="/practice" style={{ margin: "0 auto" }}>
                   Already have an account? Login here.
                 </a>

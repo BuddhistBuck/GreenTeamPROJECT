@@ -27,7 +27,6 @@ export async function loginAdmin(dispatch, loginPayload) {
   try {
     dispatch({ type: "REQUEST_LOGIN" });
     Axios.post(`${baseUrl}/admin-login`, loginPayload).then((res) => {
-      console.log(res.data);
       if (res.data.success) {
         dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
         localStorage.setItem("currentAdmin", JSON.stringify(res.data));
@@ -44,7 +43,6 @@ export async function createAccountUser(dispatch, loginPayload) {
     dispatch({ type: "REQUEST_CREATE_ACCOUNT" });
     Axios.post(`${baseUrl}/user-create`, loginPayload).then((res) => {
       dispatch({ type: "CREATE_ACCOUNT_SUCCESS", payload: res.data });
-      console.log(res.data);
       return res.data;
     });
   } catch (error) {
@@ -55,11 +53,13 @@ export async function createAccountUser(dispatch, loginPayload) {
 export async function logoutUser(dispatch) {
   dispatch({ type: "LOGOUT" });
   localStorage.removeItem("currentUser");
+  localStorage.removeItem("currentAdmin");
   localStorage.removeItem("token");
 }
 
 export async function logoutAdmin(dispatch) {
   dispatch({ type: "LOGOUT" });
+  localStorage.removeItem("currentUser");
   localStorage.removeItem("currentAdmin");
   localStorage.removeItem("token");
 }

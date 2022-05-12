@@ -18,6 +18,7 @@ export default function ManageUsersPage(props) {
   useEffect(() => {
     Axios.get(`${baseUrl}/users`).then((res) => {
       let users = formatUserData(res.data);
+      console.log(res.data);
       setUsers(users);
     });
   }, []);
@@ -98,7 +99,7 @@ export default function ManageUsersPage(props) {
                     {row.subscriptionStatus ? "Subscribed" : "Not Subscribed"}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {formatDate(row.lastLoggedIn)}
+                    {formatDate(row.timeCreated)}
                   </StyledTableCell>
                 </StyledTableRow>
               ))

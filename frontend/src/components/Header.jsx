@@ -18,13 +18,15 @@ function Header() {
   const dispatch = useAuthDispatch();
   let history = useHistory();
 
+  let darkTheme = JSON.parse(localStorage.getItem("currentUser")).darkTheme;
+
   function logout() {
     logoutUser(dispatch);
     history.push("/practice");
   }
 
   return (
-    <div className="header-top">
+    <div className={darkTheme ? "header-top-dark" : "header-top"}>
       <a href="/practice" className="header-logo">
         <img src={typewriter} alt=""></img>&nbsp;&nbsp;&nbsp;&nbsp;
         <h1>Court Reporter Pro</h1>
