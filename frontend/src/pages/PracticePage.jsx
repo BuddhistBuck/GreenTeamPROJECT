@@ -132,6 +132,7 @@ export default function PraticePage() {
   const [listToEdit, setListToEdit] = useState("");
   const [listToDeleteTerms, setListToDeleteTerms] = useState([]);
   const [listToDeleteTermsArray, setListToDeleteTermsArray] = useState([]);
+  const [listSelected, setListSelected] = useState("");
 
   const [newList, setNewList] = useState("");
 
@@ -146,16 +147,12 @@ export default function PraticePage() {
     const requestOne = Axios.post(`${baseUrl}/user-delete-list-object`, {
       email: JSON.parse(localStorage.getItem("currentUser")).email,
       name: obj,
-    }).then((res) => {
-      // console.log(res);
-    });
+    }).then((res) => {});
 
     const requestTwo = Axios.post(`${baseUrl}/user-delete-list`, {
       email: JSON.parse(localStorage.getItem("currentUser")).email,
       listTitle: obj,
-    }).then((res) => {
-      // console.log(res);
-    });
+    }).then((res) => {});
 
     Axios.all([requestOne, requestTwo])
       .then(
@@ -300,29 +297,48 @@ export default function PraticePage() {
     for (let i = 0; i < inputFieldCounter; i++) {
       items.push(document.getElementById("box" + i).value);
     }
-    setInputFieldCounter(0);
 
-    Axios.post(`${baseUrl}/user-update-list`, {
-      email: JSON.parse(localStorage.getItem("currentUser")).email,
-      listTitle: listToEdit,
-      newListTerms: items,
-    })
-      .then((err) => {
-        setSuccessMessage("List updated");
-        if (err) {
-          setErrorMessage("Server error");
-        }
+    if (items.length !== new Set(items).size) {
+      setInputFieldErrorMessage("New list terms must be unique");
+      return;
+    } else {
+      setInputFieldCounter(0);
+
+      Axios.post(`${baseUrl}/user-update-list`, {
+        email: JSON.parse(localStorage.getItem("currentUser")).email,
+        listTitle: listToEdit,
+        newListTerms: items,
       })
-      .catch((err) => console.log(err));
+        .then((err) => {
+          setSuccessMessage("List updated");
+          if (err) {
+            setErrorMessage("Server error");
+          }
+        })
+        .catch((err) => console.log(err));
 
-    setSuccessMessage("List updated");
+      setSuccessMessage("List updated");
 
-    setTimeout(() => {
-      setSuccessMessage("");
-      setErrorMessage("");
-    }, 8000);
-    handleCloseAddTerms();
+      setTimeout(() => {
+        setSuccessMessage("");
+        setErrorMessage("");
+      }, 8000);
+      handleCloseAddTerms();
+    }
   };
+
+  useEffect(() => {
+    if (listSelected) {
+      console.log(listSelected);
+      Axios.post(`${baseUrl}/admin-get-list-by-title`, {
+        listTitle: listSelected,
+      }).then((res) => {
+        setListItems(res.data.docs[0].listTerms);
+      });
+    } else {
+      setListItems([]);
+    }
+  }, [listSelected]);
 
   // Button group selection
   const handleChange = (event, nextView) => {
@@ -401,12 +417,10 @@ export default function PraticePage() {
                         variant="outlined"
                         key={index}
                         value={option}
-                        onClick={(e) => {
-                          Axios.post(`${baseUrl}/admin-get-list-by-title`, {
-                            listTitle: option,
-                          }).then((res) => {
-                            setListItems(res.data.docs[0].listTerms);
-                          });
+                        onClick={() => {
+                          listSelected
+                            ? setListSelected("")
+                            : setListSelected(option);
                         }}
                         style={darkTheme ? { backgroundColor: "#666666" } : {}}
                         color={selectedButton ? "primary" : "secondary"}
@@ -619,7 +633,7 @@ export default function PraticePage() {
               onClick={() => {
                 setBegin(true);
               }}
-              disabled={!listItems.length > 0}
+              disabled={!listItems.length > 0 && !listSelected}
             >
               Begin
             </Button>
@@ -778,64 +792,64 @@ export default function PraticePage() {
               </Select>
             </FormControl>
           </Box>
-          <br />
-          <div className={{ display: "flex", flexDirection: "row" }}>
-            {inputFields.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    padding: "5px 0px 5px",
-                  }}
-                >
-                  <>{item}</>
-                </div>
-              );
-            })}
-
-            <p style={{ color: "red" }}>{inputFieldErrorMessage}</p>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                Add
-                <IconButton
-                  aria-label="delete"
-                  onClick={() => {
-                    setInputFieldCounter(inputFieldCounter + 1);
-                  }}
-                >
-                  <AddCircleIcon />
-                </IconButton>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                Remove
-                <IconButton
-                  aria-label="delete"
-                  onClick={() => {
-                    setInputFieldCounter(inputFieldCounter - 1);
-                  }}
-                >
-                  <RemoveCircleIcon />
-                </IconButton>
-              </div>
-            </div>
-          </div>
-          <br />
           {listToEdit ? (
             <>
+              <br />
+              <div className={{ display: "flex", flexDirection: "row" }}>
+                {inputFields.map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        padding: "5px 0px 5px",
+                      }}
+                    >
+                      <>{item}</>
+                    </div>
+                  );
+                })}
+
+                <p style={{ color: "red" }}>{inputFieldErrorMessage}</p>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    Add
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() => {
+                        setInputFieldCounter(inputFieldCounter + 1);
+                      }}
+                    >
+                      <AddCircleIcon />
+                    </IconButton>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    Remove
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() => {
+                        setInputFieldCounter(inputFieldCounter - 1);
+                      }}
+                    >
+                      <RemoveCircleIcon />
+                    </IconButton>
+                  </div>
+                </div>
+              </div>
+              <br />
               <Button
                 variant="contained"
                 style={
@@ -881,6 +895,7 @@ export default function PraticePage() {
             onClick={() => {
               handleCloseConfirmDeleteList();
               deleteLists(listToEdit);
+              setListToEdit("");
               setRefreshCount(refreshCount + 1);
               setCounter(counter + 1);
             }}
@@ -985,11 +1000,11 @@ export default function PraticePage() {
                   }
                 >
                   {listToDeleteTermsArray.length > 0 ? (
-                    listToDeleteTermsArray.map((value) => {
+                    listToDeleteTermsArray.map((value, index) => {
                       const labelId = `checkbox-list-label-${value}`;
 
                       return (
-                        <ListItem key={value} disablePadding>
+                        <ListItem key={index} disablePadding>
                           <ListItemButton
                             role={undefined}
                             onClick={handleToggle(value)}

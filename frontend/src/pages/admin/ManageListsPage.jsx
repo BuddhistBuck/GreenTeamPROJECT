@@ -48,9 +48,7 @@ export default function ManageListsPage(props) {
       eventType: eventType,
       eventDetails: eventDetails,
       admin: admin,
-    }).then((res) => {
-      console.log("Successfully created log");
-    });
+    }).then((res) => {});
   }
 
   const selectListMain = (event) => {
@@ -216,21 +214,27 @@ export default function ManageListsPage(props) {
     for (let i = 0; i < inputFieldCounter; i++) {
       items.push(document.getElementById("box" + i).value);
     }
-    setInputFieldCounter(0);
-    Axios.post(`${baseUrl}/admin-update-list`, {
-      listTitle: listToAddNewTerms,
-      newListTerms: items,
-    })
-      .then((res, err) => {})
-      .catch((err) => console.log(err));
-    createEventLog(
-      "Added terms to list",
-      `List Name: ${listToAddNewTerms}  ||  List Terms: ${items}`,
-      JSON.parse(localStorage.getItem("currentAdmin")).admin
-    );
-    setSuccessMessage("Terms added to list");
-    setRefreshCount(refreshCount + 1);
-    handleCloseAddItems();
+
+    if (items.length !== new Set(items).size) {
+      setInputFieldErrorMessage("New list terms must be unique");
+      return;
+    } else {
+      setInputFieldCounter(0);
+      Axios.post(`${baseUrl}/admin-update-list`, {
+        listTitle: listToAddNewTerms,
+        newListTerms: items,
+      })
+        .then((res, err) => {})
+        .catch((err) => console.log(err));
+      createEventLog(
+        "Added terms to list",
+        `List Name: ${listToAddNewTerms}  ||  List Terms: ${items}`,
+        JSON.parse(localStorage.getItem("currentAdmin")).admin
+      );
+      setSuccessMessage("Terms added to list");
+      setRefreshCount(refreshCount + 1);
+      handleCloseAddItems();
+    }
   };
 
   const saveNewList = () => {
@@ -585,66 +589,72 @@ export default function ManageListsPage(props) {
                     </Select>
                   </FormControl>
                 </Box>
-                <br />
+                {listToAddNewTerms ? (
+                  <>
+                    {" "}
+                    <br />
+                    <div className={{ display: "flex", flexDirection: "row" }}>
+                      {inputFields.map((item, index) => {
+                        return (
+                          <div
+                            key={index}
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              padding: "5px 0px 5px",
+                            }}
+                          >
+                            <>{item}</>
+                          </div>
+                        );
+                      })}
 
-                <div className={{ display: "flex", flexDirection: "row" }}>
-                  {inputFields.map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          padding: "5px 0px 5px",
-                        }}
-                      >
-                        <>{item}</>
+                      <p style={{ color: "red" }}>{inputFieldErrorMessage}</p>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          Add
+                          <IconButton
+                            aria-label="delete"
+                            onClick={() => {
+                              setInputFieldCounter(inputFieldCounter + 1);
+                            }}
+                          >
+                            <AddCircleIcon />
+                          </IconButton>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          Remove
+                          <IconButton
+                            aria-label="delete"
+                            onClick={() => {
+                              setInputFieldCounter(inputFieldCounter - 1);
+                            }}
+                          >
+                            <RemoveCircleIcon />
+                          </IconButton>
+                        </div>
                       </div>
-                    );
-                  })}
-
-                  <p style={{ color: "red" }}>{inputFieldErrorMessage}</p>
-                  <div style={{ display: "flex", flexDirection: "row" }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      Add
-                      <IconButton
-                        aria-label="delete"
-                        onClick={() => {
-                          setInputFieldCounter(inputFieldCounter + 1);
-                        }}
-                      >
-                        <AddCircleIcon />
-                      </IconButton>
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      Remove
-                      <IconButton
-                        aria-label="delete"
-                        onClick={() => {
-                          setInputFieldCounter(inputFieldCounter - 1);
-                        }}
-                      >
-                        <RemoveCircleIcon />
-                      </IconButton>
-                    </div>
-                  </div>
-                </div>
-                <br />
-                <Button variant="contained" onClick={saveNewListTerms}>
-                  Save
-                </Button>
+                    <br />
+                    <Button variant="contained" onClick={saveNewListTerms}>
+                      Save
+                    </Button>
+                  </>
+                ) : (
+                  <></>
+                )}
               </Box>
             </Modal>
             {/* ------ */}
