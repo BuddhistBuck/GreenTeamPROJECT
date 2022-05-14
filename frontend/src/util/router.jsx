@@ -31,10 +31,13 @@ const UserPrivateRoute = ({ component, ...options }) => {
   return <Route {...options} component={finalComponent} />;
 };
 
+const userToken = localStorage.getItem("currentUser");
+const adminToken = localStorage.getItem("currentAdmin");
+
 const Router = () => (
   <Switch>
     {/* User Routes */}
-    <Route exact path="/" component={HomePage} />
+    <Route exact path="/" component={userToken ? PracticePage : HomePage} />
     <Route exact path="/signup" component={SignUpPage} />
     <Route exact path="/forgot-password" component={ForgotPasswordPage} />
     <Route exact path="/new-password" component={NewPassword} />
@@ -44,7 +47,11 @@ const Router = () => (
     <UserPrivateRoute exact path="/account" component={AccountSettingsPage} />
 
     {/* Admin Routes */}
-    <AdminPrivateRoute exact path="/admin" component={AdminLoginPage} />
+    <AdminPrivateRoute
+      exact
+      path="/admin"
+      component={adminToken ? AdminHomePage : AdminLoginPage}
+    />
     <AdminPrivateRoute
       exact
       path="/admin/documentation"

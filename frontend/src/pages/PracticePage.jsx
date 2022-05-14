@@ -59,10 +59,9 @@ export default function PraticePage() {
   const [listItems, setListItems] = useState([]);
   const [userLists, setUserLists] = useState([]);
   const [metronomeIcon, setMetronomeIcon] = useState(true);
-  const [selectedButton, setSelectedButton] = useState(false);
   const [wpm, setWpm] = useState(200);
   const [begin, setBegin] = useState(false);
-  const [view, setView] = useState("Words");
+  const [view, setView] = useState("");
   const [refreshCount, setRefreshCount] = useState();
   const [counter, setCounter] = useState(0);
 
@@ -122,6 +121,7 @@ export default function PraticePage() {
     setOpenDeleteTerms(false);
     setListToDeleteTerms("");
     setListToDeleteTermsArray([]);
+    setChecked([]);
   };
 
   const [successMessage, setSuccessMessage] = useState("");
@@ -133,6 +133,7 @@ export default function PraticePage() {
   const [listToDeleteTerms, setListToDeleteTerms] = useState([]);
   const [listToDeleteTermsArray, setListToDeleteTermsArray] = useState([]);
   const [listSelected, setListSelected] = useState("");
+  const [previousListTerms, setPreviousListTerms] = useState([]);
 
   const [newList, setNewList] = useState("");
 
@@ -183,11 +184,13 @@ export default function PraticePage() {
 
   const deleteListTerms = (title, obj) => {
     let terms = String(obj).split(",");
+
+    console.log(terms);
     for (let i = 0; i < obj.length; i++) {
       Axios.post(`${baseUrl}/user-delete-list-term`, {
         email: JSON.parse(localStorage.getItem("currentUser")).email,
         listTitle: title,
-        listTerm: terms[0],
+        listTerm: terms[i],
       })
         .then((res) => setSuccessMessage("List terms removed"))
         .catch((err) => {
@@ -245,8 +248,23 @@ export default function PraticePage() {
     setTimeout(() => setInputFieldErrorMessage(""), 10000);
   }, [inputFieldCounter]);
 
+  // Clear error messages
+  useEffect(() => {
+    setTimeout(() => {
+      setSuccessMessage("");
+      setErrorMessage("");
+    }, 10000);
+  }, [successMessage, errorMessage]);
+
   // Save List
   const saveNewList = () => {
+    if (!newList) {
+      setErrorMessage("List name is empty, cannot save list");
+      handleCloseCreateList();
+
+      return;
+    }
+
     const requestOne = Axios.post(`${baseUrl}/user-list-object-create`, {
       email: JSON.parse(localStorage.getItem("currentUser")).email,
       name: newList,
@@ -284,10 +302,6 @@ export default function PraticePage() {
     }
 
     setNewList("");
-    setTimeout(() => {
-      setSuccessMessage("");
-      setErrorMessage("");
-    }, 10000);
     handleCloseCreateList();
   };
 
@@ -298,38 +312,41 @@ export default function PraticePage() {
       items.push(document.getElementById("box" + i).value);
     }
 
+    for (var i = 0; i < items.length; i++) {
+      if (items[i] === "") {
+        setInputFieldErrorMessage("One or more fields cannot be empty");
+        return;
+      }
+    }
+
     if (items.length !== new Set(items).size) {
       setInputFieldErrorMessage("New list terms must be unique");
       return;
     } else {
-      setInputFieldCounter(0);
-
       Axios.post(`${baseUrl}/user-update-list`, {
         email: JSON.parse(localStorage.getItem("currentUser")).email,
         listTitle: listToEdit,
         newListTerms: items,
-      })
-        .then((err) => {
+      }).then((err) => {
+        if (previousListTerms.length === err.data.err.listTerms.length) {
+          setInputFieldErrorMessage(
+            "One or more terms already exist in list, please add new terms"
+          );
+        } else {
           setSuccessMessage("List updated");
-          if (err) {
-            setErrorMessage("Server error");
-          }
-        })
-        .catch((err) => console.log(err));
-
-      setSuccessMessage("List updated");
-
-      setTimeout(() => {
-        setSuccessMessage("");
-        setErrorMessage("");
-      }, 8000);
-      handleCloseAddTerms();
+          setTimeout(() => {
+            setSuccessMessage("");
+            setErrorMessage("");
+          }, 8000);
+          handleCloseAddTerms();
+          setInputFieldCounter(0);
+        }
+      });
     }
   };
 
   useEffect(() => {
     if (listSelected) {
-      console.log(listSelected);
       Axios.post(`${baseUrl}/admin-get-list-by-title`, {
         listTitle: listSelected,
       }).then((res) => {
@@ -347,10 +364,6 @@ export default function PraticePage() {
 
   const handleMetronomeClick = () => {
     setMetronomeIcon(!metronomeIcon);
-  };
-
-  const handleSelectButton = () => {
-    setSelectedButton(!selectedButton);
   };
 
   let darkTheme = JSON.parse(localStorage.getItem("currentUser")).darkTheme;
@@ -423,7 +436,7 @@ export default function PraticePage() {
                             : setListSelected(option);
                         }}
                         style={darkTheme ? { backgroundColor: "#666666" } : {}}
-                        color={selectedButton ? "primary" : "secondary"}
+                        color={darkTheme ? "secondary" : "secondary"}
                       >
                         {option}
                       </ToggleButton>
@@ -475,7 +488,7 @@ export default function PraticePage() {
                           });
                         }}
                         style={darkTheme ? { backgroundColor: "#666666" } : {}}
-                        color={selectedButton ? "#ffffff" : "secondary"}
+                        color={darkTheme ? "secondary" : "secondary"}
                       >
                         {option}
                       </ToggleButton>
@@ -554,7 +567,6 @@ export default function PraticePage() {
           </Box>
           <p style={{ color: "red" }}> {errorMessage}</p>
           <p style={{ color: "#007EA7" }}> {successMessage}</p>
-
           <div
             style={
               !subscriptionStatus
@@ -633,7 +645,7 @@ export default function PraticePage() {
               onClick={() => {
                 setBegin(true);
               }}
-              disabled={!listItems.length > 0 && !listSelected}
+              disabled={!view}
             >
               Begin
             </Button>
@@ -771,7 +783,17 @@ export default function PraticePage() {
               <Select
                 value={listToEdit}
                 label="Select List"
-                onChange={(e) => setListToEdit(e.target.value)}
+                onChange={(e) => {
+                  setListToEdit(e.target.value);
+                  // Get previous list of terms
+                  Axios.post(`${baseUrl}/user-get-list-by-title`, {
+                    email: JSON.parse(localStorage.getItem("currentUser"))
+                      .email,
+                    listTitle: e.target.value,
+                  }).then((res) => {
+                    setPreviousListTerms(res.data.docs[0].listTerms);
+                  });
+                }}
                 style={
                   darkTheme
                     ? { backgroundColor: "#666666", color: "white" }
@@ -794,6 +816,10 @@ export default function PraticePage() {
           </Box>
           {listToEdit ? (
             <>
+              <p style={darkTheme ? { color: "white" } : { color: "black" }}>
+                Note that if a term already exists in the list, it will not be
+                added.
+              </p>
               <br />
               <div className={{ display: "flex", flexDirection: "row" }}>
                 {inputFields.map((item, index) => {

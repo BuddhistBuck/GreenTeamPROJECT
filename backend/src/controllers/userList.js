@@ -39,7 +39,7 @@ exports.userListCreate = (req, res, next) => {
         if (err) {
           return res.send({
             success: false,
-            message: "Error: account creation attempted, server error",
+            message: "Error: List creation attempted, server error",
           });
         } else {
           return res.send({
@@ -53,21 +53,22 @@ exports.userListCreate = (req, res, next) => {
 };
 
 exports.userUpdateList = (req, res, next) => {
-  const { listTitle, newListTerms } = req.body;
+  const { email, listTitle, newListTerms } = req.body;
 
   UserList.findOneAndUpdate(
     {
+      email: email,
       listTitle: listTitle,
     },
     {
-      $push: { listTerms: newListTerms },
+      $addToSet: { listTerms: newListTerms },
     },
     { returnOriginal: false },
-    (res, err) => {
-      if (res) {
-        res.status(200).json({ res });
+    (docs, err) => {
+      if (docs) {
+        res.status(200).send({ docs });
       } else {
-        return console.log(err);
+        res.json({ err });
       }
     }
   );
@@ -112,7 +113,6 @@ exports.userDeleteListTerm = async (req, res) => {
     {
       email: email,
       listTitle: listTitle,
-      listTerm: listTerm,
     },
     { $pull: { listTerms: listTerm } }
   );

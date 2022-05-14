@@ -358,7 +358,8 @@ export default function AccountSettingsPage() {
               darkTheme
                 ? { backgroundColor: "#4f7fa1" }
                 : { backgroundColor: "#008B9E" }
-            }            onClick={() => {
+            }
+            onClick={() => {
               let param = {
                 email: JSON.parse(localStorage.getItem("currentUser")).email,
                 subscriptionStatus: "false",
@@ -377,7 +378,8 @@ export default function AccountSettingsPage() {
               darkTheme
                 ? { backgroundColor: "#4f7fa1" }
                 : { backgroundColor: "#008B9E" }
-            }            onClick={handleCloseCancelSubscription}
+            }
+            onClick={handleCloseCancelSubscription}
           >
             No
           </Button>
@@ -395,7 +397,11 @@ export default function AccountSettingsPage() {
           <div style={{ height: "10px" }} />
           <Button
             variant="contained"
-            style={{ backgroundColor: "#003459" }}
+            style={
+              darkTheme
+                ? { backgroundColor: "#4f7fa1" }
+                : { backgroundColor: "#008B9E" }
+            }
             onClick={() => {
               handleCloseCancelSubscriptionMessage();
               setCounter(counter + 1);
