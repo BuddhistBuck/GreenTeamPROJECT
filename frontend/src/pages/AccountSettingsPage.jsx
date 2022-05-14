@@ -161,12 +161,7 @@ export default function AccountSettingsPage() {
               </strong>
               <div style={{ height: "10px" }} />
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  width: "350px",
-                }}
+                className="account-field-container"
               >
                 <input
                   type="text"
@@ -208,13 +203,7 @@ export default function AccountSettingsPage() {
                 Last Name
               </strong>
               <div style={{ height: "10px" }} />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  width: "350px",
-                }}
+              <div className="account-field-container"
               >
                 <input
                   type="text"

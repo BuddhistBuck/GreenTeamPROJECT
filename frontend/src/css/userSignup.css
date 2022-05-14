@@ -1,35 +1,30 @@
 .user-background-image {
-  position: absolute;
   background: linear-gradient(
       to bottom,
       rgba(255, 0, 0, 0) 100%,
       rgb(255, 255, 255) 20%
     ),
-    url("https://user-images.githubusercontent.com/59159608/161017631-38c370fa-3fee-417f-bde4-3ad9524630e7.jpg");
+    url("https://user-images.githubusercontent.com/59159608/161017631-38c370fa-3fee-417f-bde4-3ad9524630e7.jpg")
+      repeat-y repeat-x;
   filter: blur(8px);
   -webkit-filter: blur(8px);
-  height: 100%;
-  width: 100%;
+  transform: scale(1.3);
   z-index: -1;
   background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
 .user-signup {
   display: flex;
   flex-direction: column;
   align-content: center;
-  margin: 0 auto;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  padding-top: 10% 0em 0em 10%;
   border: 1px solid silver;
   width: 60%;
+  max-width: 1200px;
   border-radius: 5px;
   z-index: 2;
   background-color: white;
+  transform: scale(0.9);
 }
 
 .user-signup form {
@@ -74,9 +69,63 @@
   background-color: white;
   position: fixed;
   bottom: 0px;
+  transform: 100vw;
 }
 
 .user-form-error {
   color: #f42b4b;
   text-align: center;
+}
+
+@media only screen and (max-width: 1280px) {
+  .user-background-image {
+    transform: translateY(0%);
+  }
+
+  .user-signup {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    transform: scale(0.85);
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .user-background-image {
+    transform: translateY(15%);
+  }
+
+  .user-signup {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    width: 600px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .user-background-image {
+    /* transform: translateY(15%); */
+  }
+
+  .user-signup {
+  }
+}
+
+@media only screen and (max-width: 428px) {
+  .user-signup {
+    transform: scale(0.6);
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .user-background-image {
+    /* transform: translateY(15%); */
+  }
+
+  .user-signup {
+    transform: scale(0.6);
+  }
 }

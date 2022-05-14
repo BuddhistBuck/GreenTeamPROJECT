@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../css/practice.css";
 
 /**
  * @author Andrew
@@ -29,29 +30,7 @@ export default function PracticeInterface(props) {
   }
 
   return (
-    <div
-      style={
-        darkTheme
-          ? {
-              display: "flex",
-              flexDirection: "column",
-              border: "2px solid #003459",
-              borderRadius: "5px",
-              padding: "20px",
-              width: "100%",
-              backgroundColor: "#333333",
-            }
-          : {
-              display: "flex",
-              flexDirection: "column",
-              border: "2px solid #008B9E",
-              borderRadius: "5px",
-              padding: "20px",
-              width: "100%",
-              backgroundColor: "#FFFFFF",
-            }
-      }
-    >
+    <div className={darkTheme ? "practice-word-box-dark" : "practice-word-box"}>
       <h3 style={darkTheme ? { color: "white" } : { color: "black" }}>
         WPM: {wpm}
       </h3>

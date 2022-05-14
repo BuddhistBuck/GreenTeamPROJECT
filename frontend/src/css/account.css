@@ -77,3 +77,32 @@
   display: flex;
   flex-direction: row;
 }
+
+.account-field-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 350px;
+}
+
+@media only screen and (max-width: 440px) {
+  .account-block {
+    width: 60%;
+  }
+  .account-block-dark {
+    width: 60%;
+  }
+
+  .account-block input {
+    width: 140px;
+  }
+
+  .account-block-dark input {
+    width: 140px;
+  }
+
+  .account-field-container {
+    width: 240px;
+
+  }
+}

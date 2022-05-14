@@ -386,23 +386,7 @@ export default function PraticePage() {
   function PracticeMenu() {
     return (
       <div className="practice-menu-container">
-        <div
-          style={
-            darkTheme
-              ? {
-                  display: "flex",
-                  flexDirection: "row",
-                  border: "1px solid #393939",
-                  borderRadius: "5px",
-                }
-              : {
-                  display: "flex",
-                  flexDirection: "row",
-                  border: "1px solid silver",
-                  borderRadius: "5px",
-                }
-          }
-        >
+        <div className={darkTheme ? "practice-menu-dark" : "practice-menu"}>
           <div
             className={
               darkTheme
@@ -568,6 +552,7 @@ export default function PraticePage() {
           <p style={{ color: "red" }}> {errorMessage}</p>
           <p style={{ color: "#007EA7" }}> {successMessage}</p>
           <div
+            id="practice-manage-lists-buttons"
             style={
               !subscriptionStatus
                 ? {
@@ -658,7 +643,7 @@ export default function PraticePage() {
     <Layout>
       {begin && listItems ? (
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div className="practice-root">
+          <div className="practice-interface">
             <div className="practice-block">
               <h2 style={darkTheme ? { color: "white" } : { color: "black" }}>
                 Practice

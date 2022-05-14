@@ -58,11 +58,11 @@ function Header() {
             </a>
           </div>
         </div> */}
-        <p style={{ width: "40px" }} />
+        <p className="header-right-spacing" />
         <a href="/account">
           <p>Account Settings</p>
         </a>
-        <p style={{ width: "40px" }} />
+        <p className="header-right-spacing" />
         <a onClick={logout}>
           <p>Sign Out</p>
         </a>

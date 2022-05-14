@@ -7,6 +7,8 @@ import logo from "../util/images/logo.gif";
 import { formatPhoneNumber } from "../util/formatPhoneNumber";
 
 export default function SignUpPage(props) {
+  document.body.style.overflow='hidden'
+
   const [inputFirstName, setInputFirstName] = useState("");
   const [inputLastName, setInputLastName] = useState("");
   const [inputEmail, setInputEmail] = useState("");
@@ -50,11 +52,18 @@ export default function SignUpPage(props) {
       {submitSuccess ? (
         <SignUpSuccess />
       ) : (
-        <>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "90vh",
+          }}
+        >
           <div className="user-background-image" />
-          <div style={{ height: "20px" }} />
           <div className="user-signup">
-            <div style={{ height: "40px" }} />
+            <div style={{ height: "30px" }} />
             <img src={logo} alt="" width="150em" />
             <h4>Create a New Account</h4>
             <form onSubmit={HandleFormSubmit}>
@@ -162,7 +171,7 @@ export default function SignUpPage(props) {
                   <span className="form-error">{errorMessage}</span>
                 )}
                 <button>Sign Up</button>
-                <div style={{height: '15px'}}/>
+                <div style={{ height: "15px" }} />
                 <a href="/practice" style={{ margin: "0 auto" }}>
                   Already have an account? Login here.
                 </a>
@@ -174,7 +183,7 @@ export default function SignUpPage(props) {
             <p style={{ paddingLeft: "20px" }}>Court Reporter Pro</p>
             <p style={{ paddingRight: "20px" }}>All Rights Reserved</p>
           </footer>
-        </>
+        </div>
       )}
     </>
   );

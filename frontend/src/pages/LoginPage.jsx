@@ -5,6 +5,8 @@ import logo from "../util/images/logo.gif";
 import "../css/userLogin.css";
 
 export default function LoginPage(props) {
+  document.body.style.overflow = "hidden";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState();
