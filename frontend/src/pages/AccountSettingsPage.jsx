@@ -286,11 +286,7 @@ export default function AccountSettingsPage() {
               </div>
             ) : (
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "60%",
-                }}
+                className="subscription-block"
               >
                 <p style={darkTheme ? { color: "white" } : { color: "black" }}>
                   Subscription Status:&nbsp;

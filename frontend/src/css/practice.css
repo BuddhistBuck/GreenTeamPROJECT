@@ -182,7 +182,7 @@
   flex-direction: column;
   border: 2px solid #003459;
   border-radius: 5px;
-  padding: 5px;
+  padding: 10px;
   width: 100%;
   background-color: #333333;
 }
@@ -192,7 +192,7 @@
   flex-direction: column;
   border: 2px solid #008b9e;
   border-radius: 5px;
-  padding: 25px;
+  padding: 10px;
   width: 100%;
   background-color: #ffffff;
 }
@@ -205,7 +205,6 @@
   .practice-block {
     border-radius: 5px;
     padding: 0px 5px 0px;
-    border: 2px solid red;
   }
 
   .practice-menu {
@@ -250,5 +249,13 @@
 
   #practice-manage-lists-buttons {
     display: none
+  }
+
+  .practice-word-box {
+    width: 100vh;
+  }
+
+  .practice-word-box-dark {
+    width: 100vh;
   }
 }

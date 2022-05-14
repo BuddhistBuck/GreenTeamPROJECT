@@ -85,6 +85,12 @@
   width: 350px;
 }
 
+.subscription-block {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+}
+
 @media only screen and (max-width: 440px) {
   .account-block {
     width: 60%;
@@ -103,6 +109,15 @@
 
   .account-field-container {
     width: 240px;
+  }
 
+  .subscription-block img {
+    width: 250px;
+  }
+}
+
+@media only screen and (max-width: 440px) {
+  .subscription-block img {
+    width: 200px;
   }
 }
