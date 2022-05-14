@@ -212,7 +212,7 @@
     flex-direction: column;
     border: 0px solid silver;
   }
-  
+
   .practice-menu-dark {
     display: flex;
     flex-direction: column;
@@ -227,7 +227,7 @@
     height: auto;
     background-color: #333333;
   }
-  
+
   .practice-menu-container {
     display: flex;
     flex-direction: column;
@@ -235,7 +235,7 @@
     padding: 40px 0px 40px;
     height: auto;
   }
-  
+
   .practice-menu-select-list {
     padding: 5px 20px 5px;
     margin-bottom: 20px;
@@ -248,14 +248,16 @@
   }
 
   #practice-manage-lists-buttons {
-    display: none
+    display: none;
   }
 
   .practice-word-box {
     width: 100vh;
+    padding: 10px;
   }
 
   .practice-word-box-dark {
     width: 100vh;
+    padding: 10px;
   }
 }
