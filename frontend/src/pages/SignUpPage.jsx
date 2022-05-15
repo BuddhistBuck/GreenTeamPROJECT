@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SignUpSuccess from "./SignUpSuccessPage";
 import "../css/userSignup.css";
 import { createAccountUser, useAuthDispatch } from "../context";
 import logo from "../util/images/logo.gif";
 import { formatPhoneNumber } from "../util/formatPhoneNumber";
+import { validateEmail } from "../util/validateEmail";
 
 /**
  * @component The component that is rendered when a user successfully creates an account
@@ -19,33 +20,51 @@ export default function SignUpPage(props) {
   const [password, setPassword] = useState("");
   const [submitSuccess, setSubmitSucccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const dispatch = useAuthDispatch();
+
+  useEffect(() => {
+    setTimeout(() => setErrorMessage(""), 8000);
+  }, []);
 
   const HandleFormSubmit = async (e) => {
     e.preventDefault();
 
-    let firstName =
-      inputFirstName.charAt(0).toUpperCase() + inputFirstName.slice(1);
-    let lastName =
-      inputLastName.charAt(0).toUpperCase() + inputLastName.slice(1);
-    let occupation =
-      inputOccupation.charAt(0).toUpperCase() + inputOccupation.slice(1);
+    if (!inputFirstName || !inputLastName || !inputEmail || !password) {
+      setErrorMessage("One or more required fields is empty");
+      return;
+    }
 
-    try {
-      let payload = {
-        firstName: firstName,
-        lastName: lastName,
-        occupation: occupation,
-        email: inputEmail,
-        phoneNumber: inputPhone,
-        password: password,
-      };
+    if (password.length < 8) {
+      setErrorMessage("Must have at least 8 characters in password");
+      return;
+    }
 
-      createAccountUser(dispatch, payload);
-      setSubmitSucccess(true);
-    } catch (error) {
-      setErrorMessage("ERROR: ", error);
+    if (validateEmail(inputEmail)) {
+      let firstName =
+        inputFirstName.charAt(0).toUpperCase() + inputFirstName.slice(1);
+      let lastName =
+        inputLastName.charAt(0).toUpperCase() + inputLastName.slice(1);
+      let occupation =
+        inputOccupation.charAt(0).toUpperCase() + inputOccupation.slice(1);
+
+      try {
+        let payload = {
+          firstName: firstName,
+          lastName: lastName,
+          occupation: occupation,
+          email: inputEmail,
+          phoneNumber: inputPhone.length === 14 ? inputPhone : "Not listed",
+          password: password,
+        };
+
+        createAccountUser(dispatch, payload);
+        setSubmitSucccess(true);
+      } catch (error) {
+        setErrorMessage("ERROR: ", error);
+      }
+    } else {
+      setErrorMessage("Email is not in the proper format");
+      return;
     }
   };
 
@@ -84,7 +103,9 @@ export default function SignUpPage(props) {
                   }}
                 >
                   <label htmlFor="firstName">
-                    <p>First Name</p>
+                    <p>
+                      First Name<span style={{ color: "red" }}>&nbsp;*</span>
+                    </p>
                     <input
                       type="text"
                       placeholder="Enter first name ..."
@@ -92,7 +113,9 @@ export default function SignUpPage(props) {
                     />
                   </label>
                   <label htmlFor="lastName">
-                    <p>Last Name</p>
+                    <p>
+                      Last Name<span style={{ color: "red" }}>&nbsp;*</span>
+                    </p>
                     <input
                       type="text"
                       placeholder="Enter last name ..."
@@ -109,7 +132,9 @@ export default function SignUpPage(props) {
                   }}
                 >
                   <label htmlFor="email">
-                    <p>Email</p>
+                    <p>
+                      Email<span style={{ color: "red" }}>&nbsp;*</span>
+                    </p>
                     <input
                       type="text"
                       placeholder="Enter email ..."
@@ -149,12 +174,30 @@ export default function SignUpPage(props) {
                     />
                   </label>
                   <label htmlFor="password">
-                    <p>Password</p>
+                    <p>
+                      Password<span style={{ color: "red" }}>&nbsp;*</span>
+                    </p>
                     <input
                       type="password"
                       placeholder="Enter password ..."
                       onChange={(e) => setPassword(e.target.value)}
+                      onFocus={() =>
+                        (document.getElementById(
+                          "password-requirements"
+                        ).style.display = "block")
+                      }
+                      onBlur={() =>
+                        (document.getElementById(
+                          "password-requirements"
+                        ).style.display = "none")
+                      }
                     />
+                    {/* PASSWORD MESSAGE */}
+                    <div id="password-requirements">
+                      <span style={{ color: "#008B9E" }}>
+                        Password must have a minimum of 8 characters.
+                      </span>
+                    </div>
                   </label>
                 </div>
               </div>
@@ -169,9 +212,8 @@ export default function SignUpPage(props) {
                   flexDirection: "column",
                 }}
               >
-                {errorMessage && (
-                  <span className="form-error">{errorMessage}</span>
-                )}
+                <span className="user-form-error">{errorMessage}</span>
+                <div style={{ height: "15px" }} />
                 <button>Sign Up</button>
                 <div style={{ height: "15px" }} />
                 <a href="/practice" style={{ margin: "0 auto" }}>

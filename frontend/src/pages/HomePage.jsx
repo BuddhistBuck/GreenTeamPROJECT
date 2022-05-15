@@ -12,12 +12,20 @@ function HomePage(props) {
     <div className="home-container">
       <h1>Welcome to Court Reporter Pro</h1>
       <img src={logo} alt="" width="200px" />
-      <div style={{ display: "flex", flexDirection: "column", padding: '20px' }}>
-        <NavLink exact to="/signup">Sign Up</NavLink>
+      <div
+        style={{ display: "flex", flexDirection: "column", padding: "20px" }}
+      >
+        <NavLink exact to="/signup">
+          Sign Up
+        </NavLink>
         <div className="home-vertical-spacing" />
-        <NavLink exact to="/practice">Log In</NavLink>
+        <NavLink exact to="/practice">
+          Log In
+        </NavLink>
         <div className="home-vertical-spacing" />
-        <NavLink exact to="/admin" id="admin-link">Admin</NavLink>
+        <NavLink exact to="/admin" id="admin-link">
+          Admin
+        </NavLink>
         {/* <button onClick={runCommand}>Extract</button> */}
       </div>
     </div>

@@ -1,6 +1,7 @@
 import Axios from "axios";
 import { baseUrl } from "./baseUrl";
 import { legal } from "./productionStenoData/legal";
+import { commonPhrases } from "../util/productionStenoData/commonPhrases";
 
 /**
  * (CURRENTLY NOT IN USE) Posts entire list of terms to an Admin-created List
@@ -52,6 +53,6 @@ function saveNewList(newList) {
  * (CURRENTLY NOT IN USE) The 'Extract' button run command to post a new admin-created list
  **/
 export function runCommand() {
-  saveNewList("Short Phrases");
-  saveNewListTerms("Short Phrases", legal);
+  saveNewList("Common Phrases");
+  saveNewListTerms("Common Phrases", commonPhrases);
 }

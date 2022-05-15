@@ -245,9 +245,7 @@ export default function ManageListsPage(props) {
       name: newList,
     }).then((res) => {
       if (res) {
-        setSuccessMessage(
-          "New list successfully created, refresh to see changes"
-        );
+        setSuccessMessage("New list successfully created");
         createEventLog(
           "Created list",
           `List Name: ${newList}`,
@@ -293,13 +291,12 @@ export default function ManageListsPage(props) {
   };
 
   const deleteListTerms = (obj, title) => {
-    console.log(`title: ${title}, obj: ${obj}`);
     for (let i = 0; i < obj.length; i++) {
       Axios.post(`${baseUrl}/admin-delete-list-term`, {
         listTitle: title,
         listTerm: obj[i],
       })
-        .then((res) => console.log(res))
+        .then((res) => {})
         .catch((err) => {
           console.log(err);
         });
@@ -542,7 +539,7 @@ export default function ManageListsPage(props) {
                     handleCloseConfirmDeleteList();
                     deleteLists(selectedListsForDelete);
                     setSuccessMessage("Successfully deleted list(s)");
-                    setRefreshCount(refreshCount + 1);
+                    window.location.reload();
                   }}
                 >
                   Confirm
@@ -725,7 +722,7 @@ export default function ManageListsPage(props) {
                     handleCloseConfirmDeleteListTerms();
                     handleCloseDeleteListTerms();
                     setSuccessMessage(
-                      "List term(s) deleted, please refresh to see changes"
+                      "List term(s) deleted, please reload the list table to see changes"
                     );
                     setRefreshCount(refreshCount + 1);
                   }}

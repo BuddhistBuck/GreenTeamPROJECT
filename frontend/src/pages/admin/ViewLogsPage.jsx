@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AdminLayout from "../../components/AdminLayout";
 import Axios from "axios";
 import { baseUrl } from "../../util/baseUrl";
-import { TablePaginationActions, createData } from "../../util/userListTable";
+import { TablePaginationActions, createData } from "../../util/logEventTable";
 
 // Import Material UI components
 import Table from "@mui/material/Table";

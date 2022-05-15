@@ -20,7 +20,6 @@ export default function ViewUsersPage(props) {
   useEffect(() => {
     Axios.get(`${baseUrl}/users`).then((res) => {
       let users = formatUserData(res.data);
-      console.log(res.data);
       setUsers(users);
     });
   }, []);
@@ -78,6 +77,9 @@ export default function ViewUsersPage(props) {
               <StyledTableCell align="right">Email</StyledTableCell>
               <StyledTableCell align="right">Phone Number</StyledTableCell>
               <StyledTableCell align="right">
+                Occupation
+              </StyledTableCell>
+              <StyledTableCell align="right">
                 Subscription Status
               </StyledTableCell>
               <StyledTableCell align="right">Date Created</StyledTableCell>
@@ -95,7 +97,10 @@ export default function ViewUsersPage(props) {
                   </StyledTableCell>
                   <StyledTableCell align="right">{row.email}</StyledTableCell>
                   <StyledTableCell align="right">
-                    {row.phoneNumber}
+                    {row.phoneNumber ? row.phoneNumber : "Not listed"}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.occupation ? row.occupation : "Not listed"}
                   </StyledTableCell>
                   <StyledTableCell align="right">
                     {row.subscriptionStatus ? "Subscribed" : "Not Subscribed"}
