@@ -4,7 +4,10 @@ import { initialState, AuthReducer } from "./reducer";
 export const AuthStateContext = createContext();
 export const AuthDispatchContext = createContext();
 
-// AuthState utilized for Provider
+/**
+ * @component The component for the Authentication State. Allows the use of state management of
+ * user accounts throughout the app.
+ */
 export function useAuthState() {
   const context = React.useContext(AuthStateContext);
   if (context === undefined) {
@@ -14,7 +17,10 @@ export function useAuthState() {
   return context;
 }
 
-// Login Dispatch
+/**
+ * @component The component for the Authentication Dispatch. Allows dispatch functions
+ * and actions to be used throughout the application.
+ */
 export function useAuthDispatch() {
   const context = React.useContext(AuthDispatchContext);
   if (context === undefined) {
@@ -24,7 +30,10 @@ export function useAuthDispatch() {
   return context;
 }
 
-// Practice Page Dispatch
+/**
+ * @component The component for the Authentication Priovider. Stores the user information
+ * to be used throughout the applicaiton.
+ */
 export const AuthProvider = ({ children }) => {
   const [user, dispatch] = useReducer(AuthReducer, initialState);
 

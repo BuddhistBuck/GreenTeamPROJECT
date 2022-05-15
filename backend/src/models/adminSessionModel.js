@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// MongoDB AdminSession Schema 
 const adminSessionSchema = new mongoose.Schema({
   adminId: {
     type: String,

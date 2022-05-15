@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 
+/**
+ * (CURRENTLY NOT IN USE) Detects click in order to close a dropdown component
+ * @use see Header component
+ * @source https://letsbuildui.dev/articles/building-a-dropdown-menu-component-with-react-hooks
+ **/
 export const useDetectOutsideClick = (el, initialState) => {
   const [isActive, setIsActive] = useState(initialState);
 

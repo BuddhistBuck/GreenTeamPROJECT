@@ -1,5 +1,9 @@
 import React from "react";
 
+/**
+ * @component (CURRENTLY NOT USED) The component that renders the
+ * screen confirming that a password request email is sent
+ */
 function NewPasswordEmailSent(props) {
   return (
     <div

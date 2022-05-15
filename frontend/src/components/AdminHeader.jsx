@@ -2,9 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { logoutAdmin, useAuthDispatch } from "../context";
-
 import "../css/adminHeader.css";
 
+/**
+ * @component The component for the admin-side header
+ */
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dispatch = useAuthDispatch();

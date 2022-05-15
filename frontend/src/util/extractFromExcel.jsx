@@ -2,6 +2,9 @@ import Axios from "axios";
 import { baseUrl } from "./baseUrl";
 import { legal } from "./productionStenoData/legal";
 
+/**
+ * (CURRENTLY NOT IN USE) Posts entire list of terms to an Admin-created List
+ **/
 function saveNewListTerms(title, excelData) {
   for (let i = 0; i < excelData.length; i++)
     Axios.post(`${baseUrl}/admin-update-list`, {
@@ -12,6 +15,9 @@ function saveNewListTerms(title, excelData) {
       .catch((err) => console.log(err));
 }
 
+/**
+ * (CURRENTLY NOT IN USE) Posts a new list and a new list object
+ **/
 function saveNewList(newList) {
   const requestOne = Axios.post(`${baseUrl}/admin-list-object-create`, {
     name: newList,
@@ -42,6 +48,9 @@ function saveNewList(newList) {
   }
 }
 
+/**
+ * (CURRENTLY NOT IN USE) The 'Extract' button run command to post a new admin-created list
+ **/
 export function runCommand() {
   saveNewList("Short Phrases");
   saveNewListTerms("Short Phrases", legal);

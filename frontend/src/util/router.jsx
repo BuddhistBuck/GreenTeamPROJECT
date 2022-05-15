@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 
-// User Page
+// Import User Pages
 import HomePage from "../pages/HomePage";
 import PracticePage from "../pages/PracticePage";
 import LoginPage from "../pages/LoginPage";
@@ -10,29 +10,34 @@ import AccountSettingsPage from "../pages/AccountSettingsPage";
 import ResetPassword from "../pages/ResetPassword";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import NotFoundPage from "../pages/NotFoundPage";
+import NewPassword from "../pages/NewPassword";
 
-// Admin Pages
+// Import Admin Pages
 import AdminLoginPage from "../pages/admin/AdminLoginPage";
 import AdminHomePage from "../pages/admin/AdminHomePage";
 import ManageListsPage from "../pages/admin/ManageListsPage";
-import ManageUsersPage from "../pages/admin/ManageUsersPage";
-import NewPassword from "../pages/NewPassword";
-import ManageLogsPage from "../pages/admin/ManageLogsPage";
+import ViewUsersPage from "../pages/admin/ViewUsersPage";
+import ViewLogsPage from "../pages/admin/ViewLogsPage";
 
+// Load user/admin tokens
+const userToken = localStorage.getItem("currentUser");
+const adminToken = localStorage.getItem("currentAdmin");
+
+/**
+ * @component Redirect to admin pages if an admin token is detected
+ **/
 const AdminPrivateRoute = ({ component, ...options }) => {
-  const adminToken = localStorage.getItem("currentAdmin");
   const finalComponent = adminToken ? component : AdminLoginPage;
   return <Route {...options} component={finalComponent} />;
 };
 
+/**
+ * @component Redirect to user pages if an user token is detected
+ **/
 const UserPrivateRoute = ({ component, ...options }) => {
-  const userToken = localStorage.getItem("currentUser");
   const finalComponent = userToken ? component : LoginPage;
   return <Route {...options} component={finalComponent} />;
 };
-
-const userToken = localStorage.getItem("currentUser");
-const adminToken = localStorage.getItem("currentAdmin");
 
 const Router = () => (
   <Switch>
@@ -58,8 +63,8 @@ const Router = () => (
       component={AdminHomePage}
     />
     <AdminPrivateRoute exact path="/admin/lists" component={ManageListsPage} />
-    <AdminPrivateRoute exact path="/admin/users" component={ManageUsersPage} />
-    <AdminPrivateRoute exact path="/admin/logs" component={ManageLogsPage} />
+    <AdminPrivateRoute exact path="/admin/users" component={ViewUsersPage} />
+    <AdminPrivateRoute exact path="/admin/logs" component={ViewLogsPage} />
     <Route path="/*" component={NotFoundPage} />
   </Switch>
 );

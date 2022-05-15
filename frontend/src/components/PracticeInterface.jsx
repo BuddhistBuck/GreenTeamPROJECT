@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import "../css/practice.css";
 
 /**
- * @author Andrew
- * @function PracticeInterface
- **/
+ * @component The component for the Practice Page feature
+ * (this component renders after a list is selected and the 'Begin' button is clicked)
+ */
 export default function PracticeInterface(props) {
   const { wpm, listItems } = props;
   console.log(listItems);

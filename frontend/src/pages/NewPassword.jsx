@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import "../css/userLogin.css";
 
+/**
+ * @component (CURRENTLY NOT IN USE) Renders a successful message upon
+ * setting a new password
+ */
 function NewPasswordSet() {
   return (
     <>
@@ -17,6 +21,10 @@ function NewPasswordSet() {
   );
 }
 
+/**
+ * @component (CURRENTLY NOT IN USE) The component that is rendered upon clicking the link
+ * given in the Request Password emil
+ */
 function NewPassword(props) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

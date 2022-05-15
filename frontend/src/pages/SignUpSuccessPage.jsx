@@ -1,7 +1,10 @@
 import React from "react";
 import "../css/userLogin.css";
 
-function SignUpSuccess(props) {
+/**
+ * @component The component that is upon successfully creating an account
+ */
+export default function SignUpSuccessPage(props) {
   return (
     <>
       <div className="user-background-image" />
@@ -46,5 +49,3 @@ function SignUpSuccess(props) {
     </>
   );
 }
-
-export default SignUpSuccess;

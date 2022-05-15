@@ -1,5 +1,6 @@
 const AdminEvent = require("../models/AdminEventModel");
 
+// Create an admin log
 exports.adminCreateEvent = (req, res, next) => {
   const { admin, eventType, eventDetails } = req.body;
 
@@ -24,7 +25,7 @@ exports.adminCreateEvent = (req, res, next) => {
     });
   }
 
-  // save the new user
+  // Save the new user
   const event = new AdminEvent();
   event.admin = admin;
   event.eventType = eventType;
@@ -44,6 +45,7 @@ exports.adminCreateEvent = (req, res, next) => {
   });
 };
 
+// Get all admin logs
 exports.adminGetEvents = async (req, res) => {
   AdminEvent.find({}, function (err, events) {
     var eventMap = {};

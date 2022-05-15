@@ -1,6 +1,9 @@
 import React from "react";
 import errorImg from "../util/images/404.png";
 
+/**
+ * @component The component that is renered upon visiting a non-existant link
+ */
 export default function NotFoundPage(props) {
   return (
     <div

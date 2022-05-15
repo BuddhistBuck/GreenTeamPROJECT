@@ -1,6 +1,5 @@
 /**
- * @author Chris P
- * @component Builds the selected list and interface
+ * (CURRENTLY NOT IN USE) Builds the selected list and interface 
  **/
 function buildList(text, wordsPerLine) {
   const items = text.split(" ");

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// MongoDB UserListObject Schema 
 const userListObjectSchema = new mongoose.Schema({
   email: {
     type: String,

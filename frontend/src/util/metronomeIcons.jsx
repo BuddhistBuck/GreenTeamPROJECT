@@ -1,6 +1,10 @@
 import * as React from "react";
 import { SvgIcon } from "@mui/material";
 
+/**
+ * (CURRENTLY NOT IN USE) Custom Metronome icon for use on Practice Page
+ * @source https://www.svgrepo.com/svg/42469/metronome
+ **/
 export function MetronomeClearIcon(props) {
   return (
     <SvgIcon

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
+// MongoDB Admin Schema 
 const adminSchema = new mongoose.Schema(
   {
     username: {

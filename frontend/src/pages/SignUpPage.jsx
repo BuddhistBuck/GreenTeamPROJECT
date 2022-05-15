@@ -1,14 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
-import SignUpSuccess from "./SignUpSuccess";
+import SignUpSuccess from "./SignUpSuccessPage";
 import "../css/userSignup.css";
 import { createAccountUser, useAuthDispatch } from "../context";
 import logo from "../util/images/logo.gif";
 import { formatPhoneNumber } from "../util/formatPhoneNumber";
 
+/**
+ * @component The component that is rendered when a user successfully creates an account
+ */
 export default function SignUpPage(props) {
-  document.body.style.overflow='hidden'
-
+  document.body.style.overflow = "hidden";
   const [inputFirstName, setInputFirstName] = useState("");
   const [inputLastName, setInputLastName] = useState("");
   const [inputEmail, setInputEmail] = useState("");

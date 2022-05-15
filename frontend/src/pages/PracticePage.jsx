@@ -22,7 +22,6 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import Button from "@mui/material/Button";
 import themeDefault from "../util/themeDefault";
-import themeUserList from "../util/themeUserList";
 import { marks } from "../util/sliderValues";
 import {
   FormControl,

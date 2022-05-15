@@ -1,10 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-
 import logo from "../util/images/logo.gif";
 import "../css/home.css";
-import { runCommand } from "../util/extractFromExcel";
+// import { runCommand } from "../util/extractFromExcel";
 
+/**
+ * @component The component that is rendered upon visiting the site
+ */
 function HomePage(props) {
   return (
     <div className="home-container">

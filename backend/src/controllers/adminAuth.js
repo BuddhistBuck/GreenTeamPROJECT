@@ -1,6 +1,7 @@
 const Admin = require("../models/AdminModel");
 const AdminSession = require("../models/AdminSessionModel");
 
+// Create an admin account
 exports.adminCreate = (req, res, next) => {
   const { body } = req;
   const { username, password } = body;
@@ -18,7 +19,7 @@ exports.adminCreate = (req, res, next) => {
     });
   }
 
-  // verify email
+  // Verify email
   Admin.find(
     {
       username: username,
@@ -56,6 +57,7 @@ exports.adminCreate = (req, res, next) => {
   );
 };
 
+// Login with existing credentials
 exports.adminLogin = (req, res, next) => {
   const { body } = req;
   const { username, password } = body;
@@ -103,7 +105,7 @@ exports.adminLogin = (req, res, next) => {
         });
       }
 
-      // NOTE: if correct user
+      // If correct user, create an admin session (token)
       const adminSession = new AdminSession();
       adminSession.adminId = admin._id;
       adminSession.save((err, doc) => {
@@ -125,11 +127,11 @@ exports.adminLogin = (req, res, next) => {
   );
 };
 
+// Verify the token is unique
 exports.adminVerify = (req, res, next) => {
   const { query } = req;
   const { token } = query;
 
-  // Verify the token is unique
   AdminSession.find(
     {
       _id: token,
@@ -158,6 +160,7 @@ exports.adminVerify = (req, res, next) => {
   );
 };
 
+  // Log out admin and delete session
 exports.adminLogout = (req, res, next) => {
   // Get the token
   const { query } = req;

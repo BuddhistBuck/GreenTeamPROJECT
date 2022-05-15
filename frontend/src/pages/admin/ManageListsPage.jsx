@@ -27,6 +27,9 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import { Paper } from "@mui/material";
 
+/**
+ * @component The component that allows admin to manage admin-created lists
+ */
 export default function ManageListsPage(props) {
   const [list, setList] = useState([]);
   const [listObjects, setListObjects] = useState([]);

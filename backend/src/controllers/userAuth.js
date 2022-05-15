@@ -1,6 +1,7 @@
 const User = require("../models/UserModel");
 const UserSession = require("../models/UserSessionModel");
 
+// Create a user account
 exports.userCreate = (req, res, next) => {
   const { body } = req;
   const { email, firstName, lastName, occupation, phoneNumber, password } =
@@ -34,7 +35,7 @@ exports.userCreate = (req, res, next) => {
     });
   }
 
-  // verify email
+  // Verify email
   User.find(
     {
       email: email,
@@ -76,6 +77,7 @@ exports.userCreate = (req, res, next) => {
   );
 };
 
+// Log into an existing user account
 exports.userLogin = (req, res, next) => {
   const { body } = req;
   const { email, password } = body;
@@ -148,6 +150,7 @@ exports.userLogin = (req, res, next) => {
   );
 };
 
+// Verify if user is logged in
 exports.userVerify = (req, res, next) => {
   const { query } = req;
   const { token } = query;
@@ -181,6 +184,7 @@ exports.userVerify = (req, res, next) => {
   );
 };
 
+// Log out user
 exports.userLogout = (req, res, next) => {
   // Get the token
   const { query } = req;
@@ -209,6 +213,7 @@ exports.userLogout = (req, res, next) => {
   );
 };
 
+// Get all users
 exports.getAllUsers = async (req, res) => {
   User.find({}, function (err, users) {
     // var userMap = {};
@@ -222,6 +227,7 @@ exports.getAllUsers = async (req, res) => {
   });
 };
 
+// Get a user by email
 exports.getUserByEmail = async (req, res) => {
   const { body } = req;
   const { email } = body;
@@ -239,6 +245,7 @@ exports.getUserByEmail = async (req, res) => {
   );
 };
 
+// Update user information
 exports.userUpdate = (req, res, next) => {
   const { body } = req;
   const {

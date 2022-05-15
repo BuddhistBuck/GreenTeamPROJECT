@@ -3,7 +3,10 @@ import NewPasswordEmailSent from "../components/NewPasswordEmailSent";
 import logo from "../util/images/logo.gif";
 import "../css/userLogin.css";
 
-function ResetPassword(props) {
+/**
+ * @component The component that is upon clicking the Reset Password link
+ */
+export default function ResetPasswordPage(props) {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [emailSent, setEmailSent] = useState(false);
@@ -92,5 +95,3 @@ function ResetPassword(props) {
     </>
   );
 }
-
-export default ResetPassword;

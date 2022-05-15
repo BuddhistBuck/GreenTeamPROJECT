@@ -1,5 +1,6 @@
 const UserListObject = require("../models/UserListObjectModel");
 
+// Create a user list object
 exports.userListObjectCreate = (req, res) => {
   const { email, name } = req.body;
 
@@ -55,6 +56,7 @@ exports.userListObjectCreate = (req, res) => {
   );
 };
 
+// Get all list objects
 exports.userGetLists = (req, res) => {
   const { email } = req.body;
 

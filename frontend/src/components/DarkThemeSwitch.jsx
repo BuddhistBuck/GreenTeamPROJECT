@@ -1,6 +1,9 @@
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
 
+/**
+ * @component A style component for the dark theme switch on Account Settings Page
+ */
 export const DarkThemeSwitch = styled(Switch)(({ theme }) => ({
   width: 62,
   height: 34,

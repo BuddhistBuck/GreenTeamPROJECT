@@ -83,6 +83,7 @@ mongoose
 
 app.use(cors());
 
+// Set up headers for API configuration
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "DELETE, PUT");

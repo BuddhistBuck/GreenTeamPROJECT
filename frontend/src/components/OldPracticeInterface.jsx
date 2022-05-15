@@ -1,10 +1,11 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-control-regex */
 import React, { useCallback, useEffect, useState } from "react";
 import Timer from "./Timer";
 import { s } from "../util/buildList";
 import "../css/practice.css";
 
+/**
+ * @component (CURRENTLY NOT BEING USED) Early prototype for Practice Interface
+ **/
 export default function OldPracticeInterface() {
   // Practice interface utilities
   const [startCounting, setStartCounting] = useState(false);

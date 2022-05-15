@@ -1,6 +1,9 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 
+/**
+ * @component The component for the timer features
+ * (implements some funcitonality from OldPracticeInterface)
+ */
 export default function Timer(props) {
   const { correctWords, startCounting } = props;
   const [timeElapsed, setTimeElapsed] = useState(0);
@@ -21,7 +24,7 @@ export default function Timer(props) {
   const minutes = timeElapsed / 60;
 
   return (
-    <div style={{position: 'absolute', marginTop: '-16px'}}>
+    <div style={{ position: "absolute", marginTop: "-16px" }}>
       <p>Time: {timeElapsed}</p>
       {/* <p>Speed: {(correctWords / minutes || 0).toFixed(0)} WPM</p> */}
     </div>

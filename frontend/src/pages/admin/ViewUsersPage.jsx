@@ -9,10 +9,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
 import { baseUrl } from "../../util/baseUrl";
 
-export default function ManageUsersPage(props) {
+/**
+ * @component The component that allows admin to view user account information
+ */
+export default function ViewUsersPage(props) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {

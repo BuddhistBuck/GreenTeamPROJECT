@@ -1,6 +1,9 @@
 import React from "react";
 import AdminLayout from "../../components/AdminLayout";
 
+/**
+ * @component The component for the admin-side home page
+ */
 export default function AdminHomePage(props) {
   return (
     <AdminLayout sidebar selectedLink="documentation">

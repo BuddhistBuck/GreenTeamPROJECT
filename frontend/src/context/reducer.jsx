@@ -1,12 +1,14 @@
-// Context/reducer.js
+// User information variable
 let user = localStorage.getItem("currentUser")
   ? JSON.parse(localStorage.getItem("currentUser")).user
   : "";
 
+// Admin information variable
 let token = localStorage.getItem("currentUser")
   ? JSON.parse(localStorage.getItem("currentUser")).auth_token
   : "";
 
+// Intial state of user information
 export const initialState = {
   userDetails: "" || user,
   token: "" || token,
@@ -14,6 +16,10 @@ export const initialState = {
   errorMessage: null,
 };
 
+/**
+ * @component Reducer component that takes the current state and action 
+ * in order to return a new state.
+ */
 export const AuthReducer = (initialState, action) => {
   switch (action.type) {
     case "REQUEST_CREATE_ACCOUNT":

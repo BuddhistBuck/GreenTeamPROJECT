@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// MongoDB AdminList Schema 
 const adminListSchema = new mongoose.Schema({
   listTitle: {
     type: String,

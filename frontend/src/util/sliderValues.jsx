@@ -1,3 +1,6 @@
+/**
+ * Values for WPM slider
+ **/
 export const marks = [
   {
     value: 300,

@@ -1,5 +1,6 @@
 const AdminList = require("../models/AdminListModel");
 
+// Create an admin list
 exports.adminListCreate = (req, res, next) => {
   const { listTitle, listTerms } = req.body;
 
@@ -43,6 +44,7 @@ exports.adminListCreate = (req, res, next) => {
   );
 };
 
+// Update an admin list
 exports.adminUpdateList = (req, res, next) => {
   const { listTitle, newListTerms } = req.body;
 
@@ -64,6 +66,7 @@ exports.adminUpdateList = (req, res, next) => {
   );
 };
 
+// Get an admin list by title
 exports.adminGetListByTitle = (req, res, next) => {
   const { listTitle } = req.body;
 
@@ -81,6 +84,7 @@ exports.adminGetListByTitle = (req, res, next) => {
   );
 };
 
+// Delete an admin list
 exports.adminDeleteList = async (req, res) => {
   const { listTitle } = req.body;
   const deleteListObj = await AdminList.findOneAndDelete({

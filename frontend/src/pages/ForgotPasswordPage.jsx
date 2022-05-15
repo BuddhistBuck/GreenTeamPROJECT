@@ -6,7 +6,11 @@ import Axios from "axios";
 import { baseUrl } from "../util/baseUrl";
 import NewPasswordEmailSent from "../components/NewPasswordEmailSent";
 
-function SignUpSuccess(props) {
+/**
+ * @component (CURRENTLY NOT IN USE) The component that is rendered when 
+ * the Forgot Password link is clicked
+ */
+export default function ForgotPasswordPage(props) {
   const [email, setEmail] = useState("");
   const [emailFound, setEmailFound] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -97,5 +101,3 @@ function SignUpSuccess(props) {
     </>
   );
 }
-
-export default SignUpSuccess;

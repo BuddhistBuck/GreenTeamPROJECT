@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import AdminHeader from "./AdminHeader";
 import "../css/adminLayout.css";
 
+/**
+ * @component The component for the admin-side layout
+ */
 const AdminLayout = ({ selectedLink, children }) => {
   // Changes the colors of the sidebars
   function renderSelectedLink(selected) {

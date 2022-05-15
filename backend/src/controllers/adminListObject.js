@@ -1,5 +1,6 @@
 const AdminListObject = require("../models/AdminListObjectModel");
 
+// Create an admin list object
 exports.adminListObjectCreate = (req, res) => {
   const { name } = req.body;
 
@@ -46,6 +47,7 @@ exports.adminListObjectCreate = (req, res) => {
   );
 };
 
+// Get all admin list objects
 exports.adminGetLists = (req, res) => {
   AdminListObject.find({}).exec((error, lists) => {
     if (error) return res.status(400).json({ error });
@@ -55,6 +57,7 @@ exports.adminGetLists = (req, res) => {
   });
 };
 
+// Delete admin list objects
 exports.adminDeleteListObject = async (req, res) => {
   const { name } = req.body;
   const deleteListObj = await AdminListObject.findOneAndDelete({

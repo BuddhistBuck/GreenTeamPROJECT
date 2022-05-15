@@ -10,6 +10,9 @@ import { logoutUser, useAuthDispatch } from "../context";
 import typewriter from "../util/images/keyboard.png";
 import "../css/header.css";
 
+/**
+ * @component The component for the user-side header
+ */
 function Header() {
   // State variables for language dropdown menu
   const dropdownRef = useRef(null);
@@ -20,6 +23,7 @@ function Header() {
 
   let darkTheme = JSON.parse(localStorage.getItem("currentUser")).darkTheme;
 
+  // Logout user and push to Practice Page
   function logout() {
     logoutUser(dispatch);
     history.push("/practice");
@@ -36,6 +40,8 @@ function Header() {
       {/* AiFillCaretDown */}
 
       <div className="header-right">
+        {/* ARCHIVED aCOMPONENT FOR FUTURE USE- LANGUAGE SETTINGS */}
+
         {/* <div className="language-controls" ref={dropdownRef}>
           <button className="language-icons" onClick={onClick}>
             <BsGlobe size="26px" /> &nbsp;

@@ -11,9 +11,9 @@ import { baseUrl } from "../util/baseUrl";
 import { DarkThemeSwitch } from "../components/DarkThemeSwitch";
 
 /**
- * @author Chris P
- * @component Account Settings Page
- **/
+ * @component The component that allows a user to change their
+ * name and subscription status
+ */
 export default function AccountSettingsPage() {
   let email = JSON.parse(localStorage.getItem("currentUser")).email;
   const [firstName, setFirstName] = useState(
@@ -160,9 +160,7 @@ export default function AccountSettingsPage() {
                 First Name
               </strong>
               <div style={{ height: "10px" }} />
-              <div
-                className="account-field-container"
-              >
+              <div className="account-field-container">
                 <input
                   type="text"
                   defaultValue={firstName}
@@ -203,8 +201,7 @@ export default function AccountSettingsPage() {
                 Last Name
               </strong>
               <div style={{ height: "10px" }} />
-              <div className="account-field-container"
-              >
+              <div className="account-field-container">
                 <input
                   type="text"
                   defaultValue={lastName}
@@ -285,9 +282,7 @@ export default function AccountSettingsPage() {
                 </Button>
               </div>
             ) : (
-              <div
-                className="subscription-block"
-              >
+              <div className="subscription-block">
                 <p style={darkTheme ? { color: "white" } : { color: "black" }}>
                   Subscription Status:&nbsp;
                   <span

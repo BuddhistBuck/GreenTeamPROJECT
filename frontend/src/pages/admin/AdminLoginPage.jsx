@@ -3,12 +3,16 @@ import AdminHeader from "../../components/AdminHeader";
 import "../../css/adminLogin.css";
 import { loginAdmin, useAuthDispatch } from "../../context";
 
+/**
+ * @component The component for the admin-side login page
+ */
 export default function AdminLoginPage(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState();
   const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useAuthDispatch();
+  document.body.style.backgroundColor = "white";
 
   const HandleFormSubmit = async (e) => {
     e.preventDefault();

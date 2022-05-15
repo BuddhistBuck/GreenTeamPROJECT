@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
+// Create themes for slider components on practice page
 const themeSlider = createTheme({
   palette: {
     primary: { main: "#a9cbd6" },

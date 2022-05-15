@@ -4,6 +4,9 @@ import { loginUser, useAuthDispatch } from "../context";
 import logo from "../util/images/logo.gif";
 import "../css/userLogin.css";
 
+/**
+ * @component The component that is rendered upon clicking the Log In link
+ */
 export default function LoginPage(props) {
   document.body.style.overflow = "hidden";
 

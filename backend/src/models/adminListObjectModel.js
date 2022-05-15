@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// MongoDB AdminListObject Schema 
 const adminListObjectSchema = new mongoose.Schema(
   {
     name: {

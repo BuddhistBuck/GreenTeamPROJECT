@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// MongoDB AdminEvent Schema 
 const adminEventSchema = new mongoose.Schema({
   admin: {
     type: String,
