@@ -67,55 +67,55 @@ export default function ViewUsersPage(props) {
 
   return (
     <AdminLayout sidebar selectedLink="users">
-      <h2>Manage Users</h2>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="right">First Name</StyledTableCell>
-              <StyledTableCell align="right">Last Name</StyledTableCell>
-              <StyledTableCell align="right">Email</StyledTableCell>
-              <StyledTableCell align="right">Phone Number</StyledTableCell>
-              <StyledTableCell align="right">
-                Occupation
-              </StyledTableCell>
-              <StyledTableCell align="right">
-                Subscription Status
-              </StyledTableCell>
-              <StyledTableCell align="right">Date Created</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users ? (
-              users.map((row) => (
-                <StyledTableRow key={row.firstName}>
-                  <StyledTableCell align="right">
-                    {row.firstName}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.lastName}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">{row.email}</StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.phoneNumber ? row.phoneNumber : "Not listed"}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.occupation ? row.occupation : "Not listed"}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.subscriptionStatus ? "Subscribed" : "Not Subscribed"}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {formatDate(row.timeCreated)}
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))
-            ) : (
-              <></>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <div style={{height: '100vh'}}>
+        <h2>Manage Users</h2>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align="right">First Name</StyledTableCell>
+                <StyledTableCell align="right">Last Name</StyledTableCell>
+                <StyledTableCell align="right">Email</StyledTableCell>
+                <StyledTableCell align="right">Phone Number</StyledTableCell>
+                <StyledTableCell align="right">Occupation</StyledTableCell>
+                <StyledTableCell align="right">
+                  Subscription Status
+                </StyledTableCell>
+                <StyledTableCell align="right">Date Created</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users ? (
+                users.map((row) => (
+                  <StyledTableRow key={row.firstName}>
+                    <StyledTableCell align="right">
+                      {row.firstName}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.lastName}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{row.email}</StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.phoneNumber ? row.phoneNumber : "Not listed"}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.occupation ? row.occupation : "Not listed"}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.subscriptionStatus ? "Subscribed" : "Not Subscribed"}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {formatDate(row.timeCreated)}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))
+              ) : (
+                <></>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     </AdminLayout>
   );
 }

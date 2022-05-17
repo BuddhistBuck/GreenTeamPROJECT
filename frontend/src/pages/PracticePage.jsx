@@ -21,6 +21,7 @@ import { MetronomeClearIcon, MetronomeSolidIcon } from "../util/metronomeIcons";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import Button from "@mui/material/Button";
+import LockIcon from "@mui/icons-material/Lock";
 import themeDefault from "../util/themeDefault";
 import { marks } from "../util/sliderValues";
 import {
@@ -565,7 +566,10 @@ export default function PraticePage() {
             }
           >
             {!subscriptionStatus ? (
-              <p style={{ color: "#545353" }}>Premium Features</p>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <p style={{ color: "#545353" }}>Premium Features</p>&nbsp;
+                <LockIcon style={{color: '#666666'}} />
+              </div>
             ) : (
               <></>
             )}

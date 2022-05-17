@@ -742,18 +742,26 @@ export default function ManageListsPage(props) {
         </div>
       </div>
 
-      <div style={{ height: 400, width: "100%", margin: "0 auto" }}>
-        <DataGrid
-          rows={currentList}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
-          onSelectionModelChange={setSelectionModel}
-          selectionModel={selectionModel}
-          checkboxSelection
-        />
-        <h3 style={{ color: "#00a8e8" }}>{successMessage}</h3>
-        <h3 style={{ color: "red" }}>{failedMessage}</h3>
+      <div style={{ height: "100vh" }}>
+        <div
+          style={{
+            height: 400,
+            width: "100%",
+            margin: "0 auto",
+          }}
+        >
+          <DataGrid
+            rows={currentList}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            onSelectionModelChange={setSelectionModel}
+            selectionModel={selectionModel}
+            checkboxSelection
+          />
+          <h3 style={{ color: "#00a8e8" }}>{successMessage}</h3>
+          <h3 style={{ color: "red" }}>{failedMessage}</h3>
+        </div>
       </div>
     </AdminLayout>
   );

@@ -47,59 +47,64 @@ export default function ViewLogsPage(props) {
 
   return (
     <AdminLayout sidebar selectedLink="logs">
-      <h2>Event Logs</h2>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-          <TableBody>
-            {(rowsPerPage > 0
-              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : rows
-            ).map((row) => (
-              <TableRow key={row.key}>
-                <TableCell component="th" scope="row">
-                  {row.eventType}
-                </TableCell>
-                <TableCell style={{ width: 600 }} align="right">
-                  <span style={{ color: "grey" }}>{row.eventDetails}</span>
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {row.admin}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
-                  {row.timeCreated}
-                </TableCell>
-              </TableRow>
-            ))}
+      <div style={{ height: "100vh" }}>
+        <h2>Event Logs</h2>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+            <TableBody>
+              {(rowsPerPage > 0
+                ? rows.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : rows
+              ).map((row) => (
+                <TableRow key={row.key}>
+                  <TableCell component="th" scope="row">
+                    {row.eventType}
+                  </TableCell>
+                  <TableCell style={{ width: 600 }} align="right">
+                    <span style={{ color: "grey" }}>{row.eventDetails}</span>
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="right">
+                    {row.admin}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="right">
+                    {row.timeCreated}
+                  </TableCell>
+                </TableRow>
+              ))}
 
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  // rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                  rowsPerPageOptions={[5, 10]}
+                  colSpan={3}
+                  count={rows.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      "aria-label": "rows per page",
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
               </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                // rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                rowsPerPageOptions={[5, 10]}
-                colSpan={3}
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    "aria-label": "rows per page",
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      </div>
     </AdminLayout>
   );
 }
