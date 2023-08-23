@@ -1,0 +1,263 @@
+.practice-interface {
+  flex: 1;
+  padding: 0px 60px 0px;
+}
+
+.practice-block {
+  border-radius: 5px;
+  padding: 10px 20px 10px;
+}
+
+.practice-block a {
+  color: #77939c;
+}
+
+.practice-block a:hover {
+  color: grey;
+}
+
+.practice-top-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.practice-top-buttons button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  /* cursor: pointer; */
+  outline: inherit;
+}
+
+/* ---- PRACTICE MENU ---- */
+.practice-menu {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid silver;
+  border-radius: 5px;
+}
+
+.practice-menu-dark {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #393939;
+  border-radius: 5px;
+}
+
+.practice-menu-container-dark {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 40px 0px 40px;
+  height: auto;
+  background-color: #333333;
+}
+
+.practice-menu-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 40px 0px 40px;
+  height: auto;
+}
+
+.practice-menu-select-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 40px 10px;
+}
+
+.practice-menu-select-list-dark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 40px 10px;
+  background-color: #333333;
+}
+
+/* ---- WPM INTERFACE ---- */
+
+.practice-wpm {
+  display: flex;
+  flex-direction: row;
+  max-height: 100px;
+  max-height: 300px;
+}
+
+.metronome-button {
+  position: absolute;
+  -ms-transform: translateY(65%);
+  transform: translateY(65%);
+  height: 80px;
+}
+
+/* ---- PRACTICE INTERFACE ---- */
+
+.practice-container {
+  flex: 1;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-right: 6px solid rgb(49, 170, 170);
+  box-shadow: 10px 0px 0px 0px rgb(131, 224, 224);
+  height: auto;
+}
+
+.practice-wpm {
+  display: flex;
+  flex-direction: row;
+  max-height: 300px;
+}
+
+.practice-container:focus {
+  background-color: Aqua;
+}
+
+.practice-input {
+  position: absolute;
+  /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; */
+  opacity: 0.01;
+  margin-top: -20px;
+}
+
+.word-correct {
+  font-weight: bold;
+  color: green;
+}
+
+.word-incorrect {
+  font-weight: bold;
+  color: red;
+}
+
+.word-active {
+  font-weight: bold;
+  background-color: #eeeef0;
+}
+
+/* ---- PRACTICE DROPDOWN ---- */
+
+.select-list-dropdown {
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  visibility: hidden;
+  color: black;
+  margin-top: 2%;
+  transform: translateX(1150%);
+}
+
+.select-list-dropdown.active {
+  display: flex;
+  flex-direction: column;
+  visibility: visible;
+}
+
+.select-list-dropdown a {
+  color: black;
+  padding: 10px;
+}
+
+.select-list-dropdown div {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+}
+
+.select-list-dropdown a:hover {
+  background-color: #f1f1f1;
+  color: black;
+}
+
+/* PRACTICE WORD BOX */
+
+.practice-word-box-dark {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #003459;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  background-color: #333333;
+}
+
+.practice-word-box {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #008b9e;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+@media only screen and (max-width: 500px) {
+  .practice-interface {
+    flex: 0;
+    padding: 0px 10px 0px;
+  }
+  .practice-block {
+    border-radius: 5px;
+    padding: 0px 5px 0px;
+  }
+
+  .practice-menu {
+    display: flex;
+    flex-direction: column;
+    border: 0px solid silver;
+  }
+
+  .practice-menu-dark {
+    display: flex;
+    flex-direction: column;
+    border: 0px solid #393939;
+  }
+
+  .practice-menu-container-dark {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px 0px 40px;
+    height: auto;
+    background-color: #333333;
+  }
+
+  .practice-menu-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px 0px 40px;
+    height: auto;
+  }
+
+  .practice-menu-select-list {
+    padding: 5px 20px 5px;
+    margin-bottom: 20px;
+  }
+
+  .practice-menu-select-list-dark {
+    padding: 5px 20px 5px;
+    background-color: #454545;
+    margin-bottom: 20px;
+  }
+
+  #practice-manage-lists-buttons {
+    display: none;
+  }
+
+  .practice-word-box {
+    width: 100vh;
+    padding: 10px;
+  }
+
+  .practice-word-box-dark {
+    width: 100vh;
+    padding: 10px;
+  }
+}

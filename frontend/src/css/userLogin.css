@@ -1,0 +1,139 @@
+.user-background-image {
+  position: absolute;
+  background: linear-gradient(
+      to bottom,
+      rgba(255, 0, 0, 0) 100%,
+      rgb(255, 255, 255) 20%
+    ),
+    url("https://user-images.githubusercontent.com/59159608/161017631-38c370fa-3fee-417f-bde4-3ad9524630e7.jpg");
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+  /* background-position: center; */
+  background-repeat: repeat-y;
+}
+
+.user-login-top {
+  height: 40px;
+}
+
+.user-login-bottom {
+  height: 40px;
+}
+
+
+.user-login {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  margin: 0 auto;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding-top: 10% 0em 0em 10%;
+  border: 1px solid silver;
+  width: 50%;
+  border-radius: 5px;
+  z-index: 2;
+  background-color: white;
+}
+
+.user-login form {
+  width: 300px;
+}
+
+.user-login input {
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+}
+
+.user-login button {
+  background-color: #008b9e;
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.user-login button:hover {
+  background-color: #5ab4b4;
+}
+
+.user-login a {
+  color: #008b9e;
+}
+
+.user-login a:hover {
+  color: #5ab4b4;
+}
+
+.user-login-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 50px;
+  border-top: 1px solid silver;
+  background-color: white;
+  position: fixed;
+  bottom: 0px;
+}
+
+.user-form-error {
+  color: #f42b4b;
+  text-align: center;
+}
+
+@media only screen and (max-width: 1500px) {
+  .user-login {
+    transform: scale(0.9);
+    padding-top: 0px;
+  }
+  .user-login-top {
+    height: 20px;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .user-login {
+    transform: scale(0.8);
+    margin-top: -20px;
+  }
+  .user-login-top {
+    height: 0px;
+  }
+}
+
+@media only screen and (max-width: 1280px) {
+  .user-login {
+    transform: scale(0.7);
+    margin-top: -45px;
+    /* border: 2px solid red; */
+  }
+
+  .user-background-image {
+    transform: translateY(50px);
+  }
+
+  .user-login-top {
+    height: 0px;
+  }
+  .user-login-bottom {
+    height: 0px;
+  }
+
+}
+
+@media only screen and (max-width: 800px) {
+  .user-login {
+    width: 100%;
+    height: 100%;
+    /* border: 2px solid red; */
+
+  }
+}

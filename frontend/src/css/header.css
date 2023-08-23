@@ -1,0 +1,153 @@
+/* Header Styles */
+
+.header-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #008b9e;
+  color: white;
+  padding: 0px 60px 0px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.header-top-dark {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #003459;
+  color: white;
+  padding: 0px 60px 0px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.header-right a {
+  color: white;
+}
+
+.header-right a:hover {
+  color: rgb(216, 216, 216);
+}
+
+.header-logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.header-logo img {
+  width: 50px;
+  height: 50px;
+}
+
+.header-logo a:hover {
+  color: white;
+}
+
+.header-right {
+  display: flex;
+  flex-direction: row;
+}
+
+.header-right-spacing {
+  width: 40px;
+}
+
+@media only screen and (max-width: 320px) {
+  .header-top {
+    padding: 0px 10px 0px;
+  }
+
+  .header-top-dark {
+    padding: 0px 10px 0px;
+  }
+
+  .header-logo h1 {
+    font-size: 16px;
+  }
+
+  .header-logo img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .header-right-spacing {
+    width: 5px;
+  }
+}
+
+
+@media only screen and (max-width: 500px) {
+  .header-top {
+    padding: 20px 10px 20px;
+  }
+
+  .header-top-dark {
+    padding: 20px 20px 20px;
+  }
+
+  .header-logo h1 {
+    font-size: 16px;
+  }
+
+  .header-logo img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .header-right-spacing {
+    width: 5px;
+  }
+}
+
+/* Language Dropdown Styles */
+
+.language-controls {
+  display: flex;
+  align-items: center;
+}
+
+.language-controls button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+.language-dropdown {
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  visibility: hidden;
+  color: black;
+  transform: translateY(70px);
+}
+
+.language-dropdown.active {
+  display: flex;
+  flex-direction: column;
+  visibility: visible;
+}
+
+.language-dropdown a {
+  color: black;
+}
+
+.language-dropdown div {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+}
+
+.language-dropdown a:hover {
+  background-color: #f1f1f1;
+  color: black;
+}
+
+.language-icons {
+  display: flex;
+}

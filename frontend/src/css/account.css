@@ -1,0 +1,123 @@
+.account-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0px 20px;
+  width: 100%;
+  height: 100%;
+}
+
+.account-container-dark {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0px 20px;
+  width: 100%;
+  height: 100%;
+  background-color: #454545;
+}
+
+.account-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  padding: 30px;
+  border: 2px solid silver;
+  background-color: white;
+}
+
+.account-block form {
+  width: 100%;
+}
+
+.account-block input {
+  width: 240px;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.account-option {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Account Block Dark Theme */
+
+.account-block-dark {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  padding: 30px;
+  border: 2px solid #303031;
+  background-color: #333333;
+}
+
+.account-block-dark form {
+  width: 100%;
+}
+
+.account-block-dark input {
+  width: 240px;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  color: white;
+  background-color: #454545;
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.account-option-dark {
+  display: flex;
+  flex-direction: row;
+}
+
+.account-field-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 350px;
+}
+
+.subscription-block {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+}
+
+@media only screen and (max-width: 440px) {
+  .account-block {
+    width: 60%;
+  }
+  .account-block-dark {
+    width: 60%;
+  }
+
+  .account-block input {
+    width: 140px;
+  }
+
+  .account-block-dark input {
+    width: 140px;
+  }
+
+  .account-field-container {
+    width: 240px;
+  }
+
+  .subscription-block img {
+    width: 250px;
+  }
+}
+
+@media only screen and (max-width: 440px) {
+  .subscription-block img {
+    width: 200px;
+  }
+}

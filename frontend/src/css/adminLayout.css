@@ -1,0 +1,42 @@
+.admin-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.admin-sidebar {
+  padding: 10px 20px 40px 0px;
+  border-right: 0.5px solid rgb(160, 160, 160);
+  background-color: silver;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  height: auto;
+}
+
+.admin-sidebar ul {
+  width: 90%;
+  list-style-type: none;
+}
+
+.sidebar-inactive {
+  padding: 5px 5px 5px 10px;
+  border-radius: 5px 0px 0px 5px;
+  margin-right: 3px;
+  background-color: grey;
+  color: white;
+}
+
+.sidebar-active {
+  padding: 5px 5px 5px 10px;
+  border-radius: 5px 0px 0px 5px;
+  margin-right: 3px;
+  background-color: #24292f;
+  color: white;
+}
+
+.admin-sidebar a {
+  text-decoration: none;
+}
+
+.admin-content {
+  width: 80%;
+  padding: 10px 0px 0px 50px;
+}
